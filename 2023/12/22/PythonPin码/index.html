@@ -244,7 +244,7 @@
         <section class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2023-12-22</time>
+            <time>2023-12-23</time>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
@@ -281,18 +281,18 @@
 <h3 id="getattr-app-”name“-app-class-name-【AppName】"><a href="#getattr-app-”name“-app-class-name-【AppName】" class="headerlink" title="getattr(app,”name“,app.class.name)【AppName】"></a>getattr(app,”<strong>name</strong>“,app.<strong>class</strong>.<strong>name</strong>)【AppName】</h3><p>默认为flask</p>
 <h3 id="getattr-mod-”file“-None-【ModName】"><a href="#getattr-mod-”file“-None-【ModName】" class="headerlink" title="getattr(mod,”file“,None)【ModName】"></a>getattr(mod,”<strong>file</strong>“,None)【ModName】</h3><p>如果用的不是ednv的话一般为默认路径，网上可以找得到</p>
 <p>如果是的话去让网页报错，比如路由下加一个&#x2F;debug啥的让网页报错出真实绝对路径</p>
-<p><img src="C:\Users\HeHansen\AppData\Local\Temp\Rar$DIa28980.17674\assets\image-20230927180059-65mcftm.png" alt="image"></p>
+<p><img src="/../images/pythonpin/image-20230927180059-65mcftm.png"></p>
 <p>在这里可以看到版本为2.7，2.7版本下默认路径python2.7内是app.pyc</p>
 <p>所以真实路径为<code>/opt/Python/flaskdebug/lib/python2.7/site-packages/flask/app.pyc</code>​</p>
 <h3 id="str-uuid-getnode"><a href="#str-uuid-getnode" class="headerlink" title="str(uuid.getnode())"></a>str(uuid.getnode())</h3><p>直接读取mac地址，如果是Ubuntu系统去读取<code>/sys/class/net/eth0/address</code>​</p>
 <p>如果是centos去读取<code>/sys/class/net/eth33/address</code>​</p>
 <p>mac地址需要转化为10进制！</p>
 <p>转换方法：例如<code>02:42:ac:0c:7b:85</code>​将冒号去掉得到<code>0242ac0c7b85</code>​可以用python<code>int(&#39;0242ac0c7b85&#39;,16)</code>​也可以用工具直接16进制转10进制</p>
-<p><img src="C:\Users\HeHansen\AppData\Local\Temp\Rar$DIa28980.17674\assets\image-20230927235858-khj5mjw.png" alt="image">​</p>
+<p><img src="/../images/pythonpin/image-20230927235858-khj5mjw.png"></p>
 <h3 id="get-machine-id"><a href="#get-machine-id" class="headerlink" title="get_machine_id()"></a>get_machine_id()</h3><p>一般题目都为docker环境，所以需要读取两个部分进行拼接</p>
 <p>首先是<code>/etc/machine-id</code>​（在前）</p>
 <p>如何是<code>/proc/self/cgroup</code>​（docker第一行最后一部分）</p>
-<p><img src="C:\Users\HeHansen\AppData\Local\Temp\Rar$DIa28980.17674\assets\image-20230927181101-2ufghkd.png" alt="image"></p>
+<p><img src="/../images/pythonpin/image-20230927181101-2ufghkd.png"></p>
 <p><code>/etc/machine-id</code>​读不到就去读<code>/proc/sys/kernel/random/boot_id</code>​</p>
 <p><code>self</code>​被过滤的时候，也就是<code>/proc/self/cgroup</code>​没法用了，其中的<code>self</code>​可以用相关进程的pid去替换,其实<code>1</code>​就行</p>
 <p>如果<code>cgroup</code>​被过滤了，可以考虑<code>mountinfo</code>​或者<code>cpuset</code>​</p>
@@ -304,7 +304,7 @@
 
 <h2 id="RCE后利用"><a href="#RCE后利用" class="headerlink" title="RCE后利用"></a>RCE后利用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> os</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.popen(<span class="string">&#x27;ls /&#x27;</span>).read()</span><br><span class="line"><span class="string">&#x27;app\nbin\ndev\netc\nflag\nhome\nlib\nmedia\nmnt\nopt\nproc\nroot\nrun  </span></span><br><span class="line"><span class="string">&gt;&gt;&gt; os.popen(&#x27;</span>cat /flag<span class="string">&#x27;).read()</span></span><br><span class="line"><span class="string">&#x27;</span>ctfshow&#123;a9899ac6-<span class="number">2446</span>-4b68-<span class="number">9826</span>-a5b523c2ce28&#125;\n<span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="C:\Users\HeHansen\AppData\Local\Temp\Rar$DIa28980.17674\assets\image-20230927235231-mamuti9.png" alt="image">​</p>
+<p><img src="/../images/pythonpin/image-20230927235231-mamuti9.png"></p>
 
   </article>
   <!-- tag -->
