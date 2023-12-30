@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="Hehanzzz">
+
+
+  <meta name="subtitle" content="“冬将尽，春可期”">
+
+
+  <meta name="description" content="Hehanzzz">
+
+
+
+<title>智能合约入门概念 | Hehanzzz’s Blog</title>
+
+
+
+<link rel="icon" href="/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+
+
+
+<script src="/lib/jquery.min.js"></script>
+
+
+<script src="/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+    $("#toggle-dark").click(toggleDark);
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/images/logo.svg" alt="Hehanzzz’s Blog" />
+          Hehanzzz’s Blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        智能合约入门概念
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/archives">Posts</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hehanzzz">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Twitter" target="_blank" rel="noopener" href="https://x.com/hehanzzz">
+              <iconify-icon width="20" icon="ri:twitter-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="友情链接" href="2023/12/31/About-me-关于我/">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        智能合约入门概念
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2023-12-30</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>8 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>2.4k words</span>
+          </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <p>Web3智能合约入门</p>
+<span id="more"></span>
+
+<h1 id="0x01-区块链和加密货币基础"><a href="#0x01-区块链和加密货币基础" class="headerlink" title="0x01 区块链和加密货币基础"></a>0x01 区块链和加密货币基础</h1><p>知识基础 &amp; 中心化账本 &amp; 去中心化分布式账本 &amp; 区块链 &amp; 挖矿 &amp; 安全性分析 &amp; CTF中的BlockChain</p>
+<h1 id="0x02-知识基础"><a href="#0x02-知识基础" class="headerlink" title="0x02 知识基础"></a>0x02 知识基础</h1><h2 id="非对称密码加密体制"><a href="#非对称密码加密体制" class="headerlink" title="非对称密码加密体制"></a>非对称密码加密体制</h2><p>非对称密码加密体制得有公钥（public key&#x2F;pk）和私钥匙（secret key&#x2F;sk）两个密钥，公钥是所有人都可以拥有的，私钥只能自己拥有，倘若私钥暴露则全部的安全性直接丢失。可以将消息理解为装有密码信息的箱子，公钥为箱子的锁，私钥为可以打开锁的钥匙</p>
+<h2 id="哈希算法【散列函数】"><a href="#哈希算法【散列函数】" class="headerlink" title="哈希算法【散列函数】"></a>哈希算法【散列函数】</h2><p>$hash(msg) &#x3D; hashsum$</p>
+<h1 id="0x03-中心化账本"><a href="#0x03-中心化账本" class="headerlink" title="0x03 中心化账本"></a>0x03 中心化账本</h1><p>可以假设有一本公开的账本（比如一个网站），全世界所有人都可以在上面记账，账本上记录了所有的交易记录，例如：</p>
+<p>Alice付给Bob<strong>￥20</strong>	Bob付给Charlie<strong>￥30</strong>	……</p>
+<p>理想状态下这可以理解为简单的支付系统</p>
+<p>但是产生了安全问题：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">比如说谁都可以写这个账本，该怎么办？</span><br><span class="line">答：进行数字签名技术</span><br><span class="line"></span><br><span class="line">有了签名后，但如果同一笔支付记录被攻击人恶意复制粘贴交易，造成许多非法支付存在该怎么办？</span><br><span class="line">答：对支付记录加上ID</span><br><span class="line"></span><br><span class="line">如果有人欠钱不还怎么办？</span><br><span class="line">答：无需结算，只需要让每个人在自己余额不足的时候无法交易即可，即交易时必须有本金（这要求账本必须记录从最开始的交易历史，以为只有只有才能知道每个人的实时余额）</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x04-去中心化分布式账本"><a href="#0x04-去中心化分布式账本" class="headerlink" title="0x04 去中心化分布式账本"></a>0x04 去中心化分布式账本</h1><p>每个人手中都保存一份账本，当发生交易时，将其广播给所有人，大家听到后，就在自己的账本瞎记下来</p>
+<p>去中心化分布式账本核心问题所在：</p>
+<p>如何才能让所有人同意这是正确的账本？</p>
+<p>Alice支付给Bob10LD，Bob如何让其他人知道并相信这笔交易，好让他以后可以把这10LD支付给其他人？</p>
+<p>如果我也听到了广播交易，如何确定所有人都记录了同样的交易，顺序也相同呢？</p>
+<p><em>可以参考比特币论文讨论：</em>​<a target="_blank" rel="noopener" href="https://bitcoin.org/bitcoin.pdf"><em>https://bitcoin.org/bitcoin.pdf</em></a></p>
+<p>给出的方案：哪个账本上计算工作量（Computational work）最大，就信任哪个账本（此为加密货币的核心）</p>
+<blockquote>
+<p><strong>工作量证明：</strong></p>
+<p><strong>如果有一个人找到一个特殊数字，将其放在交易列表后面，使得这个列表被SHA256加密后的摘要的前三十个bit都是0，由哈希函数的不可逆特性，所以寻找此数字的方法只能是瞎猜硬碰，所以找到此特殊数字的概率为1&#x2F;2^30，约等于1&#x2F;1000000000。找到这个数字之后，验证则非常快，即：所有人都可以很容易证明找到这个数字的人做了海量的计算，而无需自己重做等量的计算。这个数字就叫“工作量证明”（Proof of work）</strong></p>
+</blockquote>
+<p>有一个重点是：所有工作量本身就对应了交易列表，如果修改了交易，哪怕只是一个字节，都会完全改变哈希值，所以你得再猜1000000000次获得一个新的工作量证明</p>
+<h1 id="0x05-区块链"><a href="#0x05-区块链" class="headerlink" title="0x05 区块链"></a>0x05 区块链</h1><p>工作原理：首先把账本分割为“区块（Blocks）”，每个区块包含了一个交易列表，并加上工作量证明。</p>
+<p><img src="/../images/web3introduction/image-20230913225539-qe8jod2.png"></p>
+<p>规定：区块的hashsum头部需要包含60比特的0，且每笔交易都必须付款者签名。</p>
+<p><img src="/../images/web3introduction/image-20230913225929-wbwhmn8.png"></p>
+<p>为了给这些区块一个标准的顺序，我们要求区块的标头，要包含前一个区块的哈希值</p>
+<p><img src="/../images/web3introduction/image-20230913225944-k8kv8lv.png"></p>
+<p>这样如果有人修改了之前的区块或者互换了两个区块，就会造成之后所有区块的前一块pre hash都需要更改，这就需要重做所有的计算了，也就是找到新的数字。使得hashsum的头部有60比特的0。因此所有的区块都串成了一条链，我们将此账本称呼为区块链。</p>
+<h1 id="0x06-挖矿"><a href="#0x06-挖矿" class="headerlink" title="0x06 挖矿"></a>0x06 挖矿</h1><p>这个新协议的另一部分内容为我们允许世界上所有人都参与建造区块，所有人都可以听到全世界交易的广播，其中有一部分人会把交易收集成区块，然后做许多的计算工作，找到特殊数字，使得区块的哈希值开头有60比特零。他们一旦找到这个数字，就广播出新发现的区块。</p>
+<p>为了奖励区块发现者的所作工作，当他整理出区块时，我们允许他在最上面加上一笔很特殊的交易，让他凭空得到10LD.</p>
+<p>此为区块奖励，这并不需要遵守认可交易与否的准则，因为它不是从别人那里得来的，所以无需签名。</p>
+<p>这也意味者每一个新区快都会给经济增添新的虚拟货币</p>
+<p>对于矿工来说，每一个区块就有点像一个小彩票，大家都在拼命猜数字，直到有一个幸运儿找到一个特殊数字，使得整个区块的hashsum有许多个0，那他就能得到奖励</p>
+<p>对于普通用户而言：他们只想用这个系统进行收付款，他们不需要收听所有的交易，而只要收听矿工们广播出的区块，然后更新到自己保存的区块链中即可。（相信最大工作量）</p>
+<p>问题：当接受到两条不同的区块链，其中交易信息相冲突时，选择哪一条？</p>
+<p>保留最长，也就是包含的工作量最大的那一条，要是长度相同，那么就等待新的区块，使得其中一条更长</p>
+<p>因此区块链就是将我们从相信中心权威到相信计算工作量</p>
+<h1 id="0x07-安全性分析"><a href="#0x07-安全性分析" class="headerlink" title="0x07 安全性分析"></a>0x07 安全性分析</h1><h2 id="尝试欺骗"><a href="#尝试欺骗" class="headerlink" title="尝试欺骗"></a>尝试欺骗</h2><p>假设Alice伪造了一个区块，然后只将其发送给Bob而没有发送给其他人，准备欺骗Bob</p>
+<p><img src="/../images/web3introduction/image-20230914001750-df1be09.png"></p>
+<p>为做到这一点，Alice必须做到比其他矿工更快找到有限的工作量证明，这虽然概率很小，但假设Alice做到了，但是其他矿工也在一直挖矿，所以之后会有新的区块加入进来，Bob需要在两条链中选择</p>
+<p><img src="/../images/web3introduction/image-20230914001957-3fciuif.png"></p>
+<p>所以Alice必须继续一直计算下去，并且保证自己的那条假链的长度比全世界其他矿工的那条链要长（因为Bob会信任最长的那条链），意味着Alice必须掌握全球百分之51的算力才能保证自己的那条假链能够起到欺诈作用。</p>
+<p>这也警示我们：接收一个新的区块时，并非一定要信任它</p>
+<p>‍</p>
+<h1 id="0x08-Little-Problem"><a href="#0x08-Little-Problem" class="headerlink" title="0x08 Little Problem"></a>0x08 Little Problem</h1><h2 id="Problem-One："><a href="#Problem-One：" class="headerlink" title="Problem One："></a>Problem One：</h2><p>工作量证明计算出的hashsum的头部0的个数如何决定？</p>
+<p>实际的比特币协议会定期更换0的个数，好让发现新区快的平均时间控制在10min左右</p>
+<p>新型加密货币的区块时间间隔比这要短的多，例如ETH 15Seconds；XRP 3.5Seconds；LTC 2.5Minutes（就好像彩票开奖，吸引不断的矿工加入）</p>
+<h2 id="Problem-Two："><a href="#Problem-Two：" class="headerlink" title="Problem Two："></a>Problem Two：</h2><p>比特币的数量是不是有限的？</p>
+<p>是有限的，每过四年，区块奖励减半，最初是50btc，现在为6.25btc</p>
+<h2 id="Problem-Three："><a href="#Problem-Three：" class="headerlink" title="Problem Three："></a>Problem Three：</h2><p>矿工是否就没收入了？</p>
+<p>并不是，矿工还可以获得交易手续。例如Alice付给Bob 0.42btc，并且留下0.001btc给矿工&lt;Alice的电子签名&gt;作为激励矿工把它加入区块</p>
+<h2 id="Problem-Four："><a href="#Problem-Four：" class="headerlink" title="Problem Four："></a>Problem Four：</h2><p>什么是区块链？</p>
+<ul>
+<li><p>分布式，去中心化</p>
+</li>
+<li><p>非关系型</p>
+</li>
+<li><p>数据库</p>
+<ul>
+<li>只能做插入和查询操作，没有管理员</li>
+<li>任何人都可以架设服务器，加入区块链网络，成为一个节点</li>
+<li>区块链的世界里面，没有中心节点，每个节点都是平等的，每个非轻量级节点都保存着整个数据库，你可以向任何一个节点写入&#x2F;读取数据，因为所有节点最后都会同步，保证区块链一致</li>
+</ul>
+</li>
+</ul>
+<h2 id="Problem-Five："><a href="#Problem-Five：" class="headerlink" title="Problem Five："></a>Problem Five：</h2><p>作为数据库的区块链记录着什么？</p>
+<ul>
+<li>上一个区块的hashsum</li>
+<li>交易记录</li>
+<li>工作量证明</li>
+<li>……</li>
+</ul>
+<h2 id="Problem-Six："><a href="#Problem-Six：" class="headerlink" title="Problem Six："></a>Problem Six：</h2><p>区块链的特性</p>
+<ul>
+<li>去中心化安全</li>
+<li>可追溯</li>
+<li>不可篡改</li>
+</ul>
+<h2 id="Problem-Seven："><a href="#Problem-Seven：" class="headerlink" title="Problem Seven："></a>Problem Seven：</h2><p>为什么帮人记账？</p>
+<p>激励机制：</p>
+<ol>
+<li>记账成功的人（使区块链高度+1）【矿工】，将会获得区块链系统的奖励（凭空生成一定的币）</li>
+<li>同时，你记录下来的交易们中，也会有一部分手续费，也将属于这位矿工</li>
+</ol>
+<h3 id="共识机制"><a href="#共识机制" class="headerlink" title="共识机制"></a>共识机制</h3><p>比特币使用工作量证明（PoW）来达成共识</p>
+<p>但还有其他的共识机制，例如：</p>
+<p>POS Proof of Stake 权益证明</p>
+<p>POA Proof of Authority 权威证明机制</p>
+<p>POI Proof of Importance 重要性证明</p>
+<p>PBFT Practical Byzantine Fault Tolerance 实用拜占庭容错</p>
+<p>DBFT Delegated BFT 授权拜占庭容错算法</p>
+<p>……</p>
+<h3 id="PoW的缺点"><a href="#PoW的缺点" class="headerlink" title="PoW的缺点"></a>PoW的缺点</h3><p>挖矿照成大量的资源浪费；另外挖矿的激励机制也造成矿池算力的高度集中，背离了当初去中心化设计的初衷；新区快生成较慢。</p>
+<p>当节点拥有占全网百分之n的算力时，该节点既有n&#x2F;100的概率找到Block Hash</p>
+<p>‍</p>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/Web3/">Web3</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/%E6%99%BA%E8%83%BD%E5%90%88%E7%BA%A6/">智能合约</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+        <a href="/2023/12/31/About-me-%E5%85%B3%E4%BA%8E%E6%88%91/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
+          About me | 关于我
+        </a>
+      
+    </div>
+    <div>
+      
+        <a href="/2023/12/25/CVE-2023-50692-Recording/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          CVE-2023-50692 Recording
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="Hehanzzz/hehanzzz.github.io"
+  data-repo-id="R_kgDOKls9Wg"
+  data-category="Announcements"
+  data-category-id="DIC_kwDOKls9Ws4Cb8Mv"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2023</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Hehanzzz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>
