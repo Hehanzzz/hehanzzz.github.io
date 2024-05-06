@@ -232,7 +232,7 @@
         <section class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2024-05-05</time>
+            <time>2024-05-06</time>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
@@ -269,18 +269,18 @@
 <h2 id="3-getattr-app-”-name-“-app-class-name-【AppName】"><a href="#3-getattr-app-”-name-“-app-class-name-【AppName】" class="headerlink" title="3. getattr(app,”__name__“,app.__class__.__name__)【AppName】"></a>3. getattr(app,”__name__“,app.__class__.__name__)【AppName】</h2><p>默认为flask</p>
 <h2 id="4-getattr-mod-”-file-“-None-【ModName】"><a href="#4-getattr-mod-”-file-“-None-【ModName】" class="headerlink" title="4. getattr(mod,”__file__“,None)【ModName】"></a>4. getattr(mod,”__file__“,None)【ModName】</h2><p>如果用的不是ednv的话一般为默认路径，网上可以找得到</p>
 <p>如果是的话去让网页报错，比如路由下加一个&#x2F;debug啥的让网页报错出真实绝对路径</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052325330.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061256829.png"></p>
 <p>在这里可以看到版本为2.7，2.7版本下默认路径python2.7内是app.pyc</p>
 <p>所以真实路径为 &#x2F;opt&#x2F;Python&#x2F;flaskdebug&#x2F;lib&#x2F;python2.7&#x2F;site-packages&#x2F;flask&#x2F;app.pyc </p>
 <h2 id="5-str-uuid-getnode"><a href="#5-str-uuid-getnode" class="headerlink" title="5. str(uuid.getnode())"></a>5. str(uuid.getnode())</h2><p>直接读取mac地址，如果是Ubuntu系统去读取 &#x2F;sys&#x2F;class&#x2F;net&#x2F;eth0&#x2F;address </p>
 <p>如果是centos去读取 &#x2F;sys&#x2F;class&#x2F;net&#x2F;eth33&#x2F;address </p>
 <p>mac地址需要转化为10进制！</p>
 <p>转换方法：例如 02:42:ac:0c:7b:85 将冒号去掉得到 0242ac0c7b85 可以用python&#96;int(‘0242ac0c7b85’,16) ​也可以用工具直接16进制转10进制</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052325156.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061256299.png"></p>
 <h2 id="6-get-machine-id"><a href="#6-get-machine-id" class="headerlink" title="6. get_machine_id()"></a>6. get_machine_id()</h2><p>一般题目都为docker环境，所以需要读取两个部分进行拼接</p>
 <p>首先是 &#x2F;etc&#x2F;machine-id （在前）</p>
 <p>如何是 &#x2F;proc&#x2F;self&#x2F;cgroup （docker第一行最后一部分）</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052325050.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061256251.png"></p>
 <p> &#x2F;etc&#x2F;machine-id 读不到就去读 &#x2F;proc&#x2F;sys&#x2F;kernel&#x2F;random&#x2F;boot_id </p>
 <p><code>self 被过滤的时候，也就是 /proc/self/cgroup 没法用了，其中的</code>self 可以用相关进程的pid去替换,其实 1 就行</p>
 <p>如果<code>cgroup 被过滤了，可以考虑</code>mountinfo 或者&#96;cpuset </p>
@@ -293,7 +293,7 @@
 
 <h2 id="RCE后利用"><a href="#RCE后利用" class="headerlink" title="RCE后利用"></a>RCE后利用</h2><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&gt;&gt;&gt; </span><span class="keyword">import</span> os</span><br><span class="line"><span class="meta">&gt;&gt;&gt; </span>os.popen(<span class="string">&#x27;ls /&#x27;</span>).read()</span><br><span class="line"><span class="string">&#x27;app\nbin\ndev\netc\nflag\nhome\nlib\nmedia\nmnt\nopt\nproc\nroot\nrun  </span></span><br><span class="line"><span class="string">&gt;&gt;&gt; os.popen(&#x27;</span>cat /flag<span class="string">&#x27;).read()</span></span><br><span class="line"><span class="string">&#x27;</span>ctfshow&#123;a9899ac6-<span class="number">2446</span>-4b68-<span class="number">9826</span>-a5b523c2ce28&#125;\n<span class="string">&#x27;</span></span><br></pre></td></tr></table></figure>
 
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052325412.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061256273.png"></p>
 
   </article>
   <!-- tag -->

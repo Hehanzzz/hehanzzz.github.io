@@ -232,7 +232,7 @@
         <section class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2024-05-05</time>
+            <time>2024-05-06</time>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
@@ -276,11 +276,11 @@
 </blockquote>
 <p>有一个重点是：所有工作量本身就对应了交易列表，如果修改了交易，哪怕只是一个字节，都会完全改变哈希值，所以你得再猜1000000000次获得一个新的工作量证明</p>
 <h1 id="0x05-区块链"><a href="#0x05-区块链" class="headerlink" title="0x05 区块链"></a>0x05 区块链</h1><p>工作原理：首先把账本分割为“区块（Blocks）”，每个区块包含了一个交易列表，并加上工作量证明。</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052323723.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061255531.png"></p>
 <p>规定：区块的hashsum头部需要包含60比特的0，且每笔交易都必须付款者签名。</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052323300.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061255614.png"></p>
 <p>为了给这些区块一个标准的顺序，我们要求区块的标头，要包含前一个区块的哈希值</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052323684.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061255685.png"></p>
 <p>这样如果有人修改了之前的区块或者互换了两个区块，就会造成之后所有区块的前一块pre hash都需要更改，这就需要重做所有的计算了，也就是找到新的数字。使得hashsum的头部有60比特的0。因此所有的区块都串成了一条链，我们将此账本称呼为区块链。</p>
 <h1 id="0x06-挖矿"><a href="#0x06-挖矿" class="headerlink" title="0x06 挖矿"></a>0x06 挖矿</h1><p>这个新协议的另一部分内容为我们允许世界上所有人都参与建造区块，所有人都可以听到全世界交易的广播，其中有一部分人会把交易收集成区块，然后做许多的计算工作，找到特殊数字，使得区块的哈希值开头有60比特零。他们一旦找到这个数字，就广播出新发现的区块。</p>
 <p>为了奖励区块发现者的所作工作，当他整理出区块时，我们允许他在最上面加上一笔很特殊的交易，让他凭空得到10LD.</p>
@@ -292,9 +292,9 @@
 <p>保留最长，也就是包含的工作量最大的那一条，要是长度相同，那么就等待新的区块，使得其中一条更长</p>
 <p>因此区块链就是将我们从相信中心权威到相信计算工作量</p>
 <h1 id="0x07-安全性分析"><a href="#0x07-安全性分析" class="headerlink" title="0x07 安全性分析"></a>0x07 安全性分析</h1><h2 id="尝试欺骗"><a href="#尝试欺骗" class="headerlink" title="尝试欺骗"></a>尝试欺骗</h2><p>假设Alice伪造了一个区块，然后只将其发送给Bob而没有发送给其他人，准备欺骗Bob</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052323598.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061255971.png"></p>
 <p>为做到这一点，Alice必须做到比其他矿工更快找到有限的工作量证明，这虽然概率很小，但假设Alice做到了，但是其他矿工也在一直挖矿，所以之后会有新的区块加入进来，Bob需要在两条链中选择</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052323776.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061255211.png"></p>
 <p>所以Alice必须继续一直计算下去，并且保证自己的那条假链的长度比全世界其他矿工的那条链要长（因为Bob会信任最长的那条链），意味着Alice必须掌握全球百分之51的算力才能保证自己的那条假链能够起到欺诈作用。</p>
 <p>这也警示我们：接收一个新的区块时，并非一定要信任它</p>
 <p>‍</p>

