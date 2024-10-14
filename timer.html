@@ -3,37 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hehanzzz的国考计时器</title>
+    <title>Hehanzzz的计时器⏱️</title>
     <style>
         body {
             font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
             background-color: #ffffff;
-            margin: 0;
             transition: background-color 0.5s ease;
         }
 
         .container {
-            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 85%;
+            width: 60%;
             background-color: #f9f9f9;
-            padding: 30px;
+            padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            max-width: 700px;
-            width: 100%;
         }
 
         h1 {
             font-size: 60px;
             margin: 0;
             color: #333;
+            text-align: center;
         }
 
         .buttons {
             margin-top: 20px;
+            display: flex;
+            justify-content: center;
         }
 
         button {
@@ -53,21 +59,9 @@
             color: white;
         }
 
-        .logs, .questionLogs {
-            margin-top: 20px;
-            text-align: left;
-            max-height: 300px;
-            overflow-y: auto;
-            padding: 15px;
-            background-color: #f1f1f1;
-            border-radius: 5px;
-            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
-            font-size: 16px;
-            line-height: 1.6;
-        }
-
         .config {
             margin-top: 15px;
+            text-align: center;
         }
 
         label {
@@ -79,6 +73,27 @@
             padding: 8px;
             font-size: 16px;
             width: 80px;
+        }
+
+        .logs, .questionLogs {
+            margin-top: 20px;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            font-size: 16px;
+            line-height: 1.6;
+            height: 40%;
+        }
+
+        .logs {
+            height: 35%;
+        }
+
+        .questionLogs {
+            height: 35%;
         }
 
         .flash {
@@ -212,6 +227,17 @@
             // 使用 Z 键记录题目时间
             if (e.code === 'KeyZ') {
                 logQuestionTime();
+            }
+        };
+
+        // 空格键控制开始和暂停
+        document.body.onkeydown = function(e) {
+            if (e.code === 'Space') {
+                if (isRunning) {
+                    stopTimer();
+                } else {
+                    startTimer();
+                }
             }
         };
     </script>
