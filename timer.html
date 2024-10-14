@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hehanzzz的国考计时器</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #ffffff;
+            margin: 0;
+            transition: background-color 0.5s ease;
+        }
+
+        .container {
+            text-align: center;
+            background-color: #f9f9f9;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 700px;
+            width: 100%;
+        }
+
+        h1 {
+            font-size: 60px;
+            margin: 0;
+            color: #333;
+        }
+
+        .buttons {
+            margin-top: 20px;
+        }
+
+        button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 5px;
+            border: 2px solid #007bff;
+            border-radius: 5px;
+            background-color: white;
+            color: #007bff;
+            cursor: pointer;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .logs, .questionLogs {
+            margin-top: 20px;
+            text-align: left;
+            max-height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        .config {
+            margin-top: 15px;
+        }
+
+        label {
+            font-size: 16px;
+            margin-right: 10px;
+        }
+
+        input {
+            padding: 8px;
+            font-size: 16px;
+            width: 80px;
+        }
+
+        .flash {
+            background-color: #ffeb3b !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 id="timer">00:00:00</h1>
+        <div class="buttons">
+            <button id="startButton" onclick="startTimer()">开始</button>
+            <button id="stopButton" onclick="stopTimer()">暂停</button>
+            <button onclick="resetTimer()">重置</button>
+        </div>
+        <div class="config">
+            <label for="interval">记录间隔（秒）：</label>
+            <input type="number" id="interval" value="55" min="1">
+        </div>
+        <div class="logs" id="logs">
+            <h3>计时记录：</h3>
+        </div>
+        <div class="questionLogs" id="questionLogs">
+            <h3>题目计时记录：</h3>
+        </div>
+    </div>
+
+    <script>
+        let timer;
+        let logTimer;
+        let elapsedTime = 0;
+        let isRunning = false;
+        let logInterval = 55 * 1000;  // 默认55秒
+        let recordCount = 0;  // 记录次数
+        let questionCount = 0;   // 题目计数
+        let lastQuestionTime = 0;  // 上一题时间
+
+        function formatTime(ms) {
+            let totalSeconds = Math.floor(ms / 1000);
+            let hours = Math.floor(totalSeconds / 3600);
+            let minutes = Math.floor((totalSeconds % 3600) / 60);
+            let seconds = totalSeconds % 60;
+
+            return (
+                (hours < 10 ? "0" + hours : hours) + ":" +
+                (minutes < 10 ? "0" + minutes : minutes) + ":" +
+                (seconds < 10 ? "0" + seconds : seconds)
+            );
+        }
+
+        function updateTimer() {
+            document.getElementById("timer").innerHTML = formatTime(elapsedTime);
+        }
+
+        function getCurrentTime() {
+            const now = new Date();
+            return now.toLocaleTimeString();  // 获取当前系统时间
+        }
+
+        function logTime() {
+            recordCount++;  // 增加记录次数
+            let logs = document.getElementById("logs");
+            let logEntry = document.createElement("p");
+
+            logEntry.textContent = `记录 ${recordCount} —— 当前时间: ${getCurrentTime()} —— 计时器: ${formatTime(elapsedTime)}`;
+            logs.appendChild(logEntry);
+            logs.scrollTop = logs.scrollHeight;  // 自动滚动到最新记录
+
+            // 背景闪烁效果
+            document.body.classList.add('flash');
+            setTimeout(() => {
+                document.body.classList.remove('flash');
+            }, 200);  // 闪烁200毫秒
+        }
+
+        function logQuestionTime() {
+            questionCount++;
+            let questionLogs = document.getElementById("questionLogs");
+            let questionEntry = document.createElement("p");
+
+            // 计算每道题的时间（当前总时间 - 上一次记录的时间）
+            let timeForQuestion = elapsedTime - lastQuestionTime;
+            lastQuestionTime = elapsedTime;
+
+            questionEntry.textContent = `第${questionCount}题: ${formatTime(timeForQuestion)}`;
+            questionLogs.appendChild(questionEntry);
+            questionLogs.scrollTop = questionLogs.scrollHeight;  // 自动滚动到最新记录
+        }
+
+        function startTimer() {
+            if (!isRunning) {
+                isRunning = true;
+
+                // 获取用户设置的记录间隔
+                let intervalInput = document.getElementById("interval").value;
+                logInterval = intervalInput * 1000;
+
+                let startTime = Date.now() - elapsedTime;
+
+                timer = setInterval(function () {
+                    elapsedTime = Date.now() - startTime;
+                    updateTimer();
+                }, 1000);
+
+                // 开始每 logInterval 时间记录一次
+                logTimer = setInterval(logTime, logInterval);
+            }
+        }
+
+        function stopTimer() {
+            clearInterval(timer);
+            clearInterval(logTimer);
+            isRunning = false;
+        }
+
+        function resetTimer() {
+            clearInterval(timer);
+            clearInterval(logTimer);
+            isRunning = false;
+            elapsedTime = 0;
+            recordCount = 0;
+            questionCount = 0;
+            lastQuestionTime = 0;
+            updateTimer();
+            document.getElementById("logs").innerHTML = "<h3>计时记录：</h3>";  // 清空日志
+            document.getElementById("questionLogs").innerHTML = "<h3>题目计时记录：</h3>";  // 清空题目记录
+        }
+
+        // 添加 Z 键控制每题时间记录功能
+        document.body.onkeyup = function(e) {
+            // 使用 Z 键记录题目时间
+            if (e.code === 'KeyZ') {
+                logQuestionTime();
+            }
+        };
+    </script>
+</body>
+</html>
