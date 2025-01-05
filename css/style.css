@@ -171,6 +171,7 @@ a
 {
     word-break: break-all;
     margin-bottom: 12px;
+    color: rgb(152, 155, 157)
 }
 .read-more
 {
@@ -222,7 +223,7 @@ a
 {
     display: block;
     padding: 8px 16px;
-    border-radius: 18px;
+    border-radius: 6px;
     background: #fff;
     border: 1px solid #eee;
 }
@@ -255,7 +256,7 @@ a
 {
     padding: 24px 0;
     font-size: 0.875rem;
-    color: var(--font-color-3);
+    color: #6A1D9B;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -323,7 +324,7 @@ a
 }
 .archive li:nth-child(odd)
 {
-    background: #fafafa;
+    background: #506f9211;
 }
 .archive li:nth-child(even)
 {
