@@ -1,253 +1,89 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
+<html>
+    <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+  <meta name="robots" content="index, follow">
+  <!-- title -->
+  
+    
+  <title>从MVC框架进行.net再探究 - Hello Hehanzzz~</title>
+    
+  
+  
+  <!-- open graph -->
+  <meta name="description" content="Hello My World">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从MVC框架进行.net再探究">
+<meta property="og:url" content="https://hehanzzz.github.io/2024/03/03/%E4%BB%8EMVC%E6%A1%86%E6%9E%B6%E8%BF%9B%E8%A1%8C-net%E5%86%8D%E6%8E%A2%E7%A9%B6/index.html">
+<meta property="og:site_name" content="Hello Hehanzzz~">
+<meta property="og:description" content="Hello My World">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-03T04:58:34.000Z">
+<meta property="article:modified_time" content="2024-03-26T15:59:36.681Z">
+<meta property="article:author" content="Hehanzzz">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="ASP.NET">
+<meta name="twitter:card" content="summary">
+  <!-- canonical -->
+  
+  <link rel="canonical" href="https://hehanzzz.github.io/2024/03/03/从MVC框架进行-net再探究/">
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <!-- CSS -->
+  
+<link rel="stylesheet" href="/css/reset.css">
 
+  
+<link rel="stylesheet" href="/css/style.css">
 
+  
+<link rel="stylesheet" href="/css/markdown.css">
 
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-  <meta name="author" content="Hehanzzz">
-
-
-  <meta name="subtitle" content="“冬将尽，春可期”">
-
-
-  <meta name="description" content="Hehanzzz">
-
-
-
-<title>从MVC框架进行.net再探究 | Hehanzzz’s Blog</title>
-
-
-
-<link rel="icon" href="/favicon.ico">
-
-
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
-
-
-
-<script src="/lib/jquery.min.js"></script>
-
-
-<script src="/lib/iconify-icon.min.js"></script>
-
-
-<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-<script>
-  tailwind.config = {
-    darkMode: "class",
-  };
-</script>
-
-
-<script src="/lib/nprogress/nprogress.js"></script>
-
-<script>
-  $(document).ready(() => {
-    NProgress.configure({
-      showSpinner: false,
-    });
-    NProgress.start();
-    $("#nprogress .bar").css({
-      background: "#de7441",
-    });
-    $("#nprogress .peg").css({
-      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
-    });
-    $("#nprogress .spinner-icon").css({
-      "border-top-color": "#de7441",
-      "border-left-color": "#de7441",
-    });
-    setTimeout(function () {
-      NProgress.done();
-      $(".fade").removeClass("out");
-    }, 800);
-  });
-</script>
-
-<script>
-  (function () {
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
-    if (setting === "dark" || (prefersDark && setting !== "light"))
-      document.documentElement.classList.toggle("dark", true);
-    let isDark = document.documentElement.classList.contains("dark");
-  })();
-
-  $(document).ready(function () {
-    // init icon
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const isDark = document.documentElement.classList.contains("dark");
-    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
-
-    function toggleGiscusTheme() {
-      const isDark = document.documentElement.classList.contains("dark");
-      const giscusFrame = document.querySelector("iframe.giscus-frame");
-      if (giscusFrame) {
-        giscusFrame.contentWindow.postMessage(
-          {
-            giscus: {
-              setConfig: {
-                theme: isDark ? "dark" : "light",
-              },
-            },
-          },
-          "https://giscus.app"
-        );
-      }
-    }
-
-
-    // toggle dark mode
-    function toggleDark() {
-      let isDark = document.documentElement.classList.contains("dark");
-      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
-      isDark = !isDark;
-      document.documentElement.classList.toggle("dark", isDark);
-      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
-      if (prefersDark === isDark) {
-        localStorage.setItem("hexo-color-scheme", "auto");
-      } else {
-        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
-      }
-      toggleGiscusTheme();
-    }
-    $("#toggle-dark").click(toggleDark);
-
-    // listen dark mode change
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (e) => {
-        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
-        if (setting === "auto") {
-          document.documentElement.classList.toggle("dark", e.matches);
-          $("#theme-icon").attr(
-            "icon",
-            e.matches ? "ri:moon-line" : "ri:sun-line"
-          );
-          toggleGiscusTheme();
-        }
-      });
-  });
-</script>
-
-
-
+  
+<link rel="stylesheet" href="/css/fonts.css">
 
 <meta name="generator" content="Hexo 7.0.0"></head>
-<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
-  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
-  <div class="max-auto">
-    <nav class="flex items-center text-base">
-      <a href="/" class="group">
-        <h2 class="font-medium tracking-tighterp text-l p-2">
-          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/images/logo.svg" alt="Hehanzzz’s Blog" />
-          Hehanzzz’s Blog
-        </h2>
-      </a>
-      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
-        从MVC框架进行.net再探究
-      </div>
-      <div class="flex-1"></div>
-      <div class="flex items-center gap-3">
-        
-          <a class="hidden sm:flex" href="/archives">Posts</a>
-        
-        
-          
-            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hehanzzz">
-              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
-            </a>
-          
-            <a class="w-5 h-5 hidden sm:flex" title="Twitter" target="_blank" rel="noopener" href="https://x.com/hehanzzz">
-              <iconify-icon width="20" icon="ri:twitter-line"></iconify-icon>
-            </a>
-          
-        
-        <a class="w-5 h-5 hidden sm:flex" title="友情链接" href="2023/12/31/About-me-关于我/">
-          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
-        </a>
-        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
-          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
-        </a>
-      </div>
-      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
-        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
-          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
-        </span>
-        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
-          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
-        </span>
-      </div>
-    </nav>
-  </div>
-</header>
-<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
-  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
-    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
-      
-        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
-          <a href="/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
-        </li>
-      
-    </ul>
-  </div>
-  <div class="mask bg-black/20 absolute inset-0"></div>
+
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">Hello Hehanzzz~</a>
+    <!-- <div class="logo"><a href="/" title="Len"><img src="/img/logo.svg" alt="Len" aria-label="logo" height="20"></a></div> -->
+        <ul class="nav">
+            
+            <li><a href="/">Home</a></li>
+            
+            <li><a href="/about">About</a></li>
+            
+            <li><a href="/archives">Archives</a></li>
+            
+        </ul>
+
+
+    </a>
 </div>
 
-  <main class="pt-14">
-    <!-- css -->
-
-<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
-
-
-<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
-
-<!-- toc -->
-
-<section class="px-6 max-w-prose mx-auto md:px-0">
-  <!-- header -->
-  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
-    <div class="pt-4 md:pt-6">
-      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
-        从MVC框架进行.net再探究
-      </h1>
-      <div>
-        <section class="flex items-center gap-3 text-sm">
-          <span class="flex items-center gap-1">
-            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2024-03-26</time>
-          </span>
-          <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
-            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>1 min</span>
-          </span>
-          <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
-            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>6 words</span>
-          </span>
-          
-        </section>
-      </div>
-    </div>
-  </header>
-  <!-- content -->
-  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
-    <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉，这个密码看着不太对，请再试试。" data-whm="抱歉，这个文章不能被纠正，不过您还是能看看解密后的内容。">
+                
+                <div class="post-main">
+    
+        <div class="post-main-title">
+            从MVC框架进行.net再探究
+        </div>
+        <div class="post-meta">
+            2024-03-03 ｜ 
+            
+        </div>
+        <!-- 圆角分类 -->
+        <!-- <div class="tags"> -->
+            <!--  -->
+        <!-- </div> -->
+        <div class="post-md">
+            <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉，这个密码看着不太对，请再试试。" data-whm="抱歉，这个文章不能被纠正，不过您还是能看看解密后的内容。">
   <script id="hbeData" type="hbeData" data-hmacdigest="237645604b436b810bb496fa1f4acb20bacff88c13eea7ffcc33ae7c6e18f4ff">3d9768057154afe3e4a88cc4de8ad11df72e7771bf0ba3616640c192312fd7aade5f4d8a76f99886f0e8ec2c034fac6d345b0fd5dadd13fed1ceaeb6fa56d250c6f4a47c810c9af141fd68cb83257727fd6f2c33c3dce9845ac68ec4591ff833dff3f92508f0f33bed60591770b8614f65fb19af69c2a6286d58eee312910d07100ad764c8531155b0555bcc48ffe206df0eb1a4bae7d012131c126e4060a501fe31373018ef3ab64c491c41d65968c3ef8b4444d9bc3367002fa130c4e0deb749a82681545630fcc9b18a1c85b1ca3c18bc6280e3cf6bfbe9e1b248e820811ff18f8087305ac12f7907c9d6b728820d493dbace957e941a2e7eb68b7c4cb733089864e5a39f19e3d50acf1c4d1ff65136b52672bda27377fe363eaa826212e33f8df41d6d00a98961561fb32da089df721e92215977c83361947e5f5fae3dc83a249207e7780a1dcb70c4ded01f8dd97184345eca57d11f7168770ee08b2d1e4c6bedc93e9b6844a5e7e1bcf96dde1027fa0c350553793d9bd0e1c5564e4a0be6ab41cd375a23769aad55f99d7a1953</script>
   <div class="hbe hbe-content">
     <div class="hbe hbe-input hbe-input-default">
@@ -259,251 +95,39 @@
   </div>
 </div>
 <script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
-  </article>
-  <!-- tag -->
-  <div class="mt-12 pt-6 border-t border-gray-200">
+        </div>
     
-      
-        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a>
-        </span>
-      
-        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/tags/ASP-NET/">ASP.NET</a>
-        </span>
-      
-    
-  </div>
-  <!-- prev and next -->
-  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
-    <div>
-      
-        <a href="/2024/03/26/%E4%BB%8E%E6%9F%90%E9%93%B6%E8%A1%8C%E6%BA%90%E7%A0%81%E6%B3%84%E9%9C%B2%E8%87%B4RCE%E8%AE%B0%E5%BD%95/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
-          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
-          从某银行源码泄露致RCE记录
-        </a>
-      
+<!-- tags -->
+
+    <div class="post-meta">
+        标签：
+        
+            <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"> / 代码审计</a>
+        
+            <a href="/tags/ASP-NET/"> / ASP.NET</a>
+        
     </div>
-    <div>
-      
-        <a href="/2024/02/18/%E4%BB%8EnginxWebUI%E9%A1%B9%E7%9B%AE%E5%85%A5%E9%97%A8Java%E5%AE%A1%E8%AE%A1/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
-          从nginxWebUI项目入门Java审计
-          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
-        </a>
-      
-    </div>
-  </div>
-  <!-- comment -->
-  <div class="article-comments mt-12">
-    
-<script
-  src="https://giscus.app/client.js"
-  data-repo="Hehanzzz/hehanzzz.github.io"
-  data-repo-id="R_kgDOKls9Wg"
-  data-category="Announcements"
-  data-category-id="DIC_kwDOKls9Ws4Cb8Mv"
-  data-mapping="pathname"
-  data-strict="0"
-  data-reactions-enabled="1"
-  data-emit-metadata="0"
-  data-input-position="bottom"
-  data-theme="preferred_color_scheme"
-  data-lang="zh-CN"
-  crossorigin="anonymous"
-  async
-></script>
-<script>
-  window.onload = function () {
-    console.log("giscus loaded");
-    const isDark = document.documentElement.classList.contains("dark");
-    const giscusFrame = document.querySelector("iframe.giscus-frame");
-    giscusFrame.contentWindow.postMessage(
-      {
-        giscus: {
-          setConfig: {
-            theme: isDark ? "dark" : "light",
-          },
-        },
-      },
-      "https://giscus.app"
-    );
-  };
-</script>
 
-
-  </div>
-</section>
-<!-- js inspect -->
-
-<script src="/lib/clipboard.min.js"></script>
-
-
-<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    "HTML-CSS": {
-        preferredFont: "TeX",
-        availableFonts: ["STIX","TeX"],
-        linebreaks: { automatic:true },
-        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
-    },
-    tex2jax: {
-        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
-        processEscapes: true,
-        ignoreClass: "tex2jax_ignore|dno",
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-        equationNumbers: { autoNumber: "AMS" },
-        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
-        Macros: { href: "{}" }
-    },
-    messageStyle: "none"
-  });
-</script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-      var all = MathJax.Hub.getAllJax(), i;
-      for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-      }
-  });
-</script>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<script>
-  $(document).ready(() => {
-    const maraidConfig = {
-      theme: "default",
-      logLevel: 3,
-      flowchart: { curve: "linear" },
-      gantt: { axisFormat: "%m/%d/%Y" },
-      sequence: { actorMargin: 50 },
-    };
-    mermaid.initialize(maraidConfig);
-  });
-</script>
-
-
-
-<script src="/lib/fancybox/fancybox.umd.min.js"></script>
-
-<script>
-  $(document).ready(() => {
-    $('.post-content').each(function(i){
-      $(this).find('img').each(function(){
-        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
-        var alt = this.alt;
-        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
-        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
-      });
-      $(this).find('.fancybox').each(function(){
-        $(this).attr('rel', 'article' + i);
-      });
-    });
-
-    Fancybox.bind('[data-fancybox="gallery"]', {
-        // options
-    })
-  })
-</script>
-
-<!-- tocbot begin -->
-
-<script src="/lib/tocbot/tocbot.min.js"></script>
-
-<script>
-  $(document).ready(() => {
-      tocbot.init({
-        // Where to render the table of contents.
-        tocSelector: '.post-toc',
-        // Where to grab the headings to build the table of contents.
-        contentSelector: '.post-content',
-        // Which headings to grab inside of the contentSelector element.
-        headingSelector: 'h1, h2, h3',
-        // For headings inside relative or absolute positioned containers within content.
-        hasInnerContainers: true,
-    });
-  })
-</script>
-<!-- tocbot end -->
-
-
-  </main>
-  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
-  <!-- busuanzi -->
-  
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<!-- Busuanzi Analytics -->
-<div class="flex items-center gap-2">
-  <span>Visitors</span>
-  <span id="busuanzi_value_site_uv"></span>
-  <span>Page Views</span>
-  <span id="busuanzi_value_site_pv"></span>
 </div>
-<!-- End Busuanzi Analytics -->
+                <div class="footer">
+    <span>Copyright © <script>document.write(new Date().getFullYear())</script> Hello Hehanzzz~</span>
+    <span>Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> with <a target="_blank" rel="noopener" href="https:///imzl.com/zenmind">ZenMind</a></span>
+</div>
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
 
 
-  <!-- copyright -->
-  <div class="flex items-center gap-2">
-    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
-    <span>© 2023</span>
-    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
-    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Hehanzzz</a>
-  </div>
-  <!-- powered by -->
-  <div class="flex items-center gap-2">
-    <span>Powered by</span>
-    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
-    <span>&</span>
-    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Maple</a>
-  </div>
-
-</footer>
-
-  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
-    <span class="flex justify-center items-center text-sm">
-      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
-      <span id="scrollpercent"><span>0</span> %</span>
-    </span>
-  </div>
-  
-<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
 
 
-  <script>
-    $(document).ready(function () {
-      const mapleCount = "10";
-      const speed = "0.5";
-      const mapleEl = document.getElementById("maple");
-      const maples = Array.from({ length: mapleCount }).map(() => {
-        const maple = document.createElement("div");
-        const scale = Math.random() * 0.5 + 0.5;
-        const offset = Math.random() * 2 - 1;
-        const x = Math.random() * mapleEl.clientWidth;
-        const y = -Math.random() * mapleEl.clientHeight;
-        const duration = 10 / speed;
-        const delay = -duration;
-        maple.className = "maple";
-        maple.style.width = `${24 * scale}px`;
-        maple.style.height = `${24 * scale}px`;
-        maple.style.left = `${x}px`;
-        maple.style.top = `${y}px`;
-        maple.style.setProperty("--maple-fall-offset", offset);
-        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
-        maple.style.animation = `fall ${duration}s linear infinite`;
-        maple.style.animationDelay = `${delay}s`;
-        mapleEl.appendChild(maple)
-        return maple
-      })
-    });
-  </script>
-  
+<script src="/js/highlightjs-line-numbers.js"></script>
 
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
 
-  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
-</body>
-
+            </div>
+        </div>
+    </body>
 </html>

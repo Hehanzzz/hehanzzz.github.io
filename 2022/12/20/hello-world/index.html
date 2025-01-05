@@ -1,253 +1,87 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
+<html>
+    <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+  <meta name="robots" content="index, follow">
+  <!-- title -->
+  
+    
+  <title>Hello World - Hello Hehanzzz~</title>
+    
+  
+  
+  <!-- open graph -->
+  <meta name="description" content="Hello My World">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Hello World">
+<meta property="og:url" content="https://hehanzzz.github.io/2022/12/20/hello-world/index.html">
+<meta property="og:site_name" content="Hello Hehanzzz~">
+<meta property="og:description" content="Hello My World">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-12-20T14:28:37.000Z">
+<meta property="article:modified_time" content="2024-03-26T16:31:27.993Z">
+<meta property="article:author" content="Hehanzzz">
+<meta name="twitter:card" content="summary">
+  <!-- canonical -->
+  
+  <link rel="canonical" href="https://hehanzzz.github.io/2022/12/20/hello-world/">
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <!-- CSS -->
+  
+<link rel="stylesheet" href="/css/reset.css">
 
+  
+<link rel="stylesheet" href="/css/style.css">
 
+  
+<link rel="stylesheet" href="/css/markdown.css">
 
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-  <meta name="author" content="Hehanzzz">
-
-
-  <meta name="subtitle" content="“冬将尽，春可期”">
-
-
-  <meta name="description" content="Hehanzzz">
-
-
-
-<title>Hello World | Hehanzzz’s Blog</title>
-
-
-
-<link rel="icon" href="/favicon.ico">
-
-
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
-
-
-
-<script src="/lib/jquery.min.js"></script>
-
-
-<script src="/lib/iconify-icon.min.js"></script>
-
-
-<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-<script>
-  tailwind.config = {
-    darkMode: "class",
-  };
-</script>
-
-
-<script src="/lib/nprogress/nprogress.js"></script>
-
-<script>
-  $(document).ready(() => {
-    NProgress.configure({
-      showSpinner: false,
-    });
-    NProgress.start();
-    $("#nprogress .bar").css({
-      background: "#de7441",
-    });
-    $("#nprogress .peg").css({
-      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
-    });
-    $("#nprogress .spinner-icon").css({
-      "border-top-color": "#de7441",
-      "border-left-color": "#de7441",
-    });
-    setTimeout(function () {
-      NProgress.done();
-      $(".fade").removeClass("out");
-    }, 800);
-  });
-</script>
-
-<script>
-  (function () {
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
-    if (setting === "dark" || (prefersDark && setting !== "light"))
-      document.documentElement.classList.toggle("dark", true);
-    let isDark = document.documentElement.classList.contains("dark");
-  })();
-
-  $(document).ready(function () {
-    // init icon
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const isDark = document.documentElement.classList.contains("dark");
-    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
-
-    function toggleGiscusTheme() {
-      const isDark = document.documentElement.classList.contains("dark");
-      const giscusFrame = document.querySelector("iframe.giscus-frame");
-      if (giscusFrame) {
-        giscusFrame.contentWindow.postMessage(
-          {
-            giscus: {
-              setConfig: {
-                theme: isDark ? "dark" : "light",
-              },
-            },
-          },
-          "https://giscus.app"
-        );
-      }
-    }
-
-
-    // toggle dark mode
-    function toggleDark() {
-      let isDark = document.documentElement.classList.contains("dark");
-      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
-      isDark = !isDark;
-      document.documentElement.classList.toggle("dark", isDark);
-      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
-      if (prefersDark === isDark) {
-        localStorage.setItem("hexo-color-scheme", "auto");
-      } else {
-        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
-      }
-      toggleGiscusTheme();
-    }
-    $("#toggle-dark").click(toggleDark);
-
-    // listen dark mode change
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (e) => {
-        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
-        if (setting === "auto") {
-          document.documentElement.classList.toggle("dark", e.matches);
-          $("#theme-icon").attr(
-            "icon",
-            e.matches ? "ri:moon-line" : "ri:sun-line"
-          );
-          toggleGiscusTheme();
-        }
-      });
-  });
-</script>
-
-
-
+  
+<link rel="stylesheet" href="/css/fonts.css">
 
 <meta name="generator" content="Hexo 7.0.0"></head>
-<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
-  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
-  <div class="max-auto">
-    <nav class="flex items-center text-base">
-      <a href="/" class="group">
-        <h2 class="font-medium tracking-tighterp text-l p-2">
-          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/images/logo.svg" alt="Hehanzzz’s Blog" />
-          Hehanzzz’s Blog
-        </h2>
-      </a>
-      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
-        Hello World
-      </div>
-      <div class="flex-1"></div>
-      <div class="flex items-center gap-3">
-        
-          <a class="hidden sm:flex" href="/archives">Posts</a>
-        
-        
-          
-            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hehanzzz">
-              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
-            </a>
-          
-            <a class="w-5 h-5 hidden sm:flex" title="Twitter" target="_blank" rel="noopener" href="https://x.com/hehanzzz">
-              <iconify-icon width="20" icon="ri:twitter-line"></iconify-icon>
-            </a>
-          
-        
-        <a class="w-5 h-5 hidden sm:flex" title="友情链接" href="2023/12/31/About-me-关于我/">
-          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
-        </a>
-        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
-          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
-        </a>
-      </div>
-      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
-        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
-          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
-        </span>
-        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
-          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
-        </span>
-      </div>
-    </nav>
-  </div>
-</header>
-<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
-  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
-    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
-      
-        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
-          <a href="/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
-        </li>
-      
-    </ul>
-  </div>
-  <div class="mask bg-black/20 absolute inset-0"></div>
+
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">Hello Hehanzzz~</a>
+    <!-- <div class="logo"><a href="/" title="Len"><img src="/img/logo.svg" alt="Len" aria-label="logo" height="20"></a></div> -->
+        <ul class="nav">
+            
+            <li><a href="/">Home</a></li>
+            
+            <li><a href="/about">About</a></li>
+            
+            <li><a href="/archives">Archives</a></li>
+            
+        </ul>
+
+
+    </a>
 </div>
 
-  <main class="pt-14">
-    <!-- css -->
-
-<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
-
-
-<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
-
-<!-- toc -->
-
-<section class="px-6 max-w-prose mx-auto md:px-0">
-  <!-- header -->
-  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
-    <div class="pt-4 md:pt-6">
-      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
-        Hello World
-      </h1>
-      <div>
-        <section class="flex items-center gap-3 text-sm">
-          <span class="flex items-center gap-1">
-            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2024-03-27</time>
-          </span>
-          <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
-            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>1 min</span>
-          </span>
-          <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
-            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>6 words</span>
-          </span>
-          
-        </section>
-      </div>
-    </div>
-  </header>
-  <!-- content -->
-  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
-    <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉，这个密码看着不太对，请再试试。" data-whm="抱歉，这个文章不能被纠正，不过您还是能看看解密后的内容">
+                
+                <div class="post-main">
+    
+        <div class="post-main-title">
+            Hello World
+        </div>
+        <div class="post-meta">
+            2022-12-20 ｜ 
+            
+        </div>
+        <!-- 圆角分类 -->
+        <!-- <div class="tags"> -->
+            <!--  -->
+        <!-- </div> -->
+        <div class="post-md">
+            <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉，这个密码看着不太对，请再试试。" data-whm="抱歉，这个文章不能被纠正，不过您还是能看看解密后的内容">
   <script id="hbeData" type="hbeData" data-hmacdigest="5b6506bbb48fb1f49fb39a3bb3e451565651b38f8d0d50dd50beb54165e7a586">63f6679251f34a46fb0c0fd2cecd1d71c9609228108e670396288ee8c8dc73eddc47d7f89193a337eabb5f183fd2816a1389b490cbc89efd56bf22d5f321a942914e1bd19a3cb07d1f1a13a5c2067d524426e7835e07f3e143c1063dda40e11a4f8f71052de50bb4e064337bfad63a9a0fef9953a22e4a3e23792365b8b8d699eac87a838271a1fe4f3db4f8b46b82b63f4e6ba7278b7e94bec80208dfaf7b07b6eacda9d865f424aabb5808e6320d63bb5d1bae66cb0a031776752aba34ff7618714b7cdf1083034a265aeb7b675ce06ac363e3ba6311abb413ec4bf255f75c4e60477d983e196879006558e0789ec8919a4e1ee235580fd67bd56837e08a12f758c54fa87af6eb3e946604cff895b150984858de706c48b8c6e3b1732bbd616a48a0d06100b0304dc98a7eb582948fe878e1ff68ee22078eb54bd16334669a259808544238b3385de19b6b2a2f215f6cc198fa03d80c324fd3a981b8e3a4f8c08f4725d02d99c7f9723ee72d0ae92eefd1e723d3a8ba9565026679a002d22830a4d0a6f882c2e6e3bf1694e3f2d3e4055a3aafd139d801d4fecc9902637577e86476a09b2acf21e85fe292a7bd81063e786800273705161422075d599dbfd623af606ffcd51fe8de5b40f79681c4e0447aaf6e361cf56b311a30f82e1b131af5254631de1ebb4d62073ac3c561c189e0b5756d2ad76681060c780798a1aa2d6152e51036d9c196d65f6224b98b69ff821facc3015f3c0a840d12faf8765b026a7a2823d4a93b34a6f044636df58fd2cb29007ca18399d82c8905fa7cdccf700373749fc006337bd116ee2c1a0f87b8bf4981b3a9988d8f9f0f41952ca7170a58614f92aa225223f94fca50f394a86e5ba4c554a97821d09438cf244a486187b97a0eb5f1598e997e4bf91471a70587ca2634409f4fa27e0addf5c5ed6548b910e2fdb68da4bc4ed58dc1243fda667272757f7d9ee4f5a8972a4f40d1e0b0922b9c2f8a004369963e8de6387c04af8770d195372115f56e55de6b82c181c75685f24eef92650904f8562152fb4145c810066c2af4851dca5cbe10aa14eccdfc53eaae7f7b028c10fc3919bd6cb01f87cc9f9918b110bd42fadf9ac3a1edeff6cd762dda06c9b09b64536a5c7fd6450da6bd9c63eefb16904fd4c4f1b66e7c457279ffd10d3ffc0ba837ba43e00f3fe64d92660bf6220bf39aa37efdf13dafbda257151a196761c1a21f680bbba7186eab07ba9667d101cb48a354e649f9864665f6d165011ed9472bf25ebe9dbddf5d89b859ce7e35aa157d7b620e8d2e9093ec200cc509b86127115a0de9c638665dc97bf5c632b63b7d05ce4a0fc75215b73f6ed1f28ad23a1565858fccda6a93ecece7a5a0dd48e80800d7032a2235e91a36034e746aa9d62fb51221c7c7e0651e544a05a719f2b921d9b4198c135ff7b6725f8dd39cb4ea3cfc99f988a568429d5dd2889eb44565868e5210e329d31bf848d5cfafb9fae29df94ecfb02da368cfa7a80c0b51522bace11d740e452fa32dc01117d4a0be496c2e711fdb76c73abeeb2c70f13394b43e6863388f9f79cb5281f08dab8cbe0ca5cbe0d86544a084fbaa9fac53bf3d07880e511c1e9cbd335ff19dd3cbe61043443e2f4279ff2aa89a9f5cc5a01f073e1e8f1a28b037a11a50dc5f9c06a256eb4e658d5f7998e17b1e10a882f6ad9ccb91e828279fdca3b5e4ee5d9745c189ac6e4c172cc990adbea8b7a5fe25b7fba35a81854c712885fddeed286490276586edacbc1ede49032e2938d515b399e55d045eb89d5bd0537126c8789399b0981c8d6883fa71c0984643fe08ef715de6483fcf298a48da4ddb34e3eb891085f30189d3f0e510e8493463709b098c8ae5627ccbe27a3ba11f7b7726795fc5f71741f32a6c6f85c11bc1ab4039109df3d21f0ab642c3211d77a0e9d11ec0d9ef27603d6c7fecab8044856667c7a0e1d0c60a4deedb14713bb2185802dcd7df2e24ef17a19a6bd5d87209716e0acb5ad9b9e2ec98b87b637a6416d35aad4ee6e4ab1cc4b71c44a45989b17261bc45315a0f714e82520ff366e162619dd61409898612ab388117df2d3f51d089776cf87df162e25b53381a10b03f168fb0b32758dcf7f425395853b978ff4af7027f47b81b4ea47e009785d83cc7a030cb00ba8e6a7caa030cdf79e9c150b3beb58786342be25f710791d1e4f9dc164505f14345fb3c82aec585039fc3f2ef22f3ccbd88fdc6247a210326d7ba3f1cf56aa526bded0a57cc32eaf21c91671dcd4d8fabd89564fbf45640699b0d04344fa8b8d7b2b492c099afabcc80d21f12c74e2cda394a1f17b393aae2e932e3c992c53c200123f133c70ef14705d6f381b50cc2106aa3486bc631143db89fac8e97aa0b979fed230fb8c3f7a9d2eab40f28dbd97e61ad2a0bc7c6ee4181e4be5da7a2db62d75c0d3c564fa857d2f685c62294e0977817e68dd24f0f9e88f87c236b29c94982b04d8035108e3ebd43918f253d0508915ee8abee5db17d75a9ee0a98b7001dacd4cffe76538f2c44c1f5e08c44ac92f74564e13b2efdd102f4529a9e369a6cf3f81b600ca39c5f5f64b3bf462c22038af2f96ff659c77c8732b0afda79a3147c73f1518037cbc9f6ae636727c9dafcadf0256bb8322bb5400dac044619923e46f7567464da591d6af45fbffb9828d82ae5d7c3e8980114d4f0a73c2ea333be48eaec793f682b10338a03e358e8f1457a371369ffc09f723fdaae4d2017ab58b04de715b0da9bdab698ec1ad6b2c89d0bda86147c5ce591dd1ed945be014fc01bd5c468e97a5aa9c0995c45cc4f50ab56469b3ed7f3fd27ac876597c045cd3f5cb689afc4312e24afa9b15618dd89dcc54ddbcf221df17f7c13b3ac2f2819a01316f59398539c90b125029b4e634486eb7746d9a5adf2db7bb907f795786881cd283387cbb00860f868a17f5dc4133ab40a4effc5c67f52b01d94ac6611326e76f5af18cd3aff985fa9c89229a9646548f9ef4579bc19811b74f36708ce6243fca946175f61d03b268c352e0abb1073ebce197550c516ffdf16a1cff1d3709a5c493fad24e4ccec1ecccd9838344abfbcebafd62ebe5be70c25de50990eddfcb2784847b21543fcf9c1fb95b0cd65ccd16a6367f29c0788082345ea387b4cca2274881c2acd5e1df42bc371fdc6b879da27629ec252ea7d3cd49ec12b0dcf78951ba40ad29a138755246c3efb1b1c8c2e71bb9e54c7e1efb1f12965b61d926266d65d1677ea736936902d275c2390acbb3097b9da8d3aaa746fb9fb70a90d5c15911aab917c659eb8b69abd17243a675010d051985e930c97d35c149be0e6616d70ad37b4b7592bd4034a0c81cb135225ecd450bd38bacab67c6b3dc1cff18d81a7774bfc52ed6c32ee807fefcbfb57ded69beb532a6a36fa9e064d9e7645e2d772ec35dd34789498e0c270c51cae82fc6b32b8582150502564a4bb71fc70fe10960b2fddedb98db8fa4a4ad935ba101fadc9ca579d6746718502aec3813ce8d2329ee982a7fb5344cb33b3d0541912dbee050f9628cdc31559c542ad7866113319d7954cf0ccc291b5d54a71a4d6f9ca34590e734992898adccdc4de2bd01caa9a27cb7867cafd90f10b33d738e198d20f256fd870a5bd036e742969581b32aa24053f9a9132168fa780faa927749a6f7b71a0831a697f8c1aec7c63c71292089ff3ded9fe07382f48bdae3f52ccad05eda84e9423792aa0998a753bb66521dd4fdb54a2a206aaef1ade298bd0aff6aa7714eeb05bca5c4968fcfebd604c8d443cc04c16702b62e126d9eab26a1a863409eda3ac84ef46d9fcdf5900342d3c6a23684d30f25cf545d0daef25fa7d249547d616961f61c2b27e530ea6cf65c992dab17151393c526a4eebe5bf878e0d834d541772ffe06b3c10df25bdafb8fd7acc3c36dd9ba0a27993a71d9e41292178483607614eab7bbca8d16491d675fb68dc77fcda21f7bb5c44bd9b26a31c4c8b8706fb2e5b09c25bb0ba8437e523327d8a6b5660f43fbde62b18d06b0151f755805dbff67423732cce629a7e305e2fc28122653a7cf6c83fdc77f3e901a45e3e49cc540fa0bb8ff0669519c7a304b4cff584accd2019719dbebb86b5dd7fa1a2345993d96907796e0f36b4a6802c59e152e0fa2e93ba07c673630b472b9f2d4b0458ece0132f087393f70f236155ae2430b38946c0bed8ec182a6dd9e6bdcbfe786e5fa66b5d8daa0e3ade8698f3cace2a776a58bed1d19048a0e180569148ea66f91722eb068395dd07717b12924c6e67f5ebc0c8f091f71ad7e6bed99f55e7069cc0140053bf56824973483b1243bc26c37c42d37ffb1c84ed993b24ecc35c32fcdbac89aeec69697a42b86a130545d9caabb20b0edaffe69bfebb6dc997f5be018bda37436870f49cd8fed165194b58753bf78823b153ccfb8590cd81e64fd88bf6ba1a309b6ece6e82518b64b9172d89bced3f6d56cc5304ee82db8d3d9da51f11a6292ba5f431a437af021844cbace9a43e61424dae9b98febf5624b24dad90baee35f3c12d32576842acfdef6c4e34069794f9e3157d0ac33c55305f84098af723dc1f9c3c0500a879352cb33d916b7b58207b99f7b11e015ed115e3c85c6faa62bb778c62054ca87f691a93afcf0bffcdf4dc62061527f9bba8947714de7b12b8c42393114484c3744ea3b74de4cd9b85506ca8922db41690ea324240c56151943aafda18e6cc09004c6f0a0d2d454d448c126b12f4e9b69c352aab5a9a54d6b500c4f771572e5d28eadcd65907935c87a85f051d064027abaccec2739d8047910a3d7579781e21e41262c4b4e9fc85582d80feb726bffe0b81ed39ce961a5b37cb27b9147a44956acb8f593ebe609aa00977ec883912e79048d5f2824a66ce855727047bd7c27100e716a4b2136cc766a1c0112dc91af7c2ada91648fd3028fd9c87e6f0111c698a5516329189fa306df9cab23a8464d68f179dc374d28895a9ee7c75a73c419e1760c605c71641d7b4201a1b898f47afcf2b14838f5820b059e33c9e94ea5fb9f581859af10a25f427a0d3a4ce5e136cb9c11d085df08e6805e1dd0c80d1427bdf09cf273b8a37b49c61e2c9aa35c375349f5104ff879fe2fd9ae99381b3b4ee5887a4864e0913a09ffbb1d1401d4a9c23ef928ede9f03de0c68c62d37b34ac6f8923aac1b0da6873e58b7e7dee2b2a2f85065b568245b63b3e68fd3c4a1ff3f820b6141039b91f58aa73fca99d47e1d48f0b7d27994516b73f393a5527c7f489ec923770b160c5d5a7d8141ba582f3aa15a770fa46a0dd24b3a3ac6142ef20b3951e76868714e7e3d0a824070d7990b8707ad2f1a98c2944431a691da8bad3af08cd044e0738fa3d5ecf27096bbdf16d658529d3704f473db7f8b0fd5ec042e02f0e793dfa22fae21b620c8e09c4910cca705102180e5576ebdc652ab535f5233617e70341fe3b202c81de36709c3221cbe66a9ba73b83c79eb0085f88b19e4b29617dcb60e5a23021dff1f001eed7369d15342488b749d0a0eef8691dd43aaff7a594a5a1a7cc4278aced2d62d934160efcc7372a8c90512968106807e55125ce88387cb12c5cf320dc544589d4076349aa225fc474c9008be002a58cee6410d97efe40538137b12f59c3678da8f3562867dec77bf244dfebea58ca5f3d0121f02c9caf3cfdecdba16b22bf86ced69897458294c0e27d275cfa5cdf9979d027dee48a07fc42edc72b201b5dc86fe4f444ddd83eb88a47a38b457b6eda43c6f74a0cff2678eb611e349eab04b3de72f1d57db902a5a4b6f260576ef8184d0ed38dbc452ffd415be7d81eb19613ec894abb4378e39315735fd862a863b25f9457ef4dcf9301d014941858fba8dfdcd51a02b4080004053fb8de25b67fbe31b94a4397c0161e655d6ee9fd99b2332361e98a661db30320c318b58cd8f1fa6e607734c6f88504355723fd60b1de8fa8804cd55a1099914213c59feec76d57368de530c90612ee770b67c89d8482b5cdf529a6da253737d9e18f000060b5608cd91c59396f99c961efabab4aec422ee0017d4ae292a2fa9ff7a38d31e13a22030a796953ec5d7c920b53aef037c730e105b3456f65a6eefb5f909ac01759faf05fb251dad856c7ef9d0a167d9097f2556fa905cf6c66497ec044647b2786daade1376a570374fecc790f932db4d65c105d2216a5fda41b8f4a4662765dd5fcc2ee21032f3b6073d6ee6054b466e0d46922041707444f5eba1aa283b906e9c70a04310c1ea4a70aa0de239cc6f38a978f8abde8e490b14cbed93c4ed472c9e7d76349efc504b90e847e347f3483b351860067c9373837931b5f037bdebc43a0dfbddf410984346bca8d438f14b3782f0286a1f08c0c910fe2090d4690164ad3198f8c167f95c7b2a53e80eb42bd4a54af8aae71edbdcb6769ebe0b6da84f5b27c8708467389df2f5e26adb787a68208a6d86</script>
   <div class="hbe hbe-content">
     <div class="hbe hbe-input hbe-input-default">
@@ -259,236 +93,30 @@
   </div>
 </div>
 <script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
-  </article>
-  <!-- tag -->
-  <div class="mt-12 pt-6 border-t border-gray-200">
+        </div>
     
-  </div>
-  <!-- prev and next -->
-  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
-    <div>
-      
-        <a href="/2023/10/22/JumpServer-V2-24-3-6-4-CVE-2023-42820/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
-          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
-          JumpServer V2.24-3.6.4(CVE-2023-42820)
-        </a>
-      
-    </div>
-    <div>
-      
-    </div>
-  </div>
-  <!-- comment -->
-  <div class="article-comments mt-12">
-    
-<script
-  src="https://giscus.app/client.js"
-  data-repo="Hehanzzz/hehanzzz.github.io"
-  data-repo-id="R_kgDOKls9Wg"
-  data-category="Announcements"
-  data-category-id="DIC_kwDOKls9Ws4Cb8Mv"
-  data-mapping="pathname"
-  data-strict="0"
-  data-reactions-enabled="1"
-  data-emit-metadata="0"
-  data-input-position="bottom"
-  data-theme="preferred_color_scheme"
-  data-lang="zh-CN"
-  crossorigin="anonymous"
-  async
-></script>
-<script>
-  window.onload = function () {
-    console.log("giscus loaded");
-    const isDark = document.documentElement.classList.contains("dark");
-    const giscusFrame = document.querySelector("iframe.giscus-frame");
-    giscusFrame.contentWindow.postMessage(
-      {
-        giscus: {
-          setConfig: {
-            theme: isDark ? "dark" : "light",
-          },
-        },
-      },
-      "https://giscus.app"
-    );
-  };
-</script>
+<!-- tags -->
 
-
-  </div>
-</section>
-<!-- js inspect -->
-
-<script src="/lib/clipboard.min.js"></script>
-
-
-<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    "HTML-CSS": {
-        preferredFont: "TeX",
-        availableFonts: ["STIX","TeX"],
-        linebreaks: { automatic:true },
-        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
-    },
-    tex2jax: {
-        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
-        processEscapes: true,
-        ignoreClass: "tex2jax_ignore|dno",
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-        equationNumbers: { autoNumber: "AMS" },
-        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
-        Macros: { href: "{}" }
-    },
-    messageStyle: "none"
-  });
-</script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-      var all = MathJax.Hub.getAllJax(), i;
-      for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-      }
-  });
-</script>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<script>
-  $(document).ready(() => {
-    const maraidConfig = {
-      theme: "default",
-      logLevel: 3,
-      flowchart: { curve: "linear" },
-      gantt: { axisFormat: "%m/%d/%Y" },
-      sequence: { actorMargin: 50 },
-    };
-    mermaid.initialize(maraidConfig);
-  });
-</script>
-
-
-
-<script src="/lib/fancybox/fancybox.umd.min.js"></script>
-
-<script>
-  $(document).ready(() => {
-    $('.post-content').each(function(i){
-      $(this).find('img').each(function(){
-        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
-        var alt = this.alt;
-        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
-        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
-      });
-      $(this).find('.fancybox').each(function(){
-        $(this).attr('rel', 'article' + i);
-      });
-    });
-
-    Fancybox.bind('[data-fancybox="gallery"]', {
-        // options
-    })
-  })
-</script>
-
-<!-- tocbot begin -->
-
-<script src="/lib/tocbot/tocbot.min.js"></script>
-
-<script>
-  $(document).ready(() => {
-      tocbot.init({
-        // Where to render the table of contents.
-        tocSelector: '.post-toc',
-        // Where to grab the headings to build the table of contents.
-        contentSelector: '.post-content',
-        // Which headings to grab inside of the contentSelector element.
-        headingSelector: 'h1, h2, h3',
-        // For headings inside relative or absolute positioned containers within content.
-        hasInnerContainers: true,
-    });
-  })
-</script>
-<!-- tocbot end -->
-
-
-  </main>
-  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
-  <!-- busuanzi -->
-  
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<!-- Busuanzi Analytics -->
-<div class="flex items-center gap-2">
-  <span>Visitors</span>
-  <span id="busuanzi_value_site_uv"></span>
-  <span>Page Views</span>
-  <span id="busuanzi_value_site_pv"></span>
 </div>
-<!-- End Busuanzi Analytics -->
+                <div class="footer">
+    <span>Copyright © <script>document.write(new Date().getFullYear())</script> Hello Hehanzzz~</span>
+    <span>Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> with <a target="_blank" rel="noopener" href="https:///imzl.com/zenmind">ZenMind</a></span>
+</div>
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
 
 
-  <!-- copyright -->
-  <div class="flex items-center gap-2">
-    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
-    <span>© 2023</span>
-    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
-    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Hehanzzz</a>
-  </div>
-  <!-- powered by -->
-  <div class="flex items-center gap-2">
-    <span>Powered by</span>
-    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
-    <span>&</span>
-    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Maple</a>
-  </div>
-
-</footer>
-
-  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
-    <span class="flex justify-center items-center text-sm">
-      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
-      <span id="scrollpercent"><span>0</span> %</span>
-    </span>
-  </div>
-  
-<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
 
 
-  <script>
-    $(document).ready(function () {
-      const mapleCount = "10";
-      const speed = "0.5";
-      const mapleEl = document.getElementById("maple");
-      const maples = Array.from({ length: mapleCount }).map(() => {
-        const maple = document.createElement("div");
-        const scale = Math.random() * 0.5 + 0.5;
-        const offset = Math.random() * 2 - 1;
-        const x = Math.random() * mapleEl.clientWidth;
-        const y = -Math.random() * mapleEl.clientHeight;
-        const duration = 10 / speed;
-        const delay = -duration;
-        maple.className = "maple";
-        maple.style.width = `${24 * scale}px`;
-        maple.style.height = `${24 * scale}px`;
-        maple.style.left = `${x}px`;
-        maple.style.top = `${y}px`;
-        maple.style.setProperty("--maple-fall-offset", offset);
-        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
-        maple.style.animation = `fall ${duration}s linear infinite`;
-        maple.style.animationDelay = `${delay}s`;
-        mapleEl.appendChild(maple)
-        return maple
-      })
-    });
-  </script>
-  
+<script src="/js/highlightjs-line-numbers.js"></script>
 
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
 
-  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
-</body>
-
+            </div>
+        </div>
+    </body>
 </html>

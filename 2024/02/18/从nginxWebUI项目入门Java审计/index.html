@@ -1,253 +1,89 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
+<html>
+    <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+  <meta name="robots" content="index, follow">
+  <!-- title -->
+  
+    
+  <title>从nginxWebUI项目入门Java审计 - Hello Hehanzzz~</title>
+    
+  
+  
+  <!-- open graph -->
+  <meta name="description" content="Hello My World">
+<meta property="og:type" content="article">
+<meta property="og:title" content="从nginxWebUI项目入门Java审计">
+<meta property="og:url" content="https://hehanzzz.github.io/2024/02/18/%E4%BB%8EnginxWebUI%E9%A1%B9%E7%9B%AE%E5%85%A5%E9%97%A8Java%E5%AE%A1%E8%AE%A1/index.html">
+<meta property="og:site_name" content="Hello Hehanzzz~">
+<meta property="og:description" content="Hello My World">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-02-18T06:40:29.000Z">
+<meta property="article:modified_time" content="2024-05-06T04:51:25.430Z">
+<meta property="article:author" content="Hehanzzz">
+<meta property="article:tag" content="代码审计">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary">
+  <!-- canonical -->
+  
+  <link rel="canonical" href="https://hehanzzz.github.io/2024/02/18/从nginxWebUI项目入门Java审计/">
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/img/favicon.ico">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <!-- CSS -->
+  
+<link rel="stylesheet" href="/css/reset.css">
 
+  
+<link rel="stylesheet" href="/css/style.css">
 
+  
+<link rel="stylesheet" href="/css/markdown.css">
 
-
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-
-  <meta name="author" content="Hehanzzz">
-
-
-  <meta name="subtitle" content="“冬将尽，春可期”">
-
-
-  <meta name="description" content="Hehanzzz">
-
-
-
-<title>从nginxWebUI项目入门Java审计 | Hehanzzz’s Blog</title>
-
-
-
-<link rel="icon" href="/favicon.ico">
-
-
-
-<link rel="stylesheet" href="/css/main.css">
-
-
-<link rel="stylesheet" href="/lib/nprogress/nprogress.css">
-
-
-
-<script src="/lib/jquery.min.js"></script>
-
-
-<script src="/lib/iconify-icon.min.js"></script>
-
-
-<script src="https://cdn.tailwindcss.com?plugins=typography"></script>
-<script>
-  tailwind.config = {
-    darkMode: "class",
-  };
-</script>
-
-
-<script src="/lib/nprogress/nprogress.js"></script>
-
-<script>
-  $(document).ready(() => {
-    NProgress.configure({
-      showSpinner: false,
-    });
-    NProgress.start();
-    $("#nprogress .bar").css({
-      background: "#de7441",
-    });
-    $("#nprogress .peg").css({
-      "box-shadow": "0 0 2px #de7441, 0 0 4px #de7441",
-    });
-    $("#nprogress .spinner-icon").css({
-      "border-top-color": "#de7441",
-      "border-left-color": "#de7441",
-    });
-    setTimeout(function () {
-      NProgress.done();
-      $(".fade").removeClass("out");
-    }, 800);
-  });
-</script>
-
-<script>
-  (function () {
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const setting = localStorage.getItem("hexo-color-scheme") || "auto";
-    if (setting === "dark" || (prefersDark && setting !== "light"))
-      document.documentElement.classList.toggle("dark", true);
-    let isDark = document.documentElement.classList.contains("dark");
-  })();
-
-  $(document).ready(function () {
-    // init icon
-    const prefersDark =
-      window.matchMedia &&
-      window.matchMedia("(prefers-color-scheme: dark)").matches;
-    const isDark = document.documentElement.classList.contains("dark");
-    $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
-
-    function toggleGiscusTheme() {
-      const isDark = document.documentElement.classList.contains("dark");
-      const giscusFrame = document.querySelector("iframe.giscus-frame");
-      if (giscusFrame) {
-        giscusFrame.contentWindow.postMessage(
-          {
-            giscus: {
-              setConfig: {
-                theme: isDark ? "dark" : "light",
-              },
-            },
-          },
-          "https://giscus.app"
-        );
-      }
-    }
-
-
-    // toggle dark mode
-    function toggleDark() {
-      let isDark = document.documentElement.classList.contains("dark");
-      const setting = localStorage.getItem("hexo-color-scheme") || "auto";
-      isDark = !isDark;
-      document.documentElement.classList.toggle("dark", isDark);
-      $("#theme-icon").attr("icon", isDark ? "ri:moon-line" : "ri:sun-line");
-      if (prefersDark === isDark) {
-        localStorage.setItem("hexo-color-scheme", "auto");
-      } else {
-        localStorage.setItem("hexo-color-scheme", isDark ? "dark" : "light");
-      }
-      toggleGiscusTheme();
-    }
-    $("#toggle-dark").click(toggleDark);
-
-    // listen dark mode change
-    window
-      .matchMedia("(prefers-color-scheme: dark)")
-      .addEventListener("change", (e) => {
-        const setting = localStorage.getItem("hexo-color-scheme") || "auto";
-        if (setting === "auto") {
-          document.documentElement.classList.toggle("dark", e.matches);
-          $("#theme-icon").attr(
-            "icon",
-            e.matches ? "ri:moon-line" : "ri:sun-line"
-          );
-          toggleGiscusTheme();
-        }
-      });
-  });
-</script>
-
-
-
+  
+<link rel="stylesheet" href="/css/fonts.css">
 
 <meta name="generator" content="Hexo 7.0.0"></head>
-<body class="font-sans bg-white dark:bg-zinc-900 text-gray-700 dark:text-gray-200 relative">
-  <header class="fixed w-full px-5 py-1 z-10 backdrop-blur-xl backdrop-saturate-150 border-b border-black/5">
-  <div class="max-auto">
-    <nav class="flex items-center text-base">
-      <a href="/" class="group">
-        <h2 class="font-medium tracking-tighterp text-l p-2">
-          <img class="w-5 mr-2 inline-block transition-transform group-hover:rotate-[30deg]" id="logo" src="/images/logo.svg" alt="Hehanzzz’s Blog" />
-          Hehanzzz’s Blog
-        </h2>
-      </a>
-      <div id="header-title" class="opacity-0 md:ml-2 md:mt-[0.1rem] text-xs font-medium whitespace-nowrap overflow-hidden overflow-ellipsis">
-        从nginxWebUI项目入门Java审计
-      </div>
-      <div class="flex-1"></div>
-      <div class="flex items-center gap-3">
-        
-          <a class="hidden sm:flex" href="/archives">Posts</a>
-        
-        
-          
-            <a class="w-5 h-5 hidden sm:flex" title="Github" target="_blank" rel="noopener" href="https://github.com/hehanzzz">
-              <iconify-icon width="20" icon="ri:github-line"></iconify-icon>
-            </a>
-          
-            <a class="w-5 h-5 hidden sm:flex" title="Twitter" target="_blank" rel="noopener" href="https://x.com/hehanzzz">
-              <iconify-icon width="20" icon="ri:twitter-line"></iconify-icon>
-            </a>
-          
-        
-        <a class="w-5 h-5 hidden sm:flex" title="友情链接" href="2023/12/31/About-me-关于我/">
-          <iconify-icon width="20" icon="ri:rss-line"></iconify-icon>
-        </a>
-        <a class="w-5 h-5" title="toggle theme" id="toggle-dark">
-          <iconify-icon width="20" icon="" id="theme-icon"></iconify-icon>
-        </a>
-      </div>
-      <div class="flex items-center justify-center gap-3 ml-3 sm:hidden">
-        <span class="w-5 h-5" aria-hidden="true" role="img" id="open-menu">
-          <iconify-icon width="20" icon="carbon:menu" ></iconify-icon>
-        </span>
-        <span class="w-5 h-5 hidden" aria-hidden="true" role="img" id="close-menu">
-          <iconify-icon  width="20" icon="carbon:close" ></iconify-icon>
-        </span>
-      </div>
-    </nav>
-  </div>
-</header>
-<div id="menu-panel" class="h-0 overflow-hidden sm:hidden fixed left-0 right-0 top-12 bottom-0 z-10">
-  <div id="menu-content" class="relative z-20 bg-white/80 px-6 sm:px-8 py-2 backdrop-blur-xl -translate-y-full transition-transform duration-300">
-    <ul class="nav flex flex-col sm:flex-row text-sm font-medium">
-      
-        <li class="nav-portfolio sm:mx-2 border-b sm:border-0 border-black/5 last:border-0 hover:text-main">
-          <a href="/archives" class="flex h-12 sm:h-auto items-center">Posts</a>
-        </li>
-      
-    </ul>
-  </div>
-  <div class="mask bg-black/20 absolute inset-0"></div>
+
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">Hello Hehanzzz~</a>
+    <!-- <div class="logo"><a href="/" title="Len"><img src="/img/logo.svg" alt="Len" aria-label="logo" height="20"></a></div> -->
+        <ul class="nav">
+            
+            <li><a href="/">Home</a></li>
+            
+            <li><a href="/about">About</a></li>
+            
+            <li><a href="/archives">Archives</a></li>
+            
+        </ul>
+
+
+    </a>
 </div>
 
-  <main class="pt-14">
-    <!-- css -->
-
-<link rel="stylesheet" href="/lib/fancybox/fancybox.min.css">
-
-
-<link rel="stylesheet" href="/lib/tocbot/tocbot.min.css">
-
-<!-- toc -->
-
-<section class="px-6 max-w-prose mx-auto md:px-0">
-  <!-- header -->
-  <header class="overflow-hidden pt-6 pb-6 md:pt-12">
-    <div class="pt-4 md:pt-6">
-      <h1 id="article-title" class="text-[2rem] font-bold leading-snug mb-4 md:mb-6 md:text-[2.6rem]">
-        从nginxWebUI项目入门Java审计
-      </h1>
-      <div>
-        <section class="flex items-center gap-3 text-sm">
-          <span class="flex items-center gap-1">
-            <iconify-icon width="18" icon="carbon-calendar" ></iconify-icon>
-            <time>2024-05-06</time>
-          </span>
-          <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
-            <iconify-icon width="18" icon="ic:round-access-alarm" ></iconify-icon>
-            <span>1 min</span>
-          </span>
-          <span class="text-gray-400">·</span>
-          <span class="flex items-center gap-1">
-            <iconify-icon width="18" icon="icon-park-outline:font-search" ></iconify-icon>
-            <span>6 words</span>
-          </span>
-          
-        </section>
-      </div>
-    </div>
-  </header>
-  <!-- content -->
-  <article class="post-content prose m-auto slide-enter-content dark:prose-invert">
-    <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉，这个密码看着不太对，请再试试。" data-whm="抱歉，这个文章不能被纠正，不过您还是能看看解密后的内容。">
+                
+                <div class="post-main">
+    
+        <div class="post-main-title">
+            从nginxWebUI项目入门Java审计
+        </div>
+        <div class="post-meta">
+            2024-02-18 ｜ 
+            
+        </div>
+        <!-- 圆角分类 -->
+        <!-- <div class="tags"> -->
+            <!--  -->
+        <!-- </div> -->
+        <div class="post-md">
+            <div class="hbe hbe-container" id="hexo-blog-encrypt" data-wpm="抱歉，这个密码看着不太对，请再试试。" data-whm="抱歉，这个文章不能被纠正，不过您还是能看看解密后的内容。">
   <script id="hbeData" type="hbeData" data-hmacdigest="0fd543764445fe76eb5b4802f53ca0bca75ddcdd0059b8d111285dfdd9b20687">f1d57a03f3005b512d360ebc8b01964cb1797c641316f5b8565baaa8c019e7d82b8628e25f2b0dfc12992923eff85ef7c002f319affee3bb73e3d5352e2cece82252ab7d4af0b2d27fc16937aa6d22980a55f7751e61c6a2943506ef63969354726e7dc3c5c4f882479db91469ebf25f2bacd58650e7690b089b11e0a6552865fc0bb99e07586560c187f0f7ecccf447906bbd19734675ce6c937853fc1bf88ccca72796b161d618e59403283f08b2c403ee066f06914f8f48d09c1b2cdead70947999c390de3b4441b715519a34800a63fc4824734ee004d406c0432f3ec6880a6d699c03450449205e1b4443e2ae8b841c201ed59054ecfeb8073ce2287e0f5b0a1cb1fc3fe7204cdc9e699aeff3daa0291dd85974e87414a7437bca4386ef0dbee9978f7a990f30855fe9253438d3f27fbb12e5dd8855afd4b7b875d3ec2b0f7dec28c3fa5e95965f7b535b106d08fb5f95505a99e1f502cfa1372db66e79801425799d3d8c0695bcc98b7996725d0637b6052e5d3d41d3569e09d87ca478aa202397a9560cc10dcefdc3402248b321b69fe0f4d0cbb0631fcb0f884539b4b7c308e0dbba781073de7580b8e52b20bd6f636cbd4df671c6b348c7cd930d2916eaa98d70349dfd11ca2f8bef4cfd9116c061ccd602960705300a7d09f89b73c8a46bd06f48ed9be1f083dc90c388f1573370314bd183e541f151b7854969f4916f854246a7821ad2257bcff040b0e5fe924f74a61793441be45f0e9adaaa9252be446ac13f59f9fa2e0c8a1e0176d33b8695e02af005264e0565f591ca23383bd1de463d35e64c0b199d949c1944f7eb5de73261d724c77882e6db62dad9769b4db9964a70a4f4da64d4a420db5bd8a1b5a2a58e419cabff57db89b5f442009ddbe8da78997875fe735a3af4a9a122297a73bd2e8d12b4fbebff21041240e492fc927c84c0ac3fe4b11cb3a737a9b2f27c8d842aedd4a5c25d3d25f009f5e5d60bce34f2b29a6ad4daaf5d317e49c80e0c850446b880ff1adbc9ec9b023ea2b72fc62a8d36a3c400d716cb3c564cc1ff7e4f6f04f3bc74dd93a4715ba69145dec63061806d35c3e699dcee56080e43541ec76eb2fc214d4ac3f13e06415241297a00dd7a15c0516661d11653dd2279fef3070c8687c7eb6c0d240c94ff15928a208f6773ea6d2d19ea5920e659ef641be3b28f698bbed224a1d3f24f229dec191db5ef8bec9db4e1cda7cc98b833ecaa556e5c7464d917d83e3f41bd0343133395417710df005c25011070dffce67416f3532473ec3bedf26d65625509dbed4a865ada97f3d49db1c99a28e6fb75a6b65c28cfac24beb7e4f9f2b0ac62931f4c6683d2cc77bbd6eb1498de165eaf1f4a834d842b55364d6194794424a98d97e1e41916d0a84381805473e5898120d34ba3695e5dd8b58c0820663717f0a898180ecab1f6fa21fd7c6bde6b354919398d77359988ca2fc519af0e8bf99ae285faebf81819003944d67377d34a88aafa5d7a2070818e672dce0c4afa0e7a86f0d9630d5818202cbb5f391351e1417972cc4a12010dbd1759d3bbba28cf706db83d6ad44e2a014013536e95065f8dec90a0d718f1bef354b480abcf59e576dd24444a3fcac79fb9113a518e17a81c5b5f277abc7d971d4e8d64f785ed52b99cd887241fc7b38afcd57dcafc38d6b02c0e099bf70b55ab52642ee051463e0b72c39c67bb5d4c8f95da13e848b3c7964f5fde69c00a47c06de5fdc9511f81933b0996ba14fd36989c2e6699da61093ff38572069d31edb7ce1f7f8b26383d508d26509c6aad4b67386a92c1bf47a63375b98270273d687cc048e0aca63bbb5ded44949955ae03b2be2339d396de75936c55b6d6fbbb48d82b514c16e571944df2c8c0c4c71ad02a059e8b99ed86115582bc8e41bd6a86026403f403345917323665a27f6599eb1fdef681b56c9ce747da35aac5d715e9325b0c6e0d5a7be4d2d5b7fb9dcd877dfa840ba0af2cf968f7ce33f1071307cd56a0aff3cb661a70c12a2c62ece5d62d4769ba96711d1975922d8cf049efb956d9d65a1ae6c40ead60b84b02c319671863e5dab2faba9e82e7648e101e6d2fc86e12c4b2a6397d2f23ccfb7540b5c468d205e0f523e444a6963920df18249ac0426126446d915264bd287eedbaebb5a70e9397c6040196c82df60415cefb89bb8a24bc9f53e4eaef73504f3d827f817fa955fc3240db3a5f55f1675fb91121c22ec980e1a9bbae1e612df7fe096dd98c82d0c0fc95d5398dc2827b99d6aaaff229c3d8b8a36a776d5c5c0fc39a36905346d2dff334c13fc0206ac2639e1a0cf7aaf893a5afc7556b3bf64d0271b85ffd44d3f1fc3e295624b54a06e07b7e0e9e59bc4a8a16e0c0767eb23077512da25bd9dcaaea171be3a9d7735ae8ac3e70f4086e6947a9a07f030ee03644bf46a5a0733da0d062b6e2b663b3c95cc9ab2aa724eafc5f4b79a9eb3792d453eabbc4ef625144c8af7d5b4c9614b9b5b4df3abdbc22141b5b641edab0834c78a9a6eaf20121f604384a174b0fdfb1d7c4575addcd247a60e1dba5c0b90e772ac3b087cb8ae91b10ac21fad7ac77abb05eba73e2b61ad2c3af43ed04e791552511bc6126ceea9d16bdeba795888a38b29427b21a5a201d2415e546c7f5cb5fd6b7d290cb37c166e9a022576d051cef741f0fa810ddaee9162b7ff05640de0838cce1a0ec38123723c18cf776f2ce4ed054fccfd63ad710bc57c5e2bf14015627db9f124c95595708a91cb6d8a92e0c1a414f08955eff26163384e18841744c5b66b618db10dc4b4d5251640eee64c0522aaedad75880e35da563648e2b328cef1dc3df6fd9e35be5260ad06321aebb5502dde9b02bb8e31c91027b8315271ee48c5bc4a9e07a1a38b29de2d8f7aa519296976077f8c289a7fec594a57659f6af5f61ee35f1e649d9b6f7b3eb57cd57cc1b77eb15cb63dfed1bb3eefc4c60e2658fe07c893e177d069484466883ff7ba8e7698694ea9d30399dd4469ac8206e5a7f9108eecc32faa812642cf58052602c7eb5cff15a44a444d00ccb854e1f1290b07c9de89b6e462954fecb3c09ee57f3368984fd57b0230e95251ee3ccff8f1ffbbc474a546c358a87a86b71ef8edace3fd4cb781faa0c53155ce1187fb08a3078f2af5c22cd251d905ef98463c922c1c15a9b172e7947669033d2015b678b59f4f2f6b66b65b780197beb63a8e937b9f2c4904b8a6787b46cadb496c2e9aa3aa93365a3e99599061fe0ec50138c5867a270e0766f81cbac018f1defb9de15bba8823b6552a1f1c7800b7aaf1731768eea79775c3fd453e993b20d641ba2e6082e237bd15c2a206e42cd1f8971894c381b873bfeb29d9790b56bb6e9d45e3fe5283144edbcef0f350399f1ee1a7b9895b2271ae0b02d6206e695705eaedf9890f4400309d9b547841bd253be367e228bd3a2992d7d74bc6c0f716a1a95b121126c023bb6daea8d456d1f6fbcf9f11263695c1b2ce331a7765070a02ecae1f4b096df441773c1495913ee67120f8defc562802ab4e9568b7dcf7a36cf969c45194c3d9d94a0d42d539c3f2243f4c713ea97cd62d3d36b4c69b4c707b0d6ec8d3979b84cceea7934e8c6939057b63b5b8234d380e58e167a7533a8a3016796eb21b2ccfec21d27f8e760e9ea4d63bea643bd6d1654511a1c02b471ee206b0bc85a03dcf461623b15e7f6da850c1e90c050d42f18aa7103d73599299c6ae86b4806f11a5c2ab8dede41ee2b2aa9f6b71f5889531072ea75ad93417dbf6359a4fe1fa0fdf4e0c3d6171f2137708b5ff4ebfb087c87e4813d108eda6fdbe4f72404acb51864771e429b4c0213a75abab40de2d9eff88fb015aaadbcf841e7ae196c303beb4a851de0168033fdb4e1147814e1f43250df46353a9469551fa3cf58a9e0d1e86a9c85f2a2b700d14cf153defc244d705ca10f3e6339fafa0e87421b6fbf96e06a2c2c92b31e6f7e87ab4f48dbbe6b31aa9555e86cae0f127960d8c6931d7649b9ca740bfabd10623248d2a561a6fb4d805486c0088664a0389bfb4838847bc906201e19a3e956d38262d0d7e514fa630298848294d9f8d4bc1776b2c094ba9674a0136fe2f1075985962062a094a8e3c8e06bcfb726362d13be730a6ee2ca31df68a7561ffc97cf0732aad69fd2564c013cb0aac4b542c3f0dc105d8796b2dc06ed8076159eb765a314f89f42386a69051622b41cfdbd9881c312d2c4b868156ba97df1920aa8319fac012a1976ec3047a68efe124c9619c0112d0896008a7aa9a6300579784954525a6a8ecb23616835645bdf585af8f1dbd5b6dda70ac354e7e6e9157ef57489d2ec4384754966a1ffb0b052b730746531f7c93bb9705a737b498a2f7e713b3a05d83a74480d12bf338737ee2e81bc91f28a0d2dd7beaf8fa8a8d576669a9eddf623d332c8a2a0409ee06a087b4b360b22db48c8427ff0563fafed0ae581b9a14d7c86dad44d234014329d7d532f09905c935c994fed7e6ac13a769fdc0001a3f97e4f9135107b80b506e723532bb27bbcca736ab5844fb8f02fc86d2df7c9bfa3d1b6e55a744fa1647bca770387f99ccc003c50f4cb1e84e38f50c2209dde66fe634168cddc62557394548f3952a8e440dc8c938aad856bec2a037101a01cb47040fb1d38280858a28f980b52106891fd1252f40943de5b6eabe3e5a250050cb3b13702a78e6330b683aa6f7c39d7047034b1954662134d7813d6d89b5d2498db1e0932d2a46331c881587a500222c265d9f933d2368042d297c58e89526d9905334da8ca3a079349c02e5afcaf31d8027456ce2fc31a09b760fa194668492f5b0d9f30385c4ff346e4edd856e5861e65bc87c74e04dde8584539e728748bf9eb98786604956bb546f8e5d412f9153e80259c9be828bf3a0666889a6884131096251750e848b922a8cbb549412ccc73bbeec34466bd67bfef8349c0e324770952a8d93ffd085ae9b43940f3f4380bec6121af994b55af1ec49212f33576be45b5a53b544550e7ffa4d53e28621725ce31a486ff235fa3f138a4b3d477a5ab45c66065f74ba86248584f5d0a917fb122521990b701743b53ef74c397071908b435e080184022401e38e48a1a9965b7f3eca45497f5b37e5c57053678e379b3a643917e798ff3767bfd93fb3df3145e892957f18c1a96f0076d67a3e05523795afe2da4ef00</script>
   <div class="hbe hbe-content">
     <div class="hbe hbe-input hbe-input-default">
@@ -259,251 +95,39 @@
   </div>
 </div>
 <script data-pjax src="/lib/hbe.js"></script><link href="/css/hbe.style.css" rel="stylesheet" type="text/css">
-  </article>
-  <!-- tag -->
-  <div class="mt-12 pt-6 border-t border-gray-200">
+        </div>
     
-      
-        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/">代码审计</a>
-        </span>
-      
-        <span class="bg-gray-100 dark:bg-gray-700 px-2 py-1 m-1 text-sm rounded-md transition-colors hover:bg-gray-200">
-          <a href="/tags/Java/">Java</a>
-        </span>
-      
-    
-  </div>
-  <!-- prev and next -->
-  <div class="flex justify-between mt-12 pt-6 border-t border-gray-200">
-    <div>
-      
-        <a href="/2024/03/03/%E4%BB%8EMVC%E6%A1%86%E6%9E%B6%E8%BF%9B%E8%A1%8C-net%E5%86%8D%E6%8E%A2%E7%A9%B6/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
-          <iconify-icon width="20" icon="ri:arrow-left-s-line" data-inline="false"></iconify-icon>
-          从MVC框架进行.net再探究
-        </a>
-      
+<!-- tags -->
+
+    <div class="post-meta">
+        标签：
+        
+            <a href="/tags/%E4%BB%A3%E7%A0%81%E5%AE%A1%E8%AE%A1/"> / 代码审计</a>
+        
+            <a href="/tags/Java/"> / Java</a>
+        
     </div>
-    <div>
-      
-        <a href="/2024/02/17/%E8%BF%91%E6%9C%9FCTF%E8%AE%B0%E5%BD%95%E5%A4%8D%E7%8E%B0%E2%80%94%E2%80%94SICTF-Round-3%E3%80%81NSSCTF-Round-18/" class="text-sm text-gray-400 hover:text-gray-500 flex justify-center">
-          近期CTF记录复现——SICTF Round#3、NSSCTF Round#18
-          <iconify-icon width="20" icon="ri:arrow-right-s-line" data-inline="false"></iconify-icon>
-        </a>
-      
-    </div>
-  </div>
-  <!-- comment -->
-  <div class="article-comments mt-12">
-    
-<script
-  src="https://giscus.app/client.js"
-  data-repo="Hehanzzz/hehanzzz.github.io"
-  data-repo-id="R_kgDOKls9Wg"
-  data-category="Announcements"
-  data-category-id="DIC_kwDOKls9Ws4Cb8Mv"
-  data-mapping="pathname"
-  data-strict="0"
-  data-reactions-enabled="1"
-  data-emit-metadata="0"
-  data-input-position="bottom"
-  data-theme="preferred_color_scheme"
-  data-lang="zh-CN"
-  crossorigin="anonymous"
-  async
-></script>
-<script>
-  window.onload = function () {
-    console.log("giscus loaded");
-    const isDark = document.documentElement.classList.contains("dark");
-    const giscusFrame = document.querySelector("iframe.giscus-frame");
-    giscusFrame.contentWindow.postMessage(
-      {
-        giscus: {
-          setConfig: {
-            theme: isDark ? "dark" : "light",
-          },
-        },
-      },
-      "https://giscus.app"
-    );
-  };
-</script>
 
-
-  </div>
-</section>
-<!-- js inspect -->
-
-<script src="/lib/clipboard.min.js"></script>
-
-
-<script async src="https://cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-MML-AM_CHTML"></script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Config({
-    "HTML-CSS": {
-        preferredFont: "TeX",
-        availableFonts: ["STIX","TeX"],
-        linebreaks: { automatic:true },
-        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
-    },
-    tex2jax: {
-        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
-        processEscapes: true,
-        ignoreClass: "tex2jax_ignore|dno",
-        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
-    },
-    TeX: {
-        equationNumbers: { autoNumber: "AMS" },
-        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
-        Macros: { href: "{}" }
-    },
-    messageStyle: "none"
-  });
-</script>
-<script type="text/x-mathjax-config">
-  MathJax.Hub.Queue(function() {
-      var all = MathJax.Hub.getAllJax(), i;
-      for (i=0; i < all.length; i += 1) {
-          all[i].SourceElement().parentNode.className += ' has-jax';
-      }
-  });
-</script>
-
-
-
-<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
-<script>
-  $(document).ready(() => {
-    const maraidConfig = {
-      theme: "default",
-      logLevel: 3,
-      flowchart: { curve: "linear" },
-      gantt: { axisFormat: "%m/%d/%Y" },
-      sequence: { actorMargin: 50 },
-    };
-    mermaid.initialize(maraidConfig);
-  });
-</script>
-
-
-
-<script src="/lib/fancybox/fancybox.umd.min.js"></script>
-
-<script>
-  $(document).ready(() => {
-    $('.post-content').each(function(i){
-      $(this).find('img').each(function(){
-        if ($(this).parent().hasClass('fancybox') || $(this).parent().is('a')) return;
-        var alt = this.alt;
-        if (alt) $(this).after('<span class="fancybox-alt">' + alt + '</span>');
-        $(this).wrap('<a class="fancybox-img" href="' + this.src + '" data-fancybox=\"gallery\" data-caption="' + alt + '"></a>')
-      });
-      $(this).find('.fancybox').each(function(){
-        $(this).attr('rel', 'article' + i);
-      });
-    });
-
-    Fancybox.bind('[data-fancybox="gallery"]', {
-        // options
-    })
-  })
-</script>
-
-<!-- tocbot begin -->
-
-<script src="/lib/tocbot/tocbot.min.js"></script>
-
-<script>
-  $(document).ready(() => {
-      tocbot.init({
-        // Where to render the table of contents.
-        tocSelector: '.post-toc',
-        // Where to grab the headings to build the table of contents.
-        contentSelector: '.post-content',
-        // Which headings to grab inside of the contentSelector element.
-        headingSelector: 'h1, h2, h3',
-        // For headings inside relative or absolute positioned containers within content.
-        hasInnerContainers: true,
-    });
-  })
-</script>
-<!-- tocbot end -->
-
-
-  </main>
-  <footer class="flex flex-col h-40 items-center justify-center text-gray-400 text-sm">
-  <!-- busuanzi -->
-  
-<script async src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
-<!-- Busuanzi Analytics -->
-<div class="flex items-center gap-2">
-  <span>Visitors</span>
-  <span id="busuanzi_value_site_uv"></span>
-  <span>Page Views</span>
-  <span id="busuanzi_value_site_pv"></span>
 </div>
-<!-- End Busuanzi Analytics -->
+                <div class="footer">
+    <span>Copyright © <script>document.write(new Date().getFullYear())</script> Hello Hehanzzz~</span>
+    <span>Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> with <a target="_blank" rel="noopener" href="https:///imzl.com/zenmind">ZenMind</a></span>
+</div>
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
 
 
-  <!-- copyright -->
-  <div class="flex items-center gap-2">
-    <a target="_blank" href="https://creativecommons.org/licenses/by-nc-sa/4.0/" style="color: inherit;">CC BY-NC-SA 4.0</a>
-    <span>© 2023</span>
-    <iconify-icon width="18" icon="emojione-monotone:maple-leaf" ></iconify-icon>
-    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Hehanzzz</a>
-  </div>
-  <!-- powered by -->
-  <div class="flex items-center gap-2">
-    <span>Powered by</span>
-    <a href="https://hexo.io/" target="_blank" rel="noopener noreferrer">Hexo</a>
-    <span>&</span>
-    <a href="https://github.com/hehanzzz" target="_blank" rel="noopener noreferrer">Maple</a>
-  </div>
-
-</footer>
-
-  <div class="back-to-top box-border fixed right-6 z-1024 -bottom-20 rounded py-1 px-1 bg-slate-900 opacity-60 text-white cursor-pointer text-center dark:bg-slate-600">
-    <span class="flex justify-center items-center text-sm">
-      <iconify-icon width="18" icon="ion:arrow-up-c" id="go-top"></iconify-icon>
-      <span id="scrollpercent"><span>0</span> %</span>
-    </span>
-  </div>
-  
-<script src="/js/main.js"></script>
+<script src="/js/highlight.min.js"></script>
 
 
-  <script>
-    $(document).ready(function () {
-      const mapleCount = "10";
-      const speed = "0.5";
-      const mapleEl = document.getElementById("maple");
-      const maples = Array.from({ length: mapleCount }).map(() => {
-        const maple = document.createElement("div");
-        const scale = Math.random() * 0.5 + 0.5;
-        const offset = Math.random() * 2 - 1;
-        const x = Math.random() * mapleEl.clientWidth;
-        const y = -Math.random() * mapleEl.clientHeight;
-        const duration = 10 / speed;
-        const delay = -duration;
-        maple.className = "maple";
-        maple.style.width = `${24 * scale}px`;
-        maple.style.height = `${24 * scale}px`;
-        maple.style.left = `${x}px`;
-        maple.style.top = `${y}px`;
-        maple.style.setProperty("--maple-fall-offset", offset);
-        maple.style.setProperty("--maple-fall-height", `${Math.abs(y) + mapleEl.clientHeight}px`);
-        maple.style.animation = `fall ${duration}s linear infinite`;
-        maple.style.animationDelay = `${delay}s`;
-        mapleEl.appendChild(maple)
-        return maple
-      })
-    });
-  </script>
-  
+<script src="/js/highlightjs-line-numbers.js"></script>
 
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
 
-  <div class="fixed top-0 bottom-0 left-0 right-0 pointer-events-none print:hidden" id="maple"></div>
-</body>
-
+            </div>
+        </div>
+    </body>
 </html>
