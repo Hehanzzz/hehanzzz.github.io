@@ -45,6 +45,8 @@ a
     background: #fff;
     border-radius: 24px;
     background: #fff;
+    color: #9b59b6;
+    
 }
 
 .header
@@ -65,6 +67,7 @@ a
     color: var(--font-color-1);
     margin-bottom: 23px;
     flex: 0 0 100%;
+    color: #3778FF;
 }
 .nav
 {
