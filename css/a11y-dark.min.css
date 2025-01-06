@@ -1,124 +1,118 @@
 pre code.hljs {
 	display: block;
 	overflow-x: auto;
-	padding: 1em
+	padding: 1em;
+	background: #2e3440;
+	color: #eceff4;
+	font-size: 14px;
+	font-weight: 500;
+	line-height: 1.5;
+	font-family: "Fira Code", "Consolas", "Courier New", monospace; /* 设置字体 */
+	border: 1px solid #4c566a;
+	border-radius: 8px;
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.3);
 }
 
+/* 单行代码块 */
 code.hljs {
-	padding: 3px 5px
+	padding: 3px 5px;
+	background: #3b4252;
+	color: #d8dee9;
+	font-family: "Fira Code", "Consolas", "Courier New", monospace; /* 设置字体 */
+	border: 1px solid #4c566a;
+	border-radius: 4px;
 }
 
+/* 高亮块基础样式 */
 .hljs {
-	background: #2b2b2b;
-	color: #f8f8f2
+	background: #2e3440; /* 背景颜色：深灰蓝 */
+	color: #eceff4; /* 主文本颜色：白色 */
+	font-weight: bold; /* 加粗以强调 */
+	border: 1px solid #4c566a; /* 包裹代码块的边框 */
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+	padding: 1em;
 }
 
+/* 注释和引用（浅灰蓝色） */
 .hljs-comment,
 .hljs-quote {
-	color: #d4d0ab
+	color: #616e88; /* 浅灰蓝色 */
+	font-style: italic;
 }
 
-.hljs-deletion,
+/* 标签名、选择器、变量（橙色） */
 .hljs-name,
-.hljs-regexp,
-.hljs-selector-class,
-.hljs-selector-id,
 .hljs-tag,
 .hljs-template-variable,
 .hljs-variable {
-	color: #ffa07a
+	color: #d08770; /* 橙色 */
+	font-weight: bold;
 }
 
+/* 内置方法、链接、数字、类型（蓝色） */
 .hljs-built_in,
 .hljs-link,
-.hljs-literal,
-.hljs-meta,
 .hljs-number,
-.hljs-params,
 .hljs-type {
-	color: #f5ab35
+	color: #81a1c1; /* 蓝色 */
+	font-weight: bold;
 }
 
+/* 属性名称（黄色） */
 .hljs-attribute {
-	color: gold
+	color: #ebcb8b; /* 黄色 */
+	font-weight: bold;
 }
 
-.hljs-addition,
-.hljs-bullet,
+/* 字符串、符号（绿色） */
 .hljs-string,
 .hljs-symbol {
-	color: #abe338
+	color: #a3be8c; /* 绿色 */
+	font-weight: bold;
 }
 
-.hljs-section,
-.hljs-title {
-	color: #00e0e0
+/* 函数名、段落标题（红色） */
+.hljs-title,
+.hljs-section {
+	color: #bf616a; /* 红色 */
+	font-weight: bold;
 }
 
+/* 关键字（紫色） */
 .hljs-keyword,
 .hljs-selector-tag {
-	color: #dcc6e0
+	color: #b48ead; /* 紫色 */
+	font-weight: bold;
 }
 
-.hljs-emphasis {
-	font-style: italic
-}
-
+/* 强调（加粗） */
 .hljs-strong {
-	font-weight: 700
+	font-weight: bold;
 }
 
-@media screen and (-ms-high-contrast:active) {
-
-	.hljs-addition,
-	.hljs-attribute,
-	.hljs-built_in,
-	.hljs-bullet,
-	.hljs-comment,
-	.hljs-link,
-	.hljs-literal,
-	.hljs-meta,
-	.hljs-number,
-	.hljs-params,
-	.hljs-quote,
-	.hljs-string,
-	.hljs-symbol,
-	.hljs-type {
-		color: highlight
-	}
-
-	.hljs-keyword,
-	.hljs-selector-tag {
-		font-weight: 700
-	}
+/* 斜体强调 */
+.hljs-emphasis {
+	font-style: italic;
 }
 
-/* 针对 pre 和 code 标签的字体大小进行调整 */
-pre, code.hljs {
-  font-size: 16px;  /* 默认字体大小 */
-  line-height: 1.5; /* 改善可读性 */
-  padding: 1em; /* 保持原有的内边距 */
+/* 符号和运算符（灰蓝色） */
+.hljs-operator {
+	color: #4c566a; /* 灰蓝色 */
+	font-weight: bold;
 }
 
-/* 针对手机设备屏幕进行优化 */
+/* 响应式优化（Dark 模式） */
 @media screen and (max-width: 768px) {
-  pre, code.hljs {
-    font-size: 9px;  /* 在小屏设备上减少字体大小 */
-    padding: 0.2em;   /* 减少内边距 */
-  }
+	pre, code.hljs {
+		font-size: 12px;
+		padding: 0.2em;
+	}
 }
 
-/* 针对大屏设备的字体优化 */
 @media screen and (min-width: 1024px) {
-  pre, code.hljs {
-    font-size: 16px;  /* 在大屏设备上增加字体大小 */
-    padding: 0.2em;   /* 增加内边距 */
-  }
-}
-
-/* 确保在高对比度模式下字体大小适中 */
-@media screen and (-ms-high-contrast: active) {
-  pre, code.hljs {
-    font-size: 14px;  /* 在高对比度模式下字体大小适度 */
-  }
+	pre, code.hljs {
+		font-size: 16px;
+		padding: 0.2em;
+	}
 }

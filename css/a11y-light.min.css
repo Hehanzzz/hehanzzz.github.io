@@ -1,0 +1,119 @@
+/* 针对 pre 和 code 标签的基础样式 */
+pre code.hljs {
+	display: block;
+	overflow-x: auto;
+	padding: 1em;
+	background: #f9f9f9; /* 背景颜色：浅灰 */
+	color: #2b2b2b; /* 默认文本颜色：深灰 */
+	font-size: 14px; /* 默认字体大小 */
+	font-weight: 500; /* 默认字体权重 */
+	line-height: 1.5; /* 行高 */
+	border: 1px solid #dcdcdc; /* 边框 */
+	border-radius: 8px; /* 圆角边框 */
+	box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1); /* 添加阴影 */
+	font-family: "Fira Code", "Consolas", "Courier New", monospace;
+
+}
+
+/* 针对单行代码块 */
+code.hljs {
+	padding: 3px 5px;
+	background: #f0f0f0; /* 背景颜色：更浅灰 */
+	color: #2b2b2b; /* 字体颜色：深灰 */
+	border: 1px solid #eaeaea; /* 边框 */
+	border-radius: 4px; /* 圆角 */
+}
+
+/* 高亮块基础样式 */
+.hljs {
+	background: #ffffff; /* 背景颜色：白色 */
+	color: #2b2b2b; /* 主文本颜色：深灰 */
+	font-weight: bold; /* 加粗以强调 */
+	border: 1px solid #e0e0e0; /* 包裹代码块的边框 */
+	border-radius: 8px; /* 圆角边框 */
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* 阴影 */
+	padding: 1em;
+}
+
+/* 注释和引用（浅蓝灰色，斜体） */
+.hljs-comment,
+.hljs-quote {
+	color: #a0aec0; /* 浅蓝灰色 */
+	font-style: italic;
+}
+
+/* 标签名、选择器、变量（明亮橙色） */
+.hljs-name,
+.hljs-tag,
+.hljs-template-variable,
+.hljs-variable {
+	color: #e06c75; /* 橙红色 */
+	font-weight: bold;
+}
+
+/* 内置方法、链接、数字、类型（蓝紫色） */
+.hljs-built_in,
+.hljs-link,
+.hljs-number,
+.hljs-type {
+	color: #5e81ac; /* 蓝紫色 */
+	font-weight: bold;
+}
+
+/* 属性名称（黄色） */
+.hljs-attribute {
+	color: #d08770; /* 黄色 */
+	font-weight: bold;
+}
+
+/* 字符串、符号、符号（绿色） */
+.hljs-string,
+.hljs-symbol {
+	color: #a3be8c; /* 绿色 */
+	font-weight: bold;
+}
+
+/* 函数名、段落标题（红色） */
+.hljs-title,
+.hljs-section {
+	color: #bf616a; /* 红色 */
+	font-weight: bold;
+}
+
+/* 关键字（蓝色，醒目） */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #81a1c1; /* 蓝色 */
+	font-weight: bold;
+}
+
+/* 强调（加粗） */
+.hljs-strong {
+	font-weight: bold;
+}
+
+/* 斜体强调 */
+.hljs-emphasis {
+	font-style: italic;
+}
+
+/* 符号和运算符（深蓝色） */
+.hljs-operator {
+	color: #434c5e; /* 深蓝色 */
+	font-weight: bold;
+}
+
+/* 响应式优化（Light 模式） */
+@media screen and (max-width: 768px) {
+	pre, code.hljs {
+		font-size: 12px; /* 小屏设备字体稍小 */
+		padding: 0.5em;
+	}
+}
+
+@media screen and (min-width: 1024px) {
+	pre, code.hljs {
+		font-size: 16px; /* 大屏设备字体稍大 */
+		padding: 1.5em;
+	}
+}
