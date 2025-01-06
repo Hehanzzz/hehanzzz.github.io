@@ -177,16 +177,3 @@
     padding-right: 12px;
 }
 
-.post-md pre {
-    color: #ffffff;             /* 设置字体颜色 */
-    background-color: #0e0e0e;  /* 设置背景颜色 */
-    max-height: 600px;          /* 限制最大高度 */
-    overflow-y: auto;           /* 超出部分添加垂直滚动条 */
-    white-space: pre-wrap;      /* 自动换行 */
-    word-wrap: break-word;
-    padding: 20px;
-    border-radius: 4px;
-    font-family: "Courier New", Courier, monospace;
-    font-size: 14px;
-    line-height: 1.6;
-}
