@@ -115,6 +115,7 @@ code.hljs {
 	pre, code.hljs {
 		font-size: 9px; /* 固定字体大小 */
 		padding: 0.5em;
+    white-space: pre-wrap
 	}
 }
 
