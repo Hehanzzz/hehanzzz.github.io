@@ -113,11 +113,8 @@ code.hljs {
 /* 响应式优化（Dark 模式） */
 @media screen and (max-width: 768px) {
 	pre, code.hljs {
-		font-size: 9px; /* 固定字体大小 */
+		font-size: 8px; /* 固定字体大小 */
 		padding: 0.5em;
-    white-space: pre-wrap;
-    text-indent: 4em; /* 增加换行后缩进 */
-    line-height: 1.4; /* 增加手机端行间距 */
 	}
 }
 
