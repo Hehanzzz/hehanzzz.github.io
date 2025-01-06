@@ -116,6 +116,8 @@ code.hljs {
 		font-size: 9px; /* 固定字体大小 */
 		padding: 0.5em;
     white-space: pre-wrap
+    text-indent: 1em; /* 增加换行后缩进 */
+    line-height: 1.8; /* 增加手机端行间距 */
 	}
 }
 
