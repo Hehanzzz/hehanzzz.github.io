@@ -12,12 +12,12 @@
   
   
   <!-- open graph -->
-  <meta name="description" content="2024年广东省大学生网络安全竞赛Web-mypdf记录">
+  <meta name="description" content="0x01 前言今天刚打了一场广东省大学生网络安全竞赛，只能说这比赛十分垃j，这里不细说。但是其中有一题名为“mypdf”是从3KCTF中扒下来的题目，质量很好，值得审计记录，故有此文。  原题：3kCTF-2021 ppaste 0x02 基本思路拿到这道题的时候，一开始直接放弃了，因为太困了加上队友很给力，完全躺平等着带飞就好了，但是后来发现赛方不上新题加上肯定有很多人py，之前做完的题都被做烂">
 <meta property="og:type" content="article">
 <meta property="og:title" content="从省赛某题到3KCTF探讨“TCPDF”">
 <meta property="og:url" content="https://hehanzzz.github.io/2024/05/13/%E4%BB%8E%E7%9C%81%E8%B5%9B%E6%9F%90%E9%A2%98%E5%88%B03KCTF%E6%8E%A2%E8%AE%A8%E2%80%9CTCPDF%E2%80%9D/index.html">
 <meta property="og:site_name" content="Hello Hehanzzz~">
-<meta property="og:description" content="2024年广东省大学生网络安全竞赛Web-mypdf记录">
+<meta property="og:description" content="0x01 前言今天刚打了一场广东省大学生网络安全竞赛，只能说这比赛十分垃j，这里不细说。但是其中有一题名为“mypdf”是从3KCTF中扒下来的题目，质量很好，值得审计记录，故有此文。  原题：3kCTF-2021 ppaste 0x02 基本思路拿到这道题的时候，一开始直接放弃了，因为太困了加上队友很给力，完全躺平等着带飞就好了，但是后来发现赛方不上新题加上肯定有很多人py，之前做完的题都被做烂">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://oss.hehanzzz.icu/img/202405130205898.png">
 <meta property="og:image" content="http://oss.hehanzzz.icu/img/202405130149912.png">
@@ -30,7 +30,7 @@
 <meta property="og:image" content="http://oss.hehanzzz.icu/img/202405130206528.png">
 <meta property="og:image" content="http://oss.hehanzzz.icu/img/202405130148565.png">
 <meta property="article:published_time" content="2024-05-12T17:47:30.000Z">
-<meta property="article:modified_time" content="2024-05-21T12:06:23.797Z">
+<meta property="article:modified_time" content="2025-01-06T08:31:59.343Z">
 <meta property="article:author" content="Hehanzzz">
 <meta property="article:tag" content="代码审计">
 <meta property="article:tag" content="PHP">
@@ -98,10 +98,7 @@
             <!--  -->
         <!-- </div> -->
         <div class="post-md">
-            <p>2024年广东省大学生网络安全竞赛Web-mypdf记录</p>
-<span id="more"></span>
-
-<h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>今天刚打了一场广东省大学生网络安全竞赛，只能说这比赛十分垃j，这里不细说。但是其中有一题名为“mypdf”是从3KCTF中扒下来的题目，质量很好，值得审计记录，故有此文。</p>
+            <h1 id="0x01-前言"><a href="#0x01-前言" class="headerlink" title="0x01 前言"></a>0x01 前言</h1><p>今天刚打了一场广东省大学生网络安全竞赛，只能说这比赛十分垃j，这里不细说。但是其中有一题名为“mypdf”是从3KCTF中扒下来的题目，质量很好，值得审计记录，故有此文。</p>
 <p><img src="http://oss.hehanzzz.icu/img/202405130205898.png"></p>
 <p>原题：3kCTF-2021 ppaste</p>
 <h1 id="0x02-基本思路"><a href="#0x02-基本思路" class="headerlink" title="0x02 基本思路"></a>0x02 基本思路</h1><p>拿到这道题的时候，一开始直接放弃了，因为太困了加上队友很给力，完全躺平等着带飞就好了，但是后来发现赛方不上新题加上肯定有很多人py，之前做完的题都被做烂了，于是收到队友的消息发现是原题且带详细解析，直接跑下床做题</p>

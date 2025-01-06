@@ -92,3 +92,33 @@ code.hljs {
 		font-weight: 700
 	}
 }
+
+/* 针对 pre 和 code 标签的字体大小进行调整 */
+pre, code.hljs {
+  font-size: 16px;  /* 默认字体大小 */
+  line-height: 1.5; /* 改善可读性 */
+  padding: 1em; /* 保持原有的内边距 */
+}
+
+/* 针对手机设备屏幕进行优化 */
+@media screen and (max-width: 768px) {
+  pre, code.hljs {
+    font-size: 9px;  /* 在小屏设备上减少字体大小 */
+    padding: 0.2em;   /* 减少内边距 */
+  }
+}
+
+/* 针对大屏设备的字体优化 */
+@media screen and (min-width: 1024px) {
+  pre, code.hljs {
+    font-size: 16px;  /* 在大屏设备上增加字体大小 */
+    padding: 0.2em;   /* 增加内边距 */
+  }
+}
+
+/* 确保在高对比度模式下字体大小适中 */
+@media screen and (-ms-high-contrast: active) {
+  pre, code.hljs {
+    font-size: 14px;  /* 在高对比度模式下字体大小适度 */
+  }
+}

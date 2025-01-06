@@ -12,17 +12,17 @@
   
   
   <!-- open graph -->
-  <meta name="description" content="Python SSTI类题目">
+  <meta name="description" content="原理flask渲染方法有render_template和render_template_string两种，我们需要做的就是，将我们想渲染的值传入模板的变量里 render_template() 是用来渲染一个指定的文件的。render_template_string则是用来渲染一个字符串 flask的目录结构 ├── app.py ├── static │ └── style.css └── te">
 <meta property="og:type" content="article">
 <meta property="og:title" content="PyhonSSTI模板注入">
 <meta property="og:url" content="https://hehanzzz.github.io/2023/12/20/PyhonSSTI/index.html">
 <meta property="og:site_name" content="Hello Hehanzzz~">
-<meta property="og:description" content="Python SSTI类题目">
+<meta property="og:description" content="原理flask渲染方法有render_template和render_template_string两种，我们需要做的就是，将我们想渲染的值传入模板的变量里 render_template() 是用来渲染一个指定的文件的。render_template_string则是用来渲染一个字符串 flask的目录结构 ├── app.py ├── static │ └── style.css └── te">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://oss.hehanzzz.icu/img/202405061256158.png">
 <meta property="og:image" content="http://oss.hehanzzz.icu/img/202405061256578.png">
 <meta property="article:published_time" content="2023-12-20T14:44:24.000Z">
-<meta property="article:modified_time" content="2024-05-06T04:56:34.952Z">
+<meta property="article:modified_time" content="2025-01-06T08:37:15.578Z">
 <meta property="article:author" content="Hehanzzz">
 <meta property="article:tag" content="Python">
 <meta property="article:tag" content="SSTI">
@@ -89,10 +89,7 @@
             <!--  -->
         <!-- </div> -->
         <div class="post-md">
-            <p>Python SSTI类题目</p>
-<span id="more"></span>
-
-<h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>flask渲染方法有render_template和render_template_string两种，我们需要做的就是，将我们想渲染的值传入模板的变量里</p>
+            <h2 id="原理"><a href="#原理" class="headerlink" title="原理"></a>原理</h2><p>flask渲染方法有render_template和render_template_string两种，我们需要做的就是，将我们想渲染的值传入模板的变量里</p>
 <p>render_template() 是用来渲染一个指定的文件的。<br>render_template_string则是用来渲染一个字符串</p>
 <p>flask的目录结构</p>
 <pre><code class="highlight dir">├── app.py
