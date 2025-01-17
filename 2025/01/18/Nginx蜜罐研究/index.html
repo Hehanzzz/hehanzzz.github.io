@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html>
+    <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+  <meta name="robots" content="index, follow">
+  <!-- title -->
+  
+    
+  <title>Nginx蜜罐研究 - Hello Hehanzzz~</title>
+    
+  
+  
+  <!-- open graph -->
+  <meta name="description" content="0x01 想法起源最开始为了面向护网，打算自己多审几个Poc，但是发现效率太慢了，而且会遇到审计出洞的系统在护网中没有的情况，或者说没审出来相关系统。于是打算搭建一个蜜罐。不得不说，想了很久的框架，一开始打算用Go写，Go也写了一半的后端，发现实现起来太复杂了，没有一个合适的框架，而且写出来也可能与实际的偏差较大。蜜罐嘛，主要就是捕获流量，受我Nie的启发，不如自己开干一个Nginx蜜罐，直接利用">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Nginx蜜罐研究">
+<meta property="og:url" content="https://hehanzzz.github.io/2025/01/18/Nginx%E8%9C%9C%E7%BD%90%E7%A0%94%E7%A9%B6/index.html">
+<meta property="og:site_name" content="Hello Hehanzzz~">
+<meta property="og:description" content="0x01 想法起源最开始为了面向护网，打算自己多审几个Poc，但是发现效率太慢了，而且会遇到审计出洞的系统在护网中没有的情况，或者说没审出来相关系统。于是打算搭建一个蜜罐。不得不说，想了很久的框架，一开始打算用Go写，Go也写了一半的后端，发现实现起来太复杂了，没有一个合适的框架，而且写出来也可能与实际的偏差较大。蜜罐嘛，主要就是捕获流量，受我Nie的启发，不如自己开干一个Nginx蜜罐，直接利用">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/01/cfb22c481e3cc577d270b7481fa84bc9.png">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/01/d19b387b010baeb0a9c77758f744d427.png">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/01/ca1a3304c92a6dbd073a916c3de9701f.png">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/01/a50ccdaa241231ac369c03d0c9125832.png">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/01/54fb11ef69757a06f6dfca1359e23953.png">
+<meta property="article:published_time" content="2025-01-17T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-01-17T19:31:48.618Z">
+<meta property="article:author" content="Hehanzzz">
+<meta property="article:tag" content="Nginx">
+<meta property="article:tag" content="蜜罐">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://oss.hehanzzz.icu/2025/01/cfb22c481e3cc577d270b7481fa84bc9.png">
+  <!-- canonical -->
+  
+  <link rel="canonical" href="https://hehanzzz.github.io/2025/01/18/Nginx蜜罐研究/">
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/img/3.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <!-- CSS -->
+  
+<link rel="stylesheet" href="/css/reset.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/markdown.css">
+
+  
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">Hello Hehanzzz~</a>
+    <!-- <div class="logo"><a href="/" title="Len"><img src="/img/logo.svg" alt="Len" aria-label="logo" height="20"></a></div> -->
+        <ul class="nav">
+            
+            <li><a href="/">Home</a></li>
+            
+            <li><a href="/about">About</a></li>
+            
+            <li><a href="/archives">Archives</a></li>
+            
+            <li><a href="/friends">Friends</a></li>
+            
+        </ul>
+
+
+    </a>
+</div>
+
+
+                
+                <div class="post-main">
+    
+        <div class="post-main-title">
+            Nginx蜜罐研究
+        </div>
+        <div class="post-meta">
+            2025-01-18 ｜ 
+            
+        </div>
+        <!-- 圆角分类 -->
+        <!-- <div class="tags"> -->
+            <!--  -->
+        <!-- </div> -->
+        <div class="post-md">
+            <h1 id="0x01-想法起源"><a href="#0x01-想法起源" class="headerlink" title="0x01 想法起源"></a>0x01 想法起源</h1><p>最开始为了面向护网，打算自己多审几个Poc，但是发现效率太慢了，而且会遇到审计出洞的系统在护网中没有的情况，或者说没审出来相关系统。于是打算搭建一个蜜罐。不得不说，想了很久的框架，一开始打算用Go写，Go也写了一半的后端，发现实现起来太复杂了，没有一个合适的框架，而且写出来也可能与实际的偏差较大。蜜罐嘛，主要就是捕获流量，受我Nie的启发，不如自己开干一个Nginx蜜罐，直接利用Retrun到别的网站实现完美仿真，反正我们只要Nginx的流量</p>
+<p><img src="https://oss.hehanzzz.icu/2025/01/cfb22c481e3cc577d270b7481fa84bc9.png" alt="image">​</p>
+<h1 id="0x02-Nginx反向代理原理"><a href="#0x02-Nginx反向代理原理" class="headerlink" title="0x02 Nginx反向代理原理"></a>0x02 Nginx反向代理原理</h1><p>Nginx 的反向代理功能可以将客户端的请求转发到另一个服务器，并将目标服务器的响应返回给客户端。在这个过程中，客户端的浏览器地址栏仍然显示原始域名（例如 <code>a.com</code>​），而实际内容来自目标服务器（例如 <code>b.com</code>​）。</p>
+<p><img src="https://oss.hehanzzz.icu/2025/01/d19b387b010baeb0a9c77758f744d427.png" alt="image">​</p>
+<h2 id="1）黑客访问-​a-com​​"><a href="#1）黑客访问-​a-com​​" class="headerlink" title="1）黑客访问 ​a.com​​"></a><strong>1）黑客访问</strong> <strong>​<code>a.com</code>​</strong>​</h2><ul>
+<li><p>黑客在浏览器中输入 <code>http://a.com</code>​ 或通过工具（如 <code>curl</code>​、<code>wget</code>​）访问 <code>a.com</code>​。</p>
+</li>
+<li><p>黑客的请求包含以下信息：</p>
+<ul>
+<li><strong>请求方法</strong>：如 <code>GET</code>​、<code>POST</code>​。</li>
+<li><strong>请求路径</strong>：如 <code>/</code>​、<code>/login</code>​。</li>
+<li><strong>User-Agent</strong>：如浏览器或工具的类型。</li>
+<li><strong>IP 地址</strong>：黑客的 IP 地址。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2）DNS-解析"><a href="#2）DNS-解析" class="headerlink" title="2）DNS 解析"></a><strong>2）DNS 解析</strong></h2><ul>
+<li><p>黑客的请求通过 DNS 解析，找到 <code>a.com</code>​ 的服务器 IP 地址。</p>
+</li>
+<li><p>DNS 解析过程：</p>
+<ol>
+<li>黑客的计算机查询本地 DNS 缓存。</li>
+<li>如果缓存中没有记录，则向 DNS 服务器发送查询请求。</li>
+<li>DNS 服务器返回 <code>a.com</code>​ 的 IP 地址。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h2 id="3）请求到达-Nginx-服务器"><a href="#3）请求到达-Nginx-服务器" class="headerlink" title="3）请求到达 Nginx 服务器"></a><strong>3）请求到达 Nginx 服务器</strong></h2><ul>
+<li>黑客的请求到达运行 Nginx 的服务器（<code>a.com</code>​ 的服务器）。</li>
+<li>Nginx 监听 <code>80</code>​ 端口（HTTP）或 <code>443</code>​ 端口（HTTPS），接收请求。</li>
+</ul>
+<hr>
+<h2 id="4）Nginx-反向代理"><a href="#4）Nginx-反向代理" class="headerlink" title="4）Nginx 反向代理"></a><strong>4）Nginx 反向代理</strong></h2><ul>
+<li>Nginx 根据配置文件，将请求转发到目标网站 <code>b.com</code>​。</li>
+<li>Nginx 的反向代理配置如下：</li>
+</ul>
+<pre><code class="highlight nginx"><span class="section">server</span> &#123;
+    <span class="attribute">listen</span> <span class="number">80</span>;
+    <span class="attribute">server_name</span> a.com;
+
+    <span class="section">location</span> / &#123;
+        <span class="attribute">proxy_pass</span> http://b.com; <span class="comment"># 将请求转发到 b.com</span>
+        <span class="attribute">proxy_set_header</span> Host b.com; 
+        <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>; <span class="comment"># 传递黑客的真实 IP</span>
+        <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>; <span class="comment"># 传递黑客的 IP</span>
+ 
+		<span class="comment"># 替换响应内容中的域名</span>
+        <span class="attribute">sub_filter</span> <span class="string">&#x27;http://b.com&#x27;</span> <span class="string">&#x27;http://127.0.0.1&#x27;</span>;
+        <span class="attribute">sub_filter_once</span> <span class="literal">off</span>;
+
+        <span class="comment"># 修改重定向的域名</span>
+        <span class="attribute">proxy_redirect</span> http://b.com http://127.0.0.1;
+    &#125;
+&#125;</code></pre>
+
+<ul>
+<li><p>Nginx 会将以下信息传递给 <code>b.com</code>​：</p>
+<ul>
+<li><strong>请求路径</strong>：如 <code>/</code>​、<code>/login</code>​。</li>
+<li><strong>请求头</strong>：如 <code>User-Agent</code>​、<code>X-Real-IP</code>​。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="5）目标网站响应"><a href="#5）目标网站响应" class="headerlink" title="5）目标网站响应"></a><strong>5）目标网站响应</strong></h2><ul>
+<li><p>目标网站 <code>b.com</code>​ 接收到请求后，处理请求并生成响应。</p>
+</li>
+<li><p>响应内容包括：</p>
+<ul>
+<li><strong>状态码</strong>：如 <code>200</code>​（成功）、<code>404</code>​（未找到）。</li>
+<li><strong>响应头</strong>：如 <code>Content-Type</code>​、<code>Server</code>​。</li>
+<li><strong>响应体</strong>：如 HTML 页面、JSON 数据。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="6）Nginx-返回响应"><a href="#6）Nginx-返回响应" class="headerlink" title="6）Nginx 返回响应"></a><strong>6）Nginx 返回响应</strong></h2><ul>
+<li><p>Nginx 接收到 <code>b.com</code>​ 的响应后，将响应返回给黑客。</p>
+</li>
+<li><p>在返回响应时，Nginx 会：</p>
+<ul>
+<li>保持浏览器地址栏显示 <code>a.com</code>​。</li>
+<li>修改响应头（如隐藏 <code>b.com</code>​ 的 <code>Server</code>​ 头）。</li>
+<li>将响应体原封不动地返回给黑客。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="7）日志记录"><a href="#7）日志记录" class="headerlink" title="7）日志记录"></a><strong>7）日志记录</strong></h2><ul>
+<li><p>Nginx 记录黑客的访问日志到 <code>/var/log/nginx/a.com.access.log</code>​。</p>
+</li>
+<li><p>日志内容包括：</p>
+<ul>
+<li><strong>黑客的 IP 地址</strong>。</li>
+<li><strong>请求时间</strong>。</li>
+<li><strong>请求方法</strong>（如 <code>GET</code>​、<code>POST</code>​）。</li>
+<li><strong>请求路径</strong>（如 <code>/</code>​、<code>/login</code>​）。</li>
+<li><strong>User-Agent</strong>（如浏览器或工具的类型）。</li>
+<li><strong>响应状态码</strong>（如 <code>200</code>​、<code>404</code>​）。</li>
+</ul>
+</li>
+</ul>
+<p><img src="https://oss.hehanzzz.icu/2025/01/ca1a3304c92a6dbd073a916c3de9701f.png" alt="image">​</p>
+<p>‍</p>
+<hr>
+<h1 id="0x03-Nginx蜜罐实现"><a href="#0x03-Nginx蜜罐实现" class="headerlink" title="0x03 Nginx蜜罐实现"></a>0x03 Nginx蜜罐实现</h1><p>不懂 Nginx 的可以先看：<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1TZ421b7SD?vd_source=5fc2cc13350a1ef8cc18566a3701dbd2">【Nginx入门必须懂3大功能配置 - Web服务器&#x2F;反向代理&#x2F;负载均衡】</a></p>
+<p>如果想直接部署的话，就直接看​<code>步骤五</code>​​</p>
+<h2 id="1-安装-Nginx"><a href="#1-安装-Nginx" class="headerlink" title="1) 安装 Nginx"></a>1) <strong>安装 Nginx</strong></h2><p>在服务器上安装 Nginx：</p>
+<pre><code class="highlight bash">sudo apt update
+sudo apt install nginx</code></pre>
+
+<h2 id="2-创建日志目录"><a href="#2-创建日志目录" class="headerlink" title="2) 创建日志目录"></a>2) 创建日志目录</h2><p>在你的桌面上创建一个日志目录，用于存储访问日志和错误日志：</p>
+<pre><code class="highlight bash"><span class="built_in">mkdir</span> -p ~/Desktop/log</code></pre>
+
+<h2 id="3-配置-Nginx-反向代理"><a href="#3-配置-Nginx-反向代理" class="headerlink" title="3) 配置 Nginx 反向代理"></a>3) <strong>配置 Nginx 反向代理</strong></h2><p>编辑 Nginx 配置文件（通常位于 <code>/etc/nginx/nginx.conf</code>​ 或 <code>/etc/nginx/sites-available/default</code>​）：</p>
+<pre><code class="highlight nginx"><span class="section">events</span> &#123;
+    <span class="attribute">worker_connections</span> <span class="number">1024</span>;
+&#125;
+
+<span class="section">http</span> &#123;
+    <span class="section">server</span> &#123;
+        <span class="attribute">listen</span> <span class="number">80</span>;
+        <span class="attribute">server_name</span> <span class="number">127.0.0.1</span>;
+
+        <span class="attribute">access_log</span> /home/your_username/Desktop/log/a.com.access.log;
+        <span class="attribute">error_log</span> /home/your_username/Desktop/log/a.com.<span class="literal">error</span>.log;
+
+        <span class="section">location</span> / &#123;
+            <span class="attribute">proxy_pass</span> http://x.com;
+            <span class="attribute">proxy_set_header</span> Host x.com;
+            <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;
+            <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;
+            <span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;
+            <span class="attribute">proxy_set_header</span> Referer http://x.com; <span class="comment"># 处理防盗链</span>
+
+            <span class="comment"># 替换响应内容中的域名</span>
+            <span class="attribute">sub_filter</span> <span class="string">&#x27;http://x.com&#x27;</span> <span class="string">&#x27;http://127.0.0.1&#x27;</span>;
+            <span class="attribute">sub_filter_once</span> <span class="literal">off</span>;
+
+            <span class="comment"># 修改重定向的域名</span>
+            <span class="attribute">proxy_redirect</span> http://x.com http://127.0.0.1;
+        &#125;
+
+        <span class="comment"># 处理 CSS 文件中的链接</span>
+        <span class="section">location</span> /path/to/css &#123;
+            <span class="attribute">sub_filter</span> <span class="string">&#x27;http://x.com&#x27;</span> <span class="string">&#x27;http://127.0.0.1&#x27;</span>;
+            <span class="attribute">sub_filter_once</span> <span class="literal">off</span>;
+        &#125;
+
+        <span class="comment"># 处理 JavaScript 文件中的链接</span>
+        <span class="section">location</span> /path/to/js &#123;
+            <span class="attribute">sub_filter</span> <span class="string">&#x27;http://x.com&#x27;</span> <span class="string">&#x27;http://127.0.0.1&#x27;</span>;
+            <span class="attribute">sub_filter_once</span> <span class="literal">off</span>;
+        &#125;
+    &#125;
+&#125;</code></pre>
+
+<p>注意：将<code>/home/your_username/Desktop/log/</code>​替换为你的实际路径。</p>
+<p><a target="_blank" rel="noopener" href="http://x.com/">http://x.com</a> 以及 <a target="_blank" rel="noopener" href="http://127.0.0.1/">http://127.0.0.1</a> 同理</p>
+<h2 id="4-重启-Nginx"><a href="#4-重启-Nginx" class="headerlink" title="4) 重启 Nginx"></a>4) <strong>重启 Nginx</strong></h2><p>保存配置文件后，重启 Nginx 以应用更改：</p>
+<pre><code class="highlight bash">sudo systemctl restart nginx</code></pre>
+
+<p>到这里只是实现了 Get 请求的记录，但是 POST 并不会记录数据包内容，所以我们接下来继续</p>
+<h2 id="5-POST捕获"><a href="#5-POST捕获" class="headerlink" title="5) POST捕获"></a>5) POST捕获</h2><ol>
+<li><p><strong>安装 OpenResty</strong>：  </p>
+<p>OpenResty 是一个基于 Nginx 的增强版本，支持 Lua 脚本。你可以通过以下步骤安装 OpenResty：</p>
+<p>在 Ubuntu 上安装 OpenResty：</p>
+<pre><code class="highlight bash">sudo apt-get update
+sudo apt-get install -y software-properties-common
+sudo add-apt-repository -y ppa:openresty/ppa
+sudo apt-get update
+sudo apt-get install -y openresty</code></pre>
+
+<p>在 CentOS 上安装 OpenResty：</p>
+<pre><code class="highlight bash">sudo yum install -y yum-utils
+sudo yum-config-manager --add-repo https://openresty.org/package/centos/openresty.repo
+sudo yum install -y openresty</code></pre>
+
+<p>安装完成后，OpenResty 的 Nginx 可执行文件路径通常为 <code>/usr/local/openresty/nginx/sbin/nginx</code>​。</p>
+</li>
+<li><p><strong>修改配置文件</strong>：</p>
+<p>在 Nginx 配置中使用 Lua 脚本捕获 POST 请求体，并将其记录到日志文件中。</p>
+<p>编辑 <code>/usr/local/openresty/nginx/conf/nginx.conf</code>​ 文件</p>
+<pre><code class="highlight nginx"><span class="section">events</span> &#123;
+    <span class="attribute">worker_connections</span> <span class="number">1024</span>;
+&#125;
+
+<span class="section">http</span> &#123;
+    <span class="comment"># 定义日志格式，包含 POST 数据</span>
+    <span class="attribute">log_format</span> postdata <span class="string">&#x27;<span class="variable">$remote_addr</span> - <span class="variable">$remote_user</span> [<span class="variable">$time_local</span>] &quot;<span class="variable">$request</span>&quot; &#x27;</span>
+                        <span class="string">&#x27;<span class="variable">$status</span> <span class="variable">$body_bytes_sent</span> &quot;<span class="variable">$http_referer</span>&quot; &#x27;</span>
+                        <span class="string">&#x27;&quot;<span class="variable">$http_user_agent</span>&quot; &quot;<span class="variable">$http_x_forwarded_for</span>&quot; &#x27;</span>
+                        <span class="string">&#x27;&quot;<span class="variable">$request_body</span>&quot;&#x27;</span>;
+
+    <span class="section">server</span> &#123;
+        <span class="attribute">listen</span> <span class="number">80</span>;
+        <span class="attribute">server_name</span> <span class="number">127.0.0.1</span>;
+
+        <span class="comment"># 使用自定义日志格式</span>
+        <span class="attribute">access_log</span> /home/your_username/Desktop/log/a.com.access.log postdata;
+        <span class="attribute">error_log</span> /home/your_username/Desktop/log/a.com.<span class="literal">error</span>.log;
+
+        <span class="section">location</span> / &#123;
+            <span class="comment"># 启用 Lua 脚本捕获 POST 数据</span>
+            <span class="attribute">lua_need_request_body</span> <span class="literal">on</span>;
+
+            <span class="comment"># 将 POST 数据记录到变量中</span>
+            <span class="attribute">set</span> <span class="variable">$request_body</span> <span class="string">&quot;&quot;</span>;
+            <span class="section">access_by_lua_block</span> &#123;
+                ngx.var.<span class="attribute">request_body</span> = ngx.req.get_body_data() or <span class="string">&quot;&quot;</span>;
+            &#125;
+
+            <span class="attribute">proxy_pass</span> http://x.com;
+            <span class="attribute">proxy_set_header</span> Host x.com;
+            <span class="attribute">proxy_set_header</span> X-Real-IP <span class="variable">$remote_addr</span>;
+            <span class="attribute">proxy_set_header</span> X-Forwarded-For <span class="variable">$proxy_add_x_forwarded_for</span>;
+            <span class="attribute">proxy_set_header</span> X-Forwarded-Proto <span class="variable">$scheme</span>;
+            <span class="attribute">proxy_set_header</span> Referer http://x.com;
+
+            <span class="comment"># 替换响应内容中的域名</span>
+            <span class="attribute">sub_filter</span> <span class="string">&#x27;http://x.com&#x27;</span> <span class="string">&#x27;http://127.0.0.1&#x27;</span>;
+            <span class="attribute">sub_filter_once</span> <span class="literal">off</span>;
+
+            <span class="comment"># 修改重定向的域名</span>
+            <span class="attribute">proxy_redirect</span> http://x.com http://127.0.0.1;
+        &#125;
+
+        <span class="comment"># 处理 CSS 文件中的链接</span>
+        <span class="section">location</span> /path/to/css &#123;
+            <span class="attribute">sub_filter</span> <span class="string">&#x27;http://x.com&#x27;</span> <span class="string">&#x27;http://127.0.0.1&#x27;</span>;
+            <span class="attribute">sub_filter_once</span> <span class="literal">off</span>;
+        &#125;
+
+        <span class="comment"># 处理 JavaScript 文件中的链接</span>
+        <span class="section">location</span> /path/to/js &#123;
+            <span class="attribute">sub_filter</span> <span class="string">&#x27;http://x.com&#x27;</span> <span class="string">&#x27;http://127.0.0.1&#x27;</span>;
+            <span class="attribute">sub_filter_once</span> <span class="literal">off</span>;
+        &#125;
+    &#125;
+&#125;</code></pre>
+</li>
+<li><p><strong>测试配置</strong>：</p>
+<p>测试 Nginx 配置是否正确：</p>
+<pre><code class="highlight bash">sudo nginx -t</code></pre>
+</li>
+<li><p><strong>重启 Nginx</strong>：<br>重启 Nginx 以应用配置：</p>
+<pre><code class="highlight bash">sudo systemctl restart openresty</code></pre></li>
+</ol>
+<p>这里也是成功了~</p>
+<p><img src="https://oss.hehanzzz.icu/2025/01/a50ccdaa241231ac369c03d0c9125832.png" alt="image-20250118032541718"></p>
+<p>日志也正常：</p>
+<p><img src="https://oss.hehanzzz.icu/2025/01/54fb11ef69757a06f6dfca1359e23953.png" alt="image-20250118033129138"></p>
+<hr>
+<h1 id="0x04-进阶玩法"><a href="#0x04-进阶玩法" class="headerlink" title="0x04 进阶玩法"></a>0x04 进阶玩法</h1><h2 id="1-使用-HTTPS"><a href="#1-使用-HTTPS" class="headerlink" title="1) 使用 HTTPS"></a>1) <strong>使用 HTTPS</strong></h2><p>为你的域名 <code>a.com</code>​ 配置 HTTPS，以模拟真实的 Web 服务。可以使用 Let’s Encrypt 免费证书：</p>
+<pre><code class="highlight bash">sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d a.com</code></pre>
+
+<h2 id="2-隐藏目标网站的真实信息"><a href="#2-隐藏目标网站的真实信息" class="headerlink" title="2) 隐藏目标网站的真实信息"></a>2) <strong>隐藏目标网站的真实信息</strong></h2><p>在反向代理配置中，可以修改响应头，隐藏目标网站的真实信息：</p>
+<pre><code class="highlight nginx"><span class="attribute">proxy_hide_header</span> Server; <span class="comment"># 隐藏目标服务器的 Server 头</span>
+<span class="attribute">proxy_hide_header</span> X-Powered-By; <span class="comment"># 隐藏目标服务器的 X-Powered-By 头</span></code></pre>
+
+<h2 id="3-重定向攻击者"><a href="#3-重定向攻击者" class="headerlink" title="3) 重定向攻击者"></a>3) <strong>重定向攻击者</strong></h2><p>可以将特定的请求路径重定向到其他陷阱系统。例如：</p>
+<pre><code class="highlight nginx"><span class="section">location</span> /exploit &#123;
+    <span class="attribute">return</span> <span class="number">302</span> http://another-honeypot.example.com;
+&#125;</code></pre>
+
+<h2 id="4-限制访问频率"><a href="#4-限制访问频率" class="headerlink" title="4) 限制访问频率"></a>4) <strong>限制访问频率</strong></h2><p>使用 Nginx 的限流功能，防止攻击者过度消耗资源以及输出大量无用Log记录：</p>
+<pre><code class="highlight nginx"><span class="attribute">limit_req_zone</span> <span class="variable">$binary_remote_addr</span> zone=one:<span class="number">10m</span> rate=1r/s;
+
+<span class="section">location</span> / &#123;
+    <span class="attribute">limit_req</span> zone=one burst=<span class="number">5</span>;
+    <span class="attribute">proxy_pass</span> http://b.com;
+&#125;</code></pre>
+
+<h1 id="0x05-再提一嘴"><a href="#0x05-再提一嘴" class="headerlink" title="0x05 再提一嘴"></a>0x05 再提一嘴</h1><p>蜜罐是搭建完了，但是如何让黑客打到我们的站点呢，其实就是有关黑产的 SEO 技术了，但是这个没有太大的必要…..尽管目的都是让搜索引擎多收录我们的网站，提高网站搜索排名，但是毕竟面向的群体对象不一样，黑产面向的是普通人，我们只需要面向黑客就好了，那么正向思维，黑客一般是通过 Fofa、Hunter 来搜索指纹批量打Poc，那我们也只需要面对空间搜索引擎进行提高我们网站的权重，简单来说就是每天限制没事干就多去 Fofa、Hunter 搜索我们的蜜罐 ^.^</p>
+<p>‍</p>
+
+        </div>
+    
+<!-- tags -->
+
+    <div class="post-meta">
+        标签：
+        
+            <a href="/tags/Nginx/"> / Nginx</a>
+        
+            <a href="/tags/%E8%9C%9C%E7%BD%90/"> / 蜜罐</a>
+        
+    </div>
+
+</div>
+                <div class="footer">
+    <span>Copyright © <script>document.write(new Date().getFullYear())</script> Hello Hehanzzz~</span>
+    <span>Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> with <a target="_blank" rel="noopener" href="https:///imzl.com/zenmind">ZenMind</a></span>
+</div>
+
+<link rel="stylesheet" href="/css/a11y-dark.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+<script>
+    hljs.initHighlightingOnLoad();
+    hljs.initLineNumbersOnLoad();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>
